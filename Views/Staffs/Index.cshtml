@@ -1,0 +1,373 @@
+﻿@using System.Globalization;
+@model IEnumerable<Persons>
+@{
+    ViewBag.Title = "Staff";
+    ViewBag.pTitle = "Staff";
+    ViewBag.pageTitle = "Accounts";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<!-- DataTables -->
+<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm float-end" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal" style="margin-left: 10px;">Create</a>
+                <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th class="text-center">Action</th>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Phone</th>
+                            <th>Complete Address</th>
+                            @*              <th>Birthday</th> *@
+                            <th>Gender</th>
+                            <th>Salary</th>
+                            <th>Date Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var Count = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            Count++;
+                            <tr>
+                                <td>
+                                    @Count
+                                </td>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a href="#" onclick="Edit(@item.Id)" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
+                                            <li><a href="#" onclick="Delete(@item.Id)" class="dropdown-item"><i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>@item.Email</td>
+                                <td>@item.FirstName @item.MiddleName @item.LastName</td>
+                                <td>@item.ContactNumber</td>
+                                <td>@item.CompleteAddress</td>
+                                @*       <td>@item.Birthday.ToString("MMMM dd, yyyy")</td> *@
+                                <td>@item.Gender</td>
+                                <td>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.Salary)</td>
+                                <td>@item.DateCreated.ToString("MMMM dd, yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+@{
+    var Users = ViewBag.Users as SelectList;
+}
+
+<div id="CreateUpdateModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div hidden>
+                            <input id="Id" type="text" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="UserId">User</label>
+                                <select id="UserId" class="form-control" value="" required>
+                                    <option value="">- Select User -</option>
+                                    @foreach (var item in Users)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="FirstName" class="form-label">First Name</label>
+                                <input id="FirstName" placeholder="First Name" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="MiddleName" class="form-label">Middle Name</label>
+                                <input id="MiddleName" placeholder="Middle Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="LastName" class="form-label">Last Name</label>
+                                <input id="LastName" placeholder="Last Name" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12" hidden>
+                            <div class="mb-3">
+                                <label for="Birthday" class="form-label">Birthday</label>
+                                <input id="Birthday" placeholder="Birthday" type="date" class="form-control" value="2023-10-01">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="CompleteAddress" class="form-label">Complete Address</label>
+                                <textarea id="CompleteAddress" placeholder="Complete Address" type="date" class="form-control" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="ContactNumber" class="form-label">Contact Number</label>
+                                <input id="ContactNumber" placeholder="Contact Number" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Gender">Gender</label>
+                                <select id="Gender" class="form-control" value="" required>
+                                    <option value="">- Gender -</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Salary" class="form-label">Salary</label>
+                                <input id="Salary" placeholder="Salary" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12" hidden>
+                            <div class="mb-3">
+                                <label for="SeniorCitizenID" class="form-label">Senior Citizen ID</label>
+                                <input id="SeniorCitizenID" placeholder="Senior Citizen ID" type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12" hidden>
+                            <div class="mb-3">
+                                <label for="PWDID" class="form-label">PWD ID</label>
+                                <input id="PWDID" placeholder="PWD ID" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button onclick="SaveForm()" type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- JAVASCRIPT -->
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+
+
+<!-- Required datatable js -->
+<script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/assets/libs/jszip/jszip.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>
+
+<!-- App js -->
+<script src="~/assets/js/pages/modal.init.js"></script>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+
+<script src="~/assets/js/app.js"></script>
+<script>
+    var ID = $("#id").val();
+
+    function convertDateTimeToDate(dateTime) {
+        var date = new Date(dateTime);
+        var day = date.getDate();
+        var month = date.getMonth() + 1; // Months are zero-based
+        var year = date.getFullYear();
+
+        // Pad single-digit day and month with leading zeros
+        var formattedDay = day < 10 ? '0' + day : day;
+        var formattedMonth = month < 10 ? '0' + month : month;
+        var formattedDate = year + '-' + formattedMonth + '-' + formattedDay;
+        return formattedDate;
+    }
+
+    function SaveForm() {
+        var data = {
+            Id: ID,
+            UserId: $("#UserId").val(),
+            LastName: $("#LastName").val(),
+            FirstName: $("#FirstName").val(),
+            MiddleName: $("#MiddleName").val(),
+            Birthday: $("#Birthday").val(),
+            CompleteAddress: $("#CompleteAddress").val(),
+            ContactNumber: $("#ContactNumber").val(),
+            Gender: $("#Gender").val(),
+            Salary: $("#Salary").val(),
+            SeniorCitizenID: $("#SeniorCitizenID").val(),
+            PWDID: $("#PWDID").val(),
+        };
+        if (data.FirstName != "" && data.LastName != "" && data.UserId != "" && data.CompleteAddress != "" && data.ContactNumber != "" && data.Gender != "" && data.Salary != "") {
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Are you sure all details are correct?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("Save", "Staffs")',
+                        type: 'POST',
+                        data: data,
+                        success: function (data) {
+                            if (data.success == true) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Record was successfully saved!',
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    allowOutsideClick: false,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '@Url.Action("Index", "Staffs")';
+                                    }
+                                });
+                            }
+                            else {
+                                Swal.fire('Oops!', data.message, 'info');
+                            }
+
+                        },
+                        error: function (error) {
+                            Swal.fire('Oops!', 'Something went wrong!', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    function Create() {
+        ID = 0;
+        $("#ModalTitle").text("Create Staff").trigger("change");
+    }
+    function Edit(Id) {
+        $("#ModalTitle").text("Update Staff").trigger("change");
+
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+        $.ajax({
+            url: '@Url.Action("Edit", "Staffs")',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (date) {
+                $("#Id").val(Id).trigger("change");
+                $("#UserId").val(date.userId).trigger("change");
+                $("#LastName").val(date.lastName).trigger("change");
+                $("#FirstName").val(date.firstName).trigger("change");
+                $("#MiddleName").val(date.middleName).trigger("change");
+                $("#Birthday").val(convertDateTimeToDate(date.birthday)).trigger("change");
+                $("#CompleteAddress").val(date.completeAddress).trigger("change");
+                $("#ContactNumber").val(date.contactNumber).trigger("change");
+                $("#Gender").val(date.gender).trigger("change");
+                $("#Salary").val(date.salary).trigger("change");
+                $("#SeniorCitizenID").val(date.seniorCitizenID).trigger("change");
+                $("#PWDID").val(date.pwdid).trigger("change");
+
+                console.log(date);
+            },
+            error: function (error) {
+                Swal.fire('Oops!', 'Something went wrong!', 'error');
+            }
+        });
+    }
+    function Delete(Id) {
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Staffs")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Record was successfully deleted!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "Staffs")';
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire('Oops!', 'Something went wrong!', 'error');
+                    }
+                });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelled!', 'Your record is safe!', 'error');
+            }
+        });
+    }
+</script>

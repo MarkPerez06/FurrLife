@@ -1,0 +1,35 @@
+﻿@using System.Globalization;
+@model IEnumerable<CartProductsView>
+@{
+    decimal Total = 0;
+}
+@foreach (var item in Model)
+{
+    <a href="javascript: void(0);" class="text-reset notification-item">
+        <div class="d-flex">
+            <img src="@item.ProductImageURL"
+                 class="me-3 avatar-xs" alt="user-pic">
+            <div class="flex-grow-1">
+                <h6 class="mb-1">@item.ProductDescription</h6>
+                <div class="font-size-12 text-muted">
+                    @if (item.ProductDiscounts > 0)
+                    {
+                        var DiscountedPrice = (item.ProductPrice - (item.ProductPrice * item.ProductDiscounts) / 100);
+                        <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.ProductPrice)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b> x (<b>@item.CartQuantity</b>)</p>
+                        Total = Total + (Convert.ToDecimal(DiscountedPrice) * Convert.ToDecimal(item.CartQuantity));
+                    }
+                    else
+                    {
+                        <p class="mb-1" key="t-simplified"><b>₱@item.ProductPrice</b> x (<b>@item.CartQuantity</b>)</p>
+                        Total = Total + (Convert.ToDecimal(item.ProductPrice) * Convert.ToDecimal(item.CartQuantity));
+                    }
+                </div>
+            </div>
+        </div>
+    </a>
+}
+<div class="d-flex" style="background-color: red">
+    <div class="flex-grow-1 col-12" >
+        <h5 class="mb-1 mt-1 text-white" style="margin-left: 15px">Total: <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</b></h5>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+﻿<!-- ========== Left Sidebar Start ========== -->
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <li class="menu-title" key="t-menu">Menu</li>
+
+
+                <li>
+                    <a href="@Url.Action("Index", "Dashboard")" class="waves-effect">
+                        @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
+                        {
+                            <span>Dashboard</span>
+                        }
+                        else
+                        {
+                            <span>My Account</span>
+                        }
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Appointments")" class="waves-effect">
+                        <span>Appointments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "Services")" class="waves-effect">
+                        <span>Services</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="@Url.Action("Index", "MenuProducts")" class="waves-effect">
+                        <span>Products</span>
+                    </a>
+                </li>
+                @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
+                {
+                    <li>
+                        <a href="javascript: void(0);" class="waves-effect">
+                            <span>Manage Accounts</span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                       @*      <li><a href=@Url.Action("Index", "Users")>System User</a></li> *@
+                            @if (ViewBag.Persons.IsAdmin == true)
+                            {
+                                <li><a href=@Url.Action("Index", "Admin")>Administrator</a></li>
+                                <li><a href=@Url.Action("Index", "Staffs")>Veterinarian</a></li>
+                            }
+                            <li><a href=@Url.Action("Index", "Customers")>Customer</a></li>
+                        </ul>
+                    </li>
+                }
+
+                @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
+                {
+                    <li>
+                        <a href="javascript: void(0);" class="waves-effect">
+                            <span>Maintenance</span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href=@Url.Action("Index", "Menu")>Category</a></li>
+                            <li><a href=@Url.Action("Index", "Units")>Units</a></li>
+                            <li><a href=@Url.Action("Index", "Products")>Products</a></li>
+                            <li><a href=@Url.Action("Index", "Discounts")>Discounts</a></li>
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<!-- Left Sidebar End -->

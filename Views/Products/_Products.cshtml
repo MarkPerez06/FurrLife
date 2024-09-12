@@ -1,0 +1,68 @@
+﻿@using System.Globalization;
+@model IEnumerable<Products>
+@foreach (var item in Model)
+{
+    var IsActiveStatus = "";
+
+    @if (item.IsActive == false)
+    {
+        IsActiveStatus = "darkgray";
+    }
+
+    <div class="col-xl-4 col-sm-6">
+        <div class="card">
+            <div class="card-body" style="background-color: @IsActiveStatus; border: 1px solid darkgray">
+                <div class="product-img position-relative">
+                    @if (item.Discounts > 0)
+                    {
+                        <div class="avatar-sm product-ribbon">
+                            <span class="avatar-title rounded-circle  bg-success">
+                                - @item.Discounts%
+                            </span>
+                        </div>
+                    }
+                    <img src="@item.ImageURL" alt="" class="img-fluid mx-auto d-block">
+                </div>
+                <div class="mt-4 text-center">
+                    <h5 class="mb-3 text-truncate">
+                        <a href="javascript: void(0);" class="text-dark">
+                            @item.Name
+                        </a>
+                    </h5>
+                    <p class="mb-3 text-truncate">@item.Description</p>
+                    <p class="text-muted">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= item.ProductRating)
+                            {
+                                <i class="bx bxs-star text-warning"></i>
+                            }
+                            else
+                            {
+                                <i class="bx bxs-star"></i>
+                            }
+
+                        }
+                    </p>
+
+                    @if (item.Discounts > 0)
+                    {
+                        var DiscountedPrice = (item.Price - (item.Price * item.Discounts) / 100);
+                        <h5 class="my-0"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.Price)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b></h5>
+                    }
+                    else
+                    {
+                        <h5 class="my-0"><b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.Price)</b></h5>
+                    }
+                    <br>
+                    <a href="javascript: void(0);" class="btn btn-success waves-effect waves-light btn-sm col-lg-12" onclick="Edit(@item.Id)" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
+                        <i class="bx bx-pencil"></i> Edit
+                    </a>
+                    @* <a href="javascript: void(0);" class="me-2 text-black" onclick="Delete(@item.Id)">
+                <i class="bx bx-trash text-danger"></i> Delete
+                </a> *@
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,206 @@
+﻿@model List<Users>
+@{
+    ViewBag.Title = "System Users";
+    ViewBag.pTitle = "System Users";
+    ViewBag.pageTitle = "Accounts";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<!-- DataTables -->
+<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <a href="~/Identity/Account/Register" class="btn btn-primary waves-effect waves-light btn-sm float-end"><i class="mdi mdi-account-box me-1"></i> Register New User</a>
+                <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Action</th>
+                            <th>UserName</th>
+                            <th>Activated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var Count = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            Count++;
+                            <tr>
+                                <td>
+                                    @Count
+                                </td>
+                                <td class="text-center">
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-dots-horizontal font-size-18"></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a href="#" onclick="Edit('@item.Id.ToString()','@item.Email','@item.EmailConfirmed')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>@item.Email</td>
+                                <td>@item.EmailConfirmed</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+<div id="CreateUpdateModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div hidden>
+                            <input id="Id" type="text" class="form-control">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Username" class="form-label">Username</label>
+                                <input id="Username" placeholder="Username" type="text" class="form-control" required readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="EmailConfirmed">Account Status</label>
+                                <select id="EmailConfirmed" class="form-control" value="" required>
+                                    <option value="">- Select -</option>
+                                    <option value="True">Activated</option>
+                                    <option value="False">Deactivated</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                                <hr />
+                            <label>CHANGE PASSWORD</label>
+                            <br />
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Password" class="form-label">New Password</label>
+                                <input id="Password" placeholder="New Password" type="password" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+                                <input id="ConfirmPassword" placeholder="ConfirmPassword" type="password" class="form-control">
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button onclick="SaveForm()" type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- JAVASCRIPT -->
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+
+
+<!-- Required datatable js -->
+<script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/assets/libs/jszip/jszip.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>
+
+<!-- App js -->
+<script src="~/assets/js/pages/modal.init.js"></script>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+
+<script src="~/assets/js/app.js"></script>
+<script>
+    var ID = $("#Id").val();
+
+    function SaveForm() {
+        var data = {
+            Id: $("#Id").val(),
+            Username: $("#Username").val(),
+            Password: $("#Password").val(),
+            ConfirmPassword: $("#ConfirmPassword").val(),
+            EmailConfirmed: $("#EmailConfirmed").val()
+        };
+        if (data.Username != "" && data.EmailConfirmed != "") {
+            $.ajax({
+                url: '@Url.Action("Save", "Users")',
+                type: 'POST',
+                data: data,
+                success: function (data) {
+                    if (data.success == true) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Record was successfully saved!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "Users")';
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire('Oops!', data.message, 'info');
+                    }
+
+                },
+                error: function (error) {
+                    Swal.fire('Oops!', 'Something went wrong!', 'error');
+                }
+            });
+        }
+    }
+
+    function Edit(Id, Email, EmailConfirmed) {
+        $("#ModalTitle").text("Update User").trigger("change");
+        $("#Id").val(Id).trigger("change");
+        $("#Username").val(Email).trigger("change");
+        $("#EmailConfirmed").val(EmailConfirmed).trigger("change");
+    }
+</script>

@@ -1,0 +1,73 @@
+﻿<header id="page-topbar">
+    <div class="navbar-header">
+        <div class="d-flex">
+            <!-- LOGO -->
+            <div class="navbar-brand-box">
+                <a href=@Url.Action("Index", "MenuProducts") class="logo logo-dark">
+                    <span class="logo-sm">
+                        <b class="text-black">FurrLife</b>
+                    </span>
+                    <span class="logo-lg">
+                        <b class="text-black">FurrLife</b>
+                    </span>
+                </a>
+
+                <a href=@Url.Action("Index", "MenuProducts") class="logo logo-light">
+                    <span class="logo-sm">
+                        <b class="text-black">FurrLife</b>
+                    </span>
+                    <span class="logo-lg">
+                        <b class="text-black">FurrLife</b>
+                    </span>
+                </a>
+            </div>
+            <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                <i class="fa fa-fw fa-bars"></i>
+            </button>
+        </div>
+
+        <div class="d-flex">
+            @* <div class="dropdown d-inline-block mt-1">
+                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-cart bx-tada"></i>
+                    <span class="badge bg-danger rounded-pill" id="TotalAddedCart"></span>
+                </button>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                     aria-labelledby="page-header-notifications-dropdown">
+                    <div class="p-3">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="m-0" key="t-notifications"> Cart Summary </h6>
+                            </div>
+                            <div class="col-auto">
+                                <a href="@Url.Action("Index", "CartProducts")" class="small" key="t-view-all"> View All</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-simplebar style="" id="Load_AddedToCartProducts">
+                        
+                    </div>
+                    <div class="p-2 border-top d-grid">
+                        <a class="btn btn-sm btn-link font-size-14 text-center" href="@Url.Action("Index", "CartProducts")">
+                            <i class="mdi mdi-arrow-right-circle me-1"></i> <span key="t-view-more">View More..</span>
+                        </a>
+                    </div>
+                </div>
+            </div> *@
+            <div class="dropdown d-inline-block mt-4">
+                <a href="~/Identity/Account/Login" class="btn header-item noti-icon mt-2 text-black">
+                    Get Started
+                </a>
+            </div>
+@*             <div class="dropdown d-inline-block">
+                <a href="~/Identity/Account/Login" type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-user"></i>
+                    <span class="d-none d-xl-inline-block ms-1" key="t-henry">@User.Identity?.Name</span>
+                    <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
+                </a>
+            </div> *@
+        </div>
+    </div>
+</header>

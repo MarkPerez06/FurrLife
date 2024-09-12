@@ -1,0 +1,7 @@
+﻿@model IEnumerable<Menu>
+
+<li><a href="javascript: void(0);" onclick="LoadProductsAll('Products','_ProductsAll')"><i class="mdi mdi-chevron-right me-1"></i> All Menu</a></li>
+@foreach (var item in Model)
+{
+    <li><a href="javascript: void(0);" onclick="LoadMenu('@item.Id','@item.Name','@item.Description')"><i class="mdi mdi-chevron-right me-1"></i> @item.Name</a></li>
+}

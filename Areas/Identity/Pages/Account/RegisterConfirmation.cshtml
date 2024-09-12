@@ -1,0 +1,35 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewBag.Title = "Register User";
+    ViewBag.pTitle = "Register User";
+    ViewBag.pageTitle = "Accounts";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@{
+    ViewData["Title"] = "Activate Account";
+    var Person = new
+    {
+        IsAdmin = false,
+        IsStaff = true,
+        IsMember = false
+    };
+    ViewBag.Persons = Person;
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (@Model.DisplayConfirmAccountLink)
+    {
+<p>
+            <a id="confirm-link" href="@Model.EmailConfirmationUrl" class="btn btn-primary waves-effect waves-light">Click here to activate your account</a>
+</p>
+    }
+    else
+    {
+<p>
+        Please check your email to confirm your account.
+</p>
+    }
+}
+

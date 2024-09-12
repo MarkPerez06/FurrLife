@@ -1,0 +1,25 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewBag.Title = "Register User";
+    ViewBag.pTitle = "Register User";
+    ViewBag.pageTitle = "Accounts";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+@{
+    ViewData["Title"] = "Account Activated";
+    var Person = new
+    {
+        IsAdmin = false,
+        IsStaff = true,
+        IsMember = false
+    };
+    ViewBag.Persons = Person;
+}
+
+<h1>@ViewData["Title"]</h1>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="mt-4 d-grid">
+    <a href="~/Users/" class="btn btn-secondary waves-effect waves-light">Back</a>
+</div>

@@ -1,0 +1,378 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Globalization;
+@model IEnumerable<CartProductsView>
+@{
+    ViewBag.Title = "FurrLife";
+    ViewBag.pTitle = "FurrLife";
+    ViewBag.pageTitle = "Cart";
+
+    // Get the SignInManager and UserManager instances from the HttpContext.RequestServices
+    var _signInManager = Context.RequestServices.GetRequiredService<SignInManager<IdentityUser>>();
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+
+    if (_signInManager.IsSignedIn(User))
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+
+<!-- ION Slider -->
+<link href="~/assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" />
+
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0 table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 10%;">Product</th>
+                                <th style="width: 25%;">Product Desc</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th colspan="2" style="width: 10%;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                decimal Total = 0;
+                                decimal Discount = 0;
+                                var Quantity = 0;
+                            }
+                            @foreach (var item in Model)
+                            {
+                                var DiscountedPrice = (item.ProductPrice - (item.ProductPrice * item.ProductDiscounts) / 100);
+                                decimal TotalPrice = 0;
+                                decimal SaveDiscount = Convert.ToDecimal(item.ProductPrice) - Convert.ToDecimal(DiscountedPrice);
+
+                                Discount = Discount + SaveDiscount;
+                                Quantity = Quantity + Convert.ToInt32(item.CartQuantity);
+                                if (item.ProductDiscounts > 0)
+                                {
+                                    TotalPrice = (Convert.ToDecimal(DiscountedPrice) * Convert.ToDecimal(item.CartQuantity));
+                                    Total = Total + TotalPrice;
+                                }
+                                else
+                                {
+                                    TotalPrice = (Convert.ToDecimal(item.ProductPrice) * Convert.ToDecimal(item.CartQuantity));
+                                    Total = Total + TotalPrice;
+                                }
+                                <tr>
+                                    <td>
+                                        <img src="@item.ProductImageURL" alt="product-img"
+                                             title="product-img" class="avatar-md" />
+                                    </td>
+                                    <td>
+                                        <h5 class="font-size-14 text-truncate"><a href="javascript:void(0)" class="text-dark">@item.ProductName</a></h5>
+                                        <p class="mb-1" key="t-simplified">@item.ProductDescription</p>
+                                    </td>
+                                    <td>
+                                        @if (item.ProductDiscounts > 0)
+                                        {
+                                            <span class="text-success">@item.ProductDiscounts% OFF</span>
+                                            <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.ProductPrice)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b></p>
+                                            <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                        }
+                                        else
+                                        {
+                                            <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b></p>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="me-3" style="width: 130px;">
+                                            <input class="CartQuantity" type="text" value="@item.CartQuantity" name="CartQuantity" min="1" id="CartQuantity_@item.CartId" onchange="CartQuantity(@item.CartId, @DiscountedPrice)">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <p class="mb-1" key="t-simplified"><b id="TotalPrice_@item.CartId">@string.Format(new CultureInfo("en-PH", false),"{0:C}", TotalPrice)</b></p>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" onclick="Delete(@item.CartId)" class="action-icon text-danger"> <i class="mdi mdi-trash-can font-size-18"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="1" class="bg-warning text-white"><h5 class="text-white mt-2"><b>Customer Request</b></h5></td>
+                                <td colspan="3" class="bg-warning text-white">
+                                    <textarea class="form-control" placeholder="Enter your request here..." id="CustomerRequest"></textarea>
+                                </td>
+                                <td colspan="2" class="bg-primary text-white"><h5 class="text-white mt-2"><b>Grand Total: <span id="GrandTotal">@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</span></b></h5></td>
+                            </tr>
+                            <tr>
+                                <td colspan="6" class="bg-warning text-white">
+                                    <div class="col-md-12">
+                                        <div class="mb-3">
+                                            <label for="Payment">Payment Method</label>
+                                            <select id="Payment" class="form-control" value="">
+                                                <option value=""> - Select Payment Method - </option>
+                                                <option value="Cash">Via Cash</option>
+                                                <option value="Membership Card">Via Membership Card</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href=@Url.Action("Index", "MenuProducts") class="btn btn-secondary float-start">
+                                        <i class="mdi mdi-arrow-left me-1"></i> Back
+                                    </a>
+                                </td>
+                                <td colspan="4"></td>
+                                <td>
+                                    <a class="btn btn-success float-end" onclick="PlaceOrder()">
+                                        <i class="mdi mdi-cart-arrow-right me-1"></i> Place Order
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<!-- JAVASCRIPT -->
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+
+
+<!-- Ion Range Slider-->
+<script src="~/assets/libs/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
+
+<!-- App js -->
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Bootrstrap touchspin -->
+<script src="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
+
+<script src="~/assets/js/pages/ecommerce-cart.init.js"></script>
+
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+
+<script src="~/assets/js/app.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        TotalAddedCart();
+        LoadPartialView("MenuProducts", "_AddedToCartProducts");
+    });
+
+    function TotalAddedCart() {
+        $.ajax({
+            url: '@Url.Action("TotalAddedCart", "MenuProducts")',
+            type: 'GET',
+            dataType: 'json',
+            success: function (result) {
+                $("#TotalAddedCart").html(result);
+            },
+            error: function (error) {
+                Swal.fire('Oops!', 'Something went wrong!', 'error');
+            }
+        });
+    }
+
+    function LoadPartialView(Controller, Action) {
+        $.ajax({
+            url: "/" + Controller + "/" + Action,
+            type: 'GET',
+            success: function (partialView) {
+                $("#Load" + Action).html(partialView);
+            },
+            error: function () {
+                console.log('Failed to load the partial view');
+            }
+        });
+    }
+
+    $(".CartQuantity").TouchSpin({
+        min: 1,        // Minimum value
+        max: 100,      // Maximum value
+        step: 1,       // Step value
+        decimals: 0,   // Number of decimal places
+        boostat: 5,    // Step when boosted
+        maxboostedstep: 10, // Maximum step when boosted
+    });
+
+    var ID = $("#id").val();
+
+    function CartQuantity(CartId, Price) {
+        var QTY = $("#CartQuantity_" + CartId).val();
+        if (QTY == 0) {
+            QTY = 1;
+            $("#CartQuantity_" + CartId).val(QTY);
+        }
+
+        //var TotalPrice = new Number(Price * QTY).toFixed(2);
+        //$("#TotalPrice_" + CartId).text("₱" + TotalPrice);
+
+        $.ajax({
+            url: '@Url.Action("Save", "CartProducts")',
+            type: 'POST',
+            data: {
+                Id: CartId,
+                Quantity: QTY,
+            },
+            success: function (data) {
+                window.location.href = '@Url.Action("Index", "CartProducts")';
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function PlaceOrder() {
+        var Payment = $("#Payment").val();
+        var CustomerRequest = $("#CustomerRequest").val();
+
+        if (@Total == 0) {
+            Swal.fire('Empty!', 'The cart is empty!', 'info');
+        }
+        else {
+            if (Payment != null && Payment != "") {
+                Swal.fire({
+                    title: 'Place Order Now?',
+                    text: 'Once done you can make your payment at the cashier area!',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonText: 'Done',
+                    cancelButtonText: 'Back',
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("PlaceOrder", "CartProducts")',
+                            type: 'POST',
+                            data: {
+                                Payment: Payment,
+                                CustomerRequest: CustomerRequest,
+                            },
+                            success: function (data) {
+                                Swal.fire({
+                                    title: data,
+                                    text: 'Order was successfully placed! your order number is ' + data,
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    allowOutsideClick: false,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '@Url.Action("Index", "MenuProducts")';
+                                    }
+                                });
+                            },
+                            error: function (error) {
+                                Swal.fire('Oops!', 'Something went wrong!', 'error');
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                Swal.fire('Invalid!', 'Please select the Payment Method!', 'info');
+            }
+        }
+    }
+    function SaveForm() {
+        var data = {
+            Id: ID,
+            MenuId: $("#MenuId").val(),
+            ImageURL: $("#File")[0].files[0],
+            Name: $("#Name").val(),
+            Description: $("#Description").val(),
+            Price: $("#Price").val(),
+            Quantity: $("#Quantity").val(),
+            Discounts: $("#Discounts").val(),
+            ProductRating: $("#ProductRating").val(),
+            UnitId: $("#UnitId").val(),
+            IsActive: $("#IsActive").val()
+        };
+
+        if (data.Name != "" && data.MenuId != "" && data.IsActive) {
+            $.ajax({
+                url: '@Url.Action("Save", "MenuProducts")',
+                type: 'POST',
+                // contentType: false,
+                // processData: false,
+                data: data,
+                success: function (data) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Record was successfully saved!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("Index", "MenuProducts")';
+                        }
+                    });
+                },
+                error: function (error) {
+                    Swal.fire('Oops!', 'Something went wrong!', 'error');
+                }
+            });
+        }
+    }
+
+    function Delete(Id) {
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "CartProducts")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Record was successfully deleted!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "CartProducts")';
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire('Oops!', 'Something went wrong!', 'error');
+                    }
+                });
+
+            }
+        });
+    }
+</script>
+
+
