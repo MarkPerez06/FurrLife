@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ivYrO7XV7P6HTvHNCdgoURrpS+onOhuaYObr6017Z7vJfWRE5hwWXeePASXSsaq1CIcz4NDCV/XRyvHqaWa4ew==",
+  "dgSpecHash": "gkUlqX6H23TmCiWCVVLuaUkrgmRvtGiQ/pibB/MuHaj+Cvb39drEMNCZrAgDnJHPbHTOIIVeFV2wVZDhcRXjkg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\0001\\Documents\\GitHub\\FurrLife\\FurrLife\\FurrLife.csproj",
+  "projectFilePath": "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\FurrLife.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\0001\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\0001\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
