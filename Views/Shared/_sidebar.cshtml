@@ -11,7 +11,7 @@
 
 
                 <li>
-                    <a href="@Url.Action("Index", "Dashboard")" class="waves-effect">
+                    <a href="@Url.Action("Index", "Dashboard-main")" class="waves-effect">
                         @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
                         {
                             <span>Dashboard</span>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Index", "MenuProducts")" class="waves-effect">
+                    <a href="@Url.Action("Index", "MenuProducts1")" class="waves-effect">
                         <span>Products</span>
                     </a>
                 </li>
@@ -51,7 +51,7 @@
                                 <li><a href=@Url.Action("Index", "Admin")>Administrator</a></li>
                                 <li><a href=@Url.Action("Index", "Staffs")>Veterinarian</a></li>
                             }
-                            <li><a href=@Url.Action("Index", "Customers")>Customer</a></li>
+                            <li><a href=@Url.Action("Index", "Customer")>Customer</a></li>
                         </ul>
                     </li>
                 }
