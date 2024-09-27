@@ -25,20 +25,6 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
-            var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name).FirstOrDefault();
-            if (Persons != null)
-            {
-                ViewBag.Persons = Persons;
-            }
-            else
-            {
-                Persons Model = new Persons();
-                Model.IsAdmin = false;
-                Model.IsStaff = false;
-                Model.IsMember = true;
-                ViewBag.Persons = Model;
-            }
-
             List<Discounts> discounts = _context.Discounts.Where(m => m.IsActive == true).OrderBy(m => m.Percentage).ToList();
             ViewBag.Discounts = new SelectList(discounts, "Percentage", "Name");
 

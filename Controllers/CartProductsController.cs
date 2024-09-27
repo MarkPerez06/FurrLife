@@ -22,20 +22,6 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
-            var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name).FirstOrDefault();
-            if (Persons != null)
-            {
-                ViewBag.Persons = Persons;
-            }
-            else
-            {
-                Persons Model = new Persons();
-                Model.IsAdmin = false;
-                Model.IsStaff = false;
-                Model.IsMember = true;
-                ViewBag.Persons = Model;
-            }
-
             var model = from cp in _context.CartProducts
                         join p in _context.Products
                         on cp.ProductId equals p.Id

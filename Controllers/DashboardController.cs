@@ -64,30 +64,21 @@ namespace FurrLife.Controllers
         {
             if (_signInManager.IsSignedIn(User))
             {
-                var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name).FirstOrDefault();
-                if (Persons != null)
-                {
-                    var OrdersModel = _context.Orders.Where(m => m.IsPaid == false).ToList();
-                    var TransactionsModel = _context.Orders.Where(m => m.IsPaid == true).ToList();
-                    decimal TransactionAmount = TransactionsModel.Sum(m => m.TotalAmount - (m.TotalAmount * Convert.ToDecimal(m.Discounts) / 100));
+                var OrdersModel = _context.Orders.Where(m => m.IsPaid == false).ToList();
+                var TransactionsModel = _context.Orders.Where(m => m.IsPaid == true).ToList();
+                decimal TransactionAmount = TransactionsModel.Sum(m => m.TotalAmount - (m.TotalAmount * Convert.ToDecimal(m.Discounts) / 100));
 
-                    var TransactionsMonthly = _context.Orders.Where(m => m.DateCreated.Month == DateTime.Now.Month && m.DateCreated.Year == DateTime.Now.Year && m.IsPaid == true).ToList();
-                    decimal TransactionsMonthlyAmount = TransactionsMonthly.Sum(m => m.TotalAmount - (m.TotalAmount * Convert.ToDecimal(m.Discounts) / 100));
+                var TransactionsMonthly = _context.Orders.Where(m => m.DateCreated.Month == DateTime.Now.Month && m.DateCreated.Year == DateTime.Now.Year && m.IsPaid == true).ToList();
+                decimal TransactionsMonthlyAmount = TransactionsMonthly.Sum(m => m.TotalAmount - (m.TotalAmount * Convert.ToDecimal(m.Discounts) / 100));
 
-                    ViewBag.TransactionAmount = TransactionAmount;
-                    ViewBag.TransactionsMonthlyAmount = TransactionsMonthlyAmount;
-                    ViewBag.OrdersCount = OrdersModel.Count;
-                    ViewBag.TransactionsCount = TransactionsModel.Count;
-                    ViewBag.Persons = Persons;
-                    var Year = _context.Orders.Where(m => m.IsPaid == true).Select(m => new { Year = m.DateCreated.Year }).Distinct().OrderByDescending(m => m.Year).ToList();
-                    ViewBag.Year = new SelectList(Year, "Year", "Year");
-                    var model = _context.Orders.ToList();
-                    return View(model);
-                }
-                else
-                {
-                    return Redirect("~/Identity/Account/Login");
-                }
+                ViewBag.TransactionAmount = TransactionAmount;
+                ViewBag.TransactionsMonthlyAmount = TransactionsMonthlyAmount;
+                ViewBag.OrdersCount = OrdersModel.Count;
+                ViewBag.TransactionsCount = TransactionsModel.Count;
+                var Year = _context.Orders.Where(m => m.IsPaid == true).Select(m => new { Year = m.DateCreated.Year }).Distinct().OrderByDescending(m => m.Year).ToList();
+                ViewBag.Year = new SelectList(Year, "Year", "Year");
+                var model = _context.Orders.ToList();
+                return View(model);
             }
             else
             {

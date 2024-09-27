@@ -19,17 +19,8 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
-            var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name && (m.IsAdmin == true || m.IsStaff == true)).FirstOrDefault();
-            if (Persons != null)
-            {
-                IEnumerable<Menu> model = _context.Menu.OrderByDescending(m => m.Id).ToList();
-                ViewBag.Persons = Persons;
-                return View(model);
-            }
-            else
-            {
-                return Redirect("~/Dashboard");
-            }
+            IEnumerable<Menu> model = _context.Menu.OrderByDescending(m => m.Id).ToList();
+            return View(model);
         }
 
         [HttpPost]

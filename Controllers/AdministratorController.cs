@@ -8,13 +8,13 @@ using System.Diagnostics;
 
 namespace FurrLife.Controllers
 {
-    public class UsersController : Controller
+    public class AdministratorController : Controller
     {
-        private readonly ILogger<UsersController> _logger;
+        private readonly ILogger<AdministratorController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
         private IPasswordHasher<IdentityUser> _passwordHasher;
-        public UsersController(ApplicationDbContext context, ILogger<UsersController> logger, SignInManager<IdentityUser> signInManager, IPasswordHasher<IdentityUser> passwordHasher)
+        public AdministratorController(ApplicationDbContext context, ILogger<AdministratorController> logger, SignInManager<IdentityUser> signInManager, IPasswordHasher<IdentityUser> passwordHasher)
         {
             _context = context;
             _logger = logger;
@@ -24,28 +24,12 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
-            var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name && (m.IsAdmin == true || m.IsStaff == true)).FirstOrDefault();
-            if (Persons != null)
-            {
-                IEnumerable<IdentityUser> model = _signInManager.UserManager.Users.ToList();
-                ViewBag.Persons = Persons;
-
-                List<Users> users = new List<Users>();
-
-                foreach (var item in model)
-                {
-                    users.Add(new Users { Id = item.Id, UserName = item.UserName, Email = item.Email, EmailConfirmed = item.EmailConfirmed, Password = item.PasswordHash });
-                }
-                return View(users);
-            }
-            else
-            {
-                return Redirect("~/Dashboard");
-            }
+            var users = _context.Users.ToList();
+            return View(users);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(string Id, string Username, string Password, string ConfirmPassword, string EmailConfirmed)
+        public async Task<IActionResult> Save(string Id, string Email, string PhoneNumber, string Password, string ConfirmPassword, string EmailConfirmed, string RoleId)
         {
             IdentityUser user = await _signInManager.UserManager.FindByIdAsync(Id);
             if (user != null)
@@ -58,7 +42,7 @@ namespace FurrLife.Controllers
                 {
                     user.EmailConfirmed = false;
                 }
-               
+
                 if ((Password != "" && Password != null) && (ConfirmPassword != "" && ConfirmPassword != null))
                 {
                     if (Password == ConfirmPassword)
@@ -70,7 +54,11 @@ namespace FurrLife.Controllers
                         return Json(new { success = false, message = "Password and Confirm Password doesn't match!" });
                     }
                 }
-                var model = await _signInManager.UserManager.UpdateAsync(user);
+                user.Email = Email;
+                user.NormalizedEmail = Email.ToUpper();
+                user.PhoneNumber = PhoneNumber;
+                user.SecurityStamp = RoleId != null ? RoleId : "3a8d4cdb-ee57-414d-9db5-a659ca451f45";
+                await _signInManager.UserManager.UpdateAsync(user);
 
                 return Json(new { success = true, message = "User was successfully updated!" });
 

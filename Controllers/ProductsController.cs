@@ -22,37 +22,28 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
-            var Persons = _context.Persons.Where(m => m.Email == User.Identity.Name && (m.IsAdmin == true || m.IsStaff == true)).FirstOrDefault();
-            if (Persons != null)
+            List<Discounts> discounts = _context.Discounts.Where(m => m.IsActive == true).OrderBy(m => m.Percentage).ToList();
+            ViewBag.Discounts = new SelectList(discounts, "Percentage", "Name");
+
+            List<Units> units = _context.Units.Where(m => m.IsActive == true).OrderBy(m => m.Name).ToList();
+            ViewBag.Units = new SelectList(units, "Id", "Name");
+
+            List<Menu> menu = _context.Menu.Where(m => m.IsActive == true).OrderBy(m => m.Name).ToList();
+            ViewBag.Menu = new SelectList(menu, "Id", "Name");
+
+
+            var products = _context.Products.OrderByDescending(m => m.Price).FirstOrDefault();
+            if (products != null)
             {
-                List<Discounts> discounts = _context.Discounts.Where(m => m.IsActive == true).OrderBy(m => m.Percentage).ToList();
-                ViewBag.Discounts = new SelectList(discounts, "Percentage", "Name");
-
-                List<Units> units = _context.Units.Where(m => m.IsActive == true).OrderBy(m => m.Name).ToList();
-                ViewBag.Units = new SelectList(units, "Id", "Name");
-
-                List<Menu> menu = _context.Menu.Where(m => m.IsActive == true).OrderBy(m => m.Name).ToList();
-                ViewBag.Menu = new SelectList(menu, "Id", "Name");
-
-
-                var products = _context.Products.OrderByDescending(m => m.Price).FirstOrDefault();
-                if (products != null)
-                {
-                    ViewBag.Products = products.Price;
-                    ViewBag.TopProductPrice = products.Price;
-                }
-                else
-                {
-                    ViewBag.Products = 100;
-                    ViewBag.TopProductPrice = 0;
-                }
-                ViewBag.Persons = Persons;
-                return View(menu);
+                ViewBag.Products = products.Price;
+                ViewBag.TopProductPrice = products.Price;
             }
             else
             {
-                return Redirect("~/Dashboard");
+                ViewBag.Products = 100;
+                ViewBag.TopProductPrice = 0;
             }
+            return View(menu);
         }
 
         public IActionResult _Menu()
@@ -98,7 +89,7 @@ namespace FurrLife.Controllers
                 IEnumerable<Products> modelFilter = _context.Products.Where(m => m.MenuId == MenuId && m.Price <= Price && m.ProductRating == ProductRating).OrderBy(m => m.Name).ToList();
                 model = modelFilter;
             }
-            else if(MenuId > 0 && Price > 0 && Discounts == 0 && ProductRating == 0)
+            else if (MenuId > 0 && Price > 0 && Discounts == 0 && ProductRating == 0)
             {
                 IEnumerable<Products> modelFilter = _context.Products.Where(m => m.MenuId == MenuId && m.Price <= Price).OrderBy(m => m.Name).ToList();
                 model = modelFilter;

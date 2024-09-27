@@ -1,9 +1,14 @@
-﻿@model List<Users>
+﻿@using Microsoft.AspNetCore.Identity;
+@using FurrLife.Models
+@using FurrLife.Static;
+@model IEnumerable<IdentityUser>
 @{
-    ViewBag.Title = "System Users";
-    ViewBag.pTitle = "System Users";
-    ViewBag.pageTitle = "Accounts";
+    ViewBag.Title = "Veterinarian";
+    ViewBag.pTitle = "Veterinarian";
+    ViewBag.pageTitle = "Veterinarian";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    ListRoles List = new ListRoles();
 }
 <!-- DataTables -->
 <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -16,14 +21,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <a href="~/Identity/Account/Register" class="btn btn-primary waves-effect waves-light btn-sm float-end"><i class="mdi mdi-account-box me-1"></i> Register New User</a>
                 <table id="datatable-buttons" class="table table-bordered dt-responsive nowrap w-100">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Action</th>
-                            <th>UserName</th>
-                            <th>Activated</th>
+                            <th>Username</th>
+                            <th>Email Address</th>
+                            <th>Phone Number</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,18 +44,41 @@
                                 <td>
                                     @Count
                                 </td>
+                                <td>@item.UserName</td>
+                                <td>@item.Email</td>
+                                <td>@item.PhoneNumber</td>
+                                <td>
+                                    @{
+                                        @foreach (var r in List.Roles.Where(m => m.Id == item.SecurityStamp))
+                                        {
+                                            <span>@r.Name</span>
+                                        }
+                                        @if (List.Roles.Where(m => m.Id == item.SecurityStamp).Count() == 0)
+                                        {
+                                            <span>No User Role</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.EmailConfirmed)
+                                    {
+                                        <spam>Activated</spam>
+                                    }
+                                    else
+                                    {
+                                        <spam>Deactivated</spam>
+                                    }
+                                </td>
                                 <td class="text-center">
                                     <div class="dropdown">
                                         <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="mdi mdi-dots-horizontal font-size-18"></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a href="#" onclick="Edit('@item.Id.ToString()','@item.Email','@item.EmailConfirmed')" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
+                                            <li><a href="#" onclick="Edit('@item.Id.ToString()','@item.UserName', '@item.Email','@item.PhoneNumber','@item.EmailConfirmed','@item.SecurityStamp') " class="dropdown-item" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal"><i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit</a></li>
                                         </ul>
                                     </div>
                                 </td>
-                                <td>@item.Email</td>
-                                <td>@item.EmailConfirmed</td>
                             </tr>
                         }
                     </tbody>
@@ -79,16 +109,41 @@
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
+                                <label for="Email" class="form-label">Email</label>
+                                <input id="Email" placeholder="Email" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="PhoneNumber" class="form-label">Phone Number</label>
+                                <input id="PhoneNumber" placeholder="Phone Number" type="text" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="RoleId">Account Role</label>
+                                <select id="RoleId" class="form-control" value="" required>
+                                    @foreach (var item in List.Roles.Where(m => m.Id == UserRoles.Veterinarian.Id))
+                                    {
+                                        <option value="@item.Id">@item.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
                                 <label for="EmailConfirmed">Account Status</label>
                                 <select id="EmailConfirmed" class="form-control" value="" required>
-                                    <option value="">- Select -</option>
+                                    <option value="" selected>- Select -</option>
                                     <option value="True">Activated</option>
                                     <option value="False">Deactivated</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-12">
-                                <hr />
+                            <hr />
                             <label>CHANGE PASSWORD</label>
                             <br />
                         </div>
@@ -104,7 +159,7 @@
                                 <input id="ConfirmPassword" placeholder="ConfirmPassword" type="password" class="form-control">
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
@@ -161,14 +216,16 @@
     function SaveForm() {
         var data = {
             Id: $("#Id").val(),
-            Username: $("#Username").val(),
+            Email: $("#Email").val(),
+            PhoneNumber: $("#PhoneNumber").val(),
             Password: $("#Password").val(),
             ConfirmPassword: $("#ConfirmPassword").val(),
-            EmailConfirmed: $("#EmailConfirmed").val()
+            EmailConfirmed: $("#EmailConfirmed").val(),
+            RoleId: $("#RoleId").val()
         };
-        if (data.Username != "" && data.EmailConfirmed != "") {
+        if (data.Email != "" && data.EmailConfirmed != "") {
             $.ajax({
-                url: '@Url.Action("Save", "Users")',
+                url: '@Url.Action("Save", "Veterinarian")',
                 type: 'POST',
                 data: data,
                 success: function (data) {
@@ -181,7 +238,7 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '@Url.Action("Index", "Users")';
+                                window.location.href = '@Url.Action("Index", "Veterinarian")';
                             }
                         });
                     }
@@ -197,10 +254,13 @@
         }
     }
 
-    function Edit(Id, Email, EmailConfirmed) {
+    function Edit(Id, UserName, Email, PhoneNumber, EmailConfirmed, RoleId) {
         $("#ModalTitle").text("Update User").trigger("change");
         $("#Id").val(Id).trigger("change");
-        $("#Username").val(Email).trigger("change");
+        $("#Username").val(UserName).trigger("change");
+        $("#Email").val(Email).trigger("change");
+        $("#PhoneNumber").val(PhoneNumber).trigger("change");
         $("#EmailConfirmed").val(EmailConfirmed).trigger("change");
+        $("#RoleId").val(RoleId).trigger("change");
     }
 </script>

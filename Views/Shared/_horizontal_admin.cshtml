@@ -186,14 +186,11 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" href="@Url.Action("Index", "Dashboard")">
                             <i class="bx bx-home-circle me-2"></i>
-                            @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
-                            {
+
                                 <span key="t-dashboards">Dashboard</span>
-                            }
-                            else
-                            {
-                                <span key="t-dashboards">My Account</span>
-                            }
+
+                                @* <span key="t-dashboards">My Account</span> *@
+
                         </a>
                     </li>
 
@@ -205,8 +202,6 @@
                         </a>
                     </li>
 
-                    @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
-                    {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button">
                                 <i class="bx bx-tone me-2"></i>
@@ -224,10 +219,7 @@
                                 <a href=@Url.Action("Index", "Customers") class="dropdown-item" key="t-default">Customer</a>
                             </div>
                         </li>
-                    }
 
-                    @if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true)
-                    {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-dashboard" role="button">
                                 <i class="bx bx-customize me-2"></i>
@@ -241,7 +233,7 @@
                                 <a href=@Url.Action("Index", "Discounts") class="dropdown-item" key="t-default">Discounts</a>
                             </div>
                         </li>
-                    }
+ 
                 </ul>
             </div>
         </nav>
