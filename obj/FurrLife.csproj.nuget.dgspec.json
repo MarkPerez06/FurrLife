@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\FurrLife.csproj": {}
+    "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\FurrLife.csproj": {}
   },
   "projects": {
-    "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\FurrLife.csproj": {
+    "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\FurrLife.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\FurrLife.csproj",
+        "projectUniqueName": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\FurrLife.csproj",
         "projectName": "FurrLife",
-        "projectPath": "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\FurrLife.csproj",
-        "packagesPath": "C:\\Users\\0001\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\0001\\Documents\\GitHub\\FurrLife 2024\\obj\\",
+        "projectPath": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\FurrLife.csproj",
+        "packagesPath": "C:\\Users\\MarkAnthonyPerez\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\0001\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\MarkAnthonyPerez\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -104,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
