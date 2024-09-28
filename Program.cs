@@ -49,7 +49,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Customer}/{action=Index}/{id?}");
+    pattern: "{controller=MenuProducts}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

@@ -9,11 +9,11 @@
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6 col-xl-5">
                 <div class="card overflow-hidden">
-                    <div class="bg-primary bg-soft">
+                    <div class="bg-primary1 bg-soft">
                         <div class="row">
-                            <div class="col-7">
-                                <div class="text-primary p-4">
-                                    <h5 class="text-primary">SIGN OUT?</h5>
+                            <div class="col-12">
+                                <div class="p-4">
+                                    <h5 class="">SIGN OUT?</h5>
                                     <p>Sign out your account to FurrLife.</p>
                                 </div>
                             </div>
@@ -23,18 +23,10 @@
                     </div>
                     <div class="card-body pt-0">
                         <div class="auth-logo">
-                            <a href=@Url.Action("Index", "index") class="auth-logo-light">
+                            <a href="#" class="auth-logo-dark">
                                 <div class="avatar-md profile-user-wid mb-4">
                                     <span class="avatar-title rounded-circle bg-light">
-                                        @* <img src="~/assets/images/logo-light.svg" alt="" class="rounded-circle" height="34"> *@
-                                    </span>
-                                </div>
-                            </a>
-
-                            <a href=@Url.Action("Index", "index") class="auth-logo-dark">
-                                <div class="avatar-md profile-user-wid mb-4">
-                                    <span class="avatar-title rounded-circle bg-light">
-                                        @*  <img src="~/assets/images/logo.svg" alt="" class="rounded-circle" height="34"> *@
+                                        <img src="~/assets/images/dog.png" alt="" class="rounded-circle" height="80">
                                     </span>
                                 </div>
                             </a>
@@ -44,8 +36,8 @@
                                 if (User.Identity?.IsAuthenticated ?? false)
                                 {
                                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post">
-                                        <button type="submit" class="btn btn-primary waves-effect waves-light">Sign out now</button>
-                                        <a href="~/Dashboard/" class="btn waves-light">Back</a>
+                                        <button type="submit" class="btn btn-primary waves-effect waves-light">Logout now</button>
+                                        <a href="/" class="btn waves-light">Back</a>
                                     </form>
                                 }
                                 else
@@ -57,15 +49,6 @@
 
                     </div>
                 </div>
-                <div class="mt-5 text-center">
-                    <div>
-                        <p>
-                            ©
-                            <script>document.write(new Date().getFullYear())</script> FurrLife.
-                        </p>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

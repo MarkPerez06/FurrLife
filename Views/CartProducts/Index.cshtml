@@ -27,7 +27,7 @@
 <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" type="text/css" />
 
 <div class="row">
-    <div class="col-xl-12">
+    <div class="col-xl-9">
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
@@ -77,9 +77,8 @@
                                     <td>
                                         @if (item.ProductDiscounts > 0)
                                         {
-                                            <span class="text-success">@item.ProductDiscounts% OFF</span>
                                             <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.ProductPrice)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b></p>
-                                            <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                            <span class="text-success">- @item.ProductDiscounts% </span><span class="badge rounded-pill bg-primary1">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
                                         }
                                         else
                                         {
@@ -100,42 +99,66 @@
                                 </tr>
                             }
                             <tr>
-                                <td colspan="1" class="bg-warning text-white"><h5 class="text-white mt-2"><b>Customer Request</b></h5></td>
-                                <td colspan="3" class="bg-warning text-white">
-                                    <textarea class="form-control" placeholder="Enter your request here..." id="CustomerRequest"></textarea>
+                                <td colspan="1" class="text-white"><h5 class="text-white mt-2" hidden><b>Customer Request</b></h5></td>
+                                <td colspan="3" class="text-white">
+                                    <textarea class="form-control" placeholder="Enter your request here..." id="CustomerRequest" hidden></textarea>
                                 </td>
-                                <td colspan="2" class="bg-primary text-white"><h5 class="text-white mt-2"><b>Grand Total: <span id="GrandTotal">@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</span></b></h5></td>
-                            </tr>
-                            <tr>
-                                <td colspan="6" class="bg-warning text-white">
-                                    <div class="col-md-12">
-                                        <div class="mb-3">
-                                            <label for="Payment">Payment Method</label>
-                                            <select id="Payment" class="form-control" value="">
-                                                <option value=""> - Select Payment Method - </option>
-                                                <option value="Cash">Via Cash</option>
-                                                <option value="Membership Card">Via Membership Card</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a href=@Url.Action("Index", "MenuProducts") class="btn btn-secondary float-start">
-                                        <i class="mdi mdi-arrow-left me-1"></i> Back
-                                    </a>
-                                </td>
-                                <td colspan="4"></td>
-                                <td>
-                                    <a class="btn btn-success float-end" onclick="PlaceOrder()">
-                                        <i class="mdi mdi-cart-arrow-right me-1"></i> Place Order
-                                    </a>
-                                </td>
+                                <td colspan="2" class="bg-primary1 text-white"><h6 class="text-white mt-2"><b>Total: <span id="GrandTotal">@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</span></b></h6></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div class="card">
+            <div class="card-body">
+                <tr>
+                    <td colspan="6" class="bg-primary1 text-white">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Payment">Appointment Schedule</label>
+                                <select id="Payment" class="form-control" value="">
+                                    <option value=""> - Select Appointment - </option>
+                                    <option value="Cash">October 1, 2024 - 8am</option>
+                                    <option value="Gcash">October 1, 2024 - 9am</option>
+                                    <option value="Bank">October 1, 2024 - 10am</option>
+                                    <option value="Bank">October 1, 2024 - 11am</option>
+                                    <option value="Bank">October 1, 2024 - 11:30am</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="bg-primary1 text-white">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Payment">Payment Method</label>
+                                <select id="Payment" class="form-control" value="">
+                                    <option value=""> - Select Payment Method - </option>
+                                    <option value="Cash">Via Cash</option>
+                                    <option value="Gcash">Via Gcash</option>
+                                    <option value="Bank">Via Bank</option>
+                                </select>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <a href=@Url.Action("Index", "MenuProducts") class="btn btn-secondary float-start">
+                            <i class="mdi mdi-arrow-left me-1"></i> Back
+                        </a>
+                    </td>
+                    <td colspan="4"></td>
+                    <td>
+                        <a class="btn btn-success float-end" onclick="PlaceOrder()">
+                            <i class="mdi mdi-cart-arrow-right me-1"></i> Place Order
+                        </a>
+                    </td>
+                </tr>
             </div>
         </div>
     </div>

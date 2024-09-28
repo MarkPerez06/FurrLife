@@ -122,7 +122,7 @@
 
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="RoleId">Account Role</label>
+                                <label for="RoleId">Role</label>
                                 <select id="RoleId" class="form-control" value="" required>
                                     @foreach (var item in List.Roles.Where(m => m.Id == UserRoles.Veterinarian.Id))
                                     {
@@ -134,18 +134,13 @@
 
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="EmailConfirmed">Account Status</label>
+                                <label for="EmailConfirmed">Status</label>
                                 <select id="EmailConfirmed" class="form-control" value="" required>
                                     <option value="" selected>- Select -</option>
                                     <option value="True">Activated</option>
                                     <option value="False">Deactivated</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <hr />
-                            <label>CHANGE PASSWORD</label>
-                            <br />
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
@@ -162,7 +157,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary1 waves-effect" data-bs-dismiss="modal">Close</button>
                         <button onclick="SaveForm()" type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
                     </div>
                 </form>

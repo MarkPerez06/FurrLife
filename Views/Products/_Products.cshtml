@@ -1,137 +1,109 @@
-﻿    @using System.Globalization;
+﻿@using System.Globalization;
 @model IEnumerable<Products>
-@foreach (var item in Model)
-{
-    var Count = 0;
 
-    Count++;
-    <tr>
-        <td>@Count.</td>
-        <td> <img src="@item.ImageURL" alt="" class="img-fluid mx-auto d-block" style="width: 60px;"></td>
-        <td>@item.Name</td>
-        <td>@item.Description</td>
-        <td>
-            @if (item.Discounts > 0)
-            {
-                var DiscountedPrice = (item.Price - (item.Price * item.Discounts) / 100);
-                <h5 class="my-0"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</del></span> 
-                    <br />
-                    <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", DiscountedPrice)</b></h5>
-            }
-            else
-            {
-                <h5 class="my-0"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</b></h5>
-            }
-        </td>
-        <td>
-            @if (item.Discounts > 0)
-            {
-                <span>-@item.Discounts %</span>
-           }
-        </td>
-        <td>
-            @for (int i = 1; i <= 5; i++)
-            {
-                if (i <= item.ProductRating)
-                {
-                    <i class="bx bxs-star text-warning"></i>
-                }
-                else
-                {
-                    <i class="bx bxs-star"></i>
-                }
+    <!-- ION Slider -->
+<link href="~/assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<!-- DataTables -->
+<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
-            }
-        </td>
-        <td>
-            @if (item.IsActive.Value)
-            {
-                <span class="badge bg-success rounded-pill p-1">Active</span>
-            }
-            else
-            {
-                <span class="badge bg-danger rounded-pill">Inactive</span>
-            }
-        </td>
-        <td class="text-center">
-            <a href="#" onclick="Edit(@item.Id)" class="btn btn-success waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
-                <i class="mdi mdi-pencil ms-1"></i> Edit
-            </a>
-            <a href="#" onclick="Delete(@item.Id)" class="btn btn-danger waves-effect waves-light btn-sm">
-                <i class="mdi mdi-delete ms-1"></i> Delete
-            </a>
-        </td>
-    </tr>
-}
-
-
-
-@foreach (var item in Model)
-{
-
-
-
-    var IsActiveStatus = "";
-
-    @if (item.IsActive == false)
-    {
-        IsActiveStatus = "darkgray";
-    }
-
-    <div class="col-xl-4 col-sm-6">
-        <div class="card">
-            <div class="card-body" style="background-color: @IsActiveStatus; border: 1px solid darkgray">
-                <div class="product-img position-relative">
-                    @if (item.Discounts > 0)
-                    {
-                        <div class="avatar-sm product-ribbon">
-                            <span class="avatar-title rounded-circle  bg-success">
-                                - @item.Discounts%
-                            </span>
-                        </div>
-                    }
-                    <img src="@item.ImageURL" alt="" class="img-fluid mx-auto d-block">
-                </div>
-                <div class="mt-4 text-center">
-                    <h5 class="mb-3 text-truncate">
-                        <a href="javascript: void(0);" class="text-dark">
-                            @item.Name
-                        </a>
-                    </h5>
-                    <p class="mb-3 text-truncate">@item.Description</p>
-                    <p class="text-muted">
-                        @for (int i = 1; i <= 5; i++)
-                        {
-                            if (i <= item.ProductRating)
-                            {
-                                <i class="bx bxs-star text-warning"></i>
-                            }
-                            else
-                            {
-                                <i class="bx bxs-star"></i>
-                            }
-
-                        }
-                    </p>
-
+<table id="datatable-buttons" class="table table-bordered table-striped dt-responsive nowrap w-100">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>Discounts</th>
+            <th>Rating</th>
+            <th>Status</th>
+            <th class="text-center" style="table-layout: fixed;">
+                <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">Create</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var Count = 0;
+        }
+        @foreach (var item in Model)
+        {
+            Count++;
+            <tr>
+                <td>@Count.</td>
+                <td> <img src="@item.ImageURL" alt="" class="img-fluid mx-auto d-block" style="width: 60px;"></td>
+                <td>@item.Name</td>
+                <td>@item.Description</td>
+                <td>
                     @if (item.Discounts > 0)
                     {
                         var DiscountedPrice = (item.Price - (item.Price * item.Discounts) / 100);
-                        <h5 class="my-0"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", DiscountedPrice)</b></h5>
+                        <h6 class="my-0">
+                            <span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</del></span>
+                            <br />
+                            <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", DiscountedPrice)</b>
+                        </h6>
                     }
                     else
                     {
-                        <h5 class="my-0"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</b></h5>
+                        <h6 class="my-0"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.Price)</b></h6>
                     }
-                    <br>
-                    <a href="javascript: void(0);" class="btn btn-success waves-effect waves-light btn-sm col-lg-12" onclick="Edit(@item.Id)" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
-                        <i class="bx bx-pencil"></i> Edit
+                </td>
+                <td>
+                    @if (item.Discounts > 0)
+                    {
+                        <span>-@item.Discounts %</span>
+                    }
+                </td>
+                <td>
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        if (i <= item.ProductRating)
+                        {
+                            <i class="bx bxs-star text-warning"></i>
+                        }
+                        else
+                        {
+                            <i class="bx bxs-star"></i>
+                        }
+
+                    }
+                </td>
+                <td>
+                    @if (item.IsActive.Value)
+                    {
+                        <span class="badge bg-success rounded-pill p-1">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger rounded-pill">Inactive</span>
+                    }
+                </td>
+                <td class="text-center">
+                    <a href="#" onclick="Edit(@item.Id)" class="btn btn-success waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
+                        <i class="mdi mdi-pencil ms-1"></i> Edit
                     </a>
-                    @* <a href="javascript: void(0);" class="me-2 text-black" onclick="Delete(@item.Id)">
-                <i class="bx bx-trash text-danger"></i> Delete
-                </a> *@
-                </div>
-            </div>
-        </div>
-    </div>
-}
+                    <a href="#" onclick="Delete(@item.Id)" class="btn btn-danger waves-effect waves-light btn-sm">
+                        <i class="mdi mdi-delete ms-1"></i> Delete
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>

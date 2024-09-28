@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Menu>
 
-<li class="mt-2"><a href="javascript: void(0);" onclick="LoadProductsAll('MenuProducts','_ProductsAll')" class="btn btn-sm btn-secondary text-white"><i class="mdi mdi-chevron-right me-1"></i> All Menu</a></li>
+<a href="javascript: void(0);" onclick="LoadProductsAll('MenuProducts','_ProductsAll')">All Items</a>
 @if (ViewBag.HasOrderProducts == true)
 {
-    <li class="mt-2"><a href="javascript: void(0);" onclick="LoadProductsAll('MenuProducts','_ProductsBestSeller')" class="btn btn-sm btn-warning text-white"><i class="mdi mdi-chevron-right me-1"></i> Best Seller</a></li>
+    <a href="javascript: void(0);" onclick="LoadProductsAll('MenuProducts','_ProductsBestSeller')"><i class="mdi mdi-chevron-right me-1"></i> Best Seller</a>
 }
 
 @foreach (var item in Model)
 {
-    <li class="mt-2"><a href="javascript: void(0);" onclick="LoadMenu('@item.Id','@item.Name','@item.Description')" class="btn btn-sm btn-primary text-white"><i class="mdi mdi-chevron-right me-1"></i> @item.Name</a></li>
+    <a href="javascript: void(0);" onclick="LoadMenu('@item.Id','@item.Name','@item.Description')" ><i class="mdi mdi-chevron-right me-1"></i> @item.Name</a>
 }

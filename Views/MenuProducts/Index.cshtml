@@ -23,7 +23,7 @@
 <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
 <link src="~/assets/libs/simplebar/simplebar.min.css" rel="stylesheet" type="text/css" />
 
-<div class="row">
+@* <div class="row">
     <div class="col-lg-3 mt-4">
         <div>
             <h5 class="font-size-14 mb-3 card-title">MENU</h5>
@@ -81,19 +81,19 @@
         </div>
     </div>
     <div class="col-lg-9 mt-4">
-        <div class="row mb-2">
-            <div class="col-xl-12 col-sm-6">
-                <div class="mt-2">
-                    <h5 id="MenuTitle">All Menu</h5>
-                    <p id="MenuDescription">Select on the menu to filter the products.</p>
-                </div>
-            </div>
-        </div>
-        <div class="row" id="Load_Products">
+      
+    </div>
+</div> *@
+<div class="row mb-2">
+    <div class="col-xl-12 col-sm-6">
+        <div class="mt-2">
+            <ul class="list-unstyled product-list" id="Load_Menu">
+            </ul>
         </div>
     </div>
 </div>
-
+<div class="row" id="Load_Products">
+</div>
 
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">

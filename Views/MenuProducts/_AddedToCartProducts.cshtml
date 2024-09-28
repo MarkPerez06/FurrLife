@@ -10,7 +10,7 @@
             <img src="@item.ProductImageURL"
                  class="me-3 avatar-xs" alt="user-pic">
             <div class="flex-grow-1">
-                <h6 class="mb-1">@item.ProductDescription</h6>
+                <h6 class="mb-1">@item.ProductName</h6>
                 <div class="font-size-12 text-muted">
                     @if (item.ProductDiscounts > 0)
                     {
@@ -28,7 +28,7 @@
         </div>
     </a>
 }
-<div class="d-flex" style="background-color: red">
+<div class="d-flex bg-primary1">
     <div class="flex-grow-1 col-12" >
         <h5 class="mb-1 mt-1 text-white" style="margin-left: 15px">Total: <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</b></h5>
     </div>

@@ -20832,6 +20832,70 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\assets\scss\_variables.scss))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\05909b44-3f10-497b-bb3e-848893161cb3_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/05909b44-3f10-497b-bb3e-848893161cb3_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\05909b44-3f10-497b-bb3e-848893161cb3_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\0bc5f4d7-4aa1-4241-8da0-e739a03327ac_0144c01e-0efa-49a2-af69-73af56a4a858_34573-n.png))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/0bc5f4d7-4aa1-4241-8da0-e739a03327ac_0144c01e-0efa-49a2-af69-73af56a4a858_34573-n.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\0bc5f4d7-4aa1-4241-8da0-e739a03327ac_0144c01e-0efa-49a2-af69-73af56a4a858_34573-n.png))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\1bbc361f-811b-4bce-8eb2-2f77aad04718_272-vet-2-1024x1024-1.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/1bbc361f-811b-4bce-8eb2-2f77aad04718_272-vet-2-1024x1024-1.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\1bbc361f-811b-4bce-8eb2-2f77aad04718_272-vet-2-1024x1024-1.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\6aeac230-4e29-4ba9-9036-d52154d504c9_pexels-photo-overlayed-1.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/6aeac230-4e29-4ba9-9036-d52154d504c9_pexels-photo-overlayed-1.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\6aeac230-4e29-4ba9-9036-d52154d504c9_pexels-photo-overlayed-1.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\6c3edc40-84b6-457a-bc4f-3069feafb02f_dog.png))">
       <SourceType>Package</SourceType>
       <SourceId>FurrLife</SourceId>
@@ -20847,6 +20911,134 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\6c3edc40-84b6-457a-bc4f-3069feafb02f_dog.png))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\7db22270-ea1c-4122-9a78-e471c52fba11_OIP (1).jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/7db22270-ea1c-4122-9a78-e471c52fba11_OIP (1).jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\7db22270-ea1c-4122-9a78-e471c52fba11_OIP (1).jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\86eafac9-3dfd-44d6-a368-d4347dc8a888_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/86eafac9-3dfd-44d6-a368-d4347dc8a888_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\86eafac9-3dfd-44d6-a368-d4347dc8a888_a671847837bdc4a42a1a4557b63e6e68--veterinary-scrubs-healing-hands.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\99296e9a-08e7-4bdb-b885-2057a03fb002_vet-lab-e1522251569189.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/99296e9a-08e7-4bdb-b885-2057a03fb002_vet-lab-e1522251569189.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\99296e9a-08e7-4bdb-b885-2057a03fb002_vet-lab-e1522251569189.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\c73a976c-dde8-41e6-838f-f55ff090ba67_334893389_233318519133073_5656155008911136017_n.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/c73a976c-dde8-41e6-838f-f55ff090ba67_334893389_233318519133073_5656155008911136017_n.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\c73a976c-dde8-41e6-838f-f55ff090ba67_334893389_233318519133073_5656155008911136017_n.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\d5eb1522-7f87-4d8d-b1f3-53e043031cd4_vet-tech-pic.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/d5eb1522-7f87-4d8d-b1f3-53e043031cd4_vet-tech-pic.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\d5eb1522-7f87-4d8d-b1f3-53e043031cd4_vet-tech-pic.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\e77fd5cf-a231-4a2d-9e5d-4ed9c25a2d50_dog.png))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/e77fd5cf-a231-4a2d-9e5d-4ed9c25a2d50_dog.png</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\e77fd5cf-a231-4a2d-9e5d-4ed9c25a2d50_dog.png))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\eb207fab-34d7-4dbf-b4a8-8476d5a92dc5_61uWMVkZy8L._SL1100_-600x600.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/eb207fab-34d7-4dbf-b4a8-8476d5a92dc5_61uWMVkZy8L._SL1100_-600x600.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\eb207fab-34d7-4dbf-b4a8-8476d5a92dc5_61uWMVkZy8L._SL1100_-600x600.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\ed383573-a9e0-418c-955c-da9a92281450_272-vet-2-1024x1024-1.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>Products/ed383573-a9e0-418c-955c-da9a92281450_272-vet-2-1024x1024-1.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\ed383573-a9e0-418c-955c-da9a92281450_272-vet-2-1024x1024-1.jpg))</OriginalItemSpec>
     </StaticWebAsset>
   </ItemGroup>
 </Project>

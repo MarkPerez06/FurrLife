@@ -16,114 +16,17 @@
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
 <div class="row">
+    <div>
+        <ul class="list-unstyled product-list" id="Load_Menu">
+        </ul>
+    </div>
     <div class="col-12">
         <div class="card">
-            <div class="card-body" >
-                <table id="datatable-buttons" class="table table-bordered table-striped dt-responsive nowrap w-100">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Discounts</th>
-                            <th>Rating</th>
-                            <th>Status</th>
-                            <th class="text-center" style="table-layout: fixed;">
-                                <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">Create</a>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody id="Load_Products"></tbody>
-                </table>
+            <div class="card-body" id="Load_Products">
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
-
-@* <div class="row">
-    <div class="col-lg-3">
-        <div class="card">
-            <div class="card-body">
-                <div>
-                    <h5 class="font-size-14 mb-3 card-title">MENU</h5>
-                    <ul class="list-unstyled product-list" id="Load_Menu">
-                    </ul>
-                </div>
-                <div class="mt-4 pt-3">
-                    <h5 class="font-size-14 mb-3 card-title">PRICE</h5>
-                    <input type="text" id="pricerange" onchange="OnChangePricerange()">
-                </div>
-
-                <div class="mt-4 pt-3" id="Load_Discounts">
-                </div>
-
-                <div class="mt-4 pt-3">
-                    <h5 class="font-size-14 mb-3 card-title">TRENDING PRODUCT</h5>
-                    <div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck0" value="0" onchange="OnChangeProductRating(0)">
-                            <label class="form-check-label" for="productratingCheck0">
-                                All <i class="bx bxs-star text-warning"></i> Stars
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck5" value="5" onchange="OnChangeProductRating(5)">
-                            <label class="form-check-label" for="productratingCheck5">
-                                5 <i class="bx bxs-star text-warning"></i>  Stars
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck4" value="4" onchange="OnChangeProductRating(4)">
-                            <label class="form-check-label" for="productratingCheck4">
-                                4 <i class="bx bxs-star text-warning"></i>  Stars
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck3" value="3" onchange="OnChangeProductRating(3)">
-                            <label class="form-check-label" for="productratingCheck3">
-                                3 <i class="bx bxs-star text-warning"></i>  Stars
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck2" value="2" onchange="OnChangeProductRating(2)">
-                            <label class="form-check-label" for="productratingCheck2">
-                                2 <i class="bx bxs-star text-warning"></i>  Stars
-                            </label>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck1" value="1" onchange="OnChangeProductRating(1)">
-                            <label class="form-check-label" for="productratingCheck1">
-                                1 <i class="bx bxs-star text-warning"></i> Star
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-9">
-        <div class="row mb-2">
-            <div class="col-xl-8 col-sm-6">
-                <div class="mt-2">
-                    <h5 id="MenuTitle">All Menu</h5>
-                    <p id="MenuDescription">Select on the menu to filter the products.</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-sm-6">
-                <ul class="nav nav-pills product-view-nav justify-content-end mt-3 mt-sm-0">
-                    <li class="nav-item">
-                        <a onclick="Create()" href="#" class="nav-link active waves-effect waves-light " data-bs-toggle="modal" data-bs-target="#CreateUpdateModal"><i class="bx bx-plus"></i></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="row" id="Load_Products">
-        </div>
-    </div>
-</div> *@
-
 
 @{
     var Discounts = ViewBag.Discounts as SelectList;
@@ -258,6 +161,7 @@
 <!-- Buttons examples -->
 <script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 <script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+
 <script src="~/assets/libs/jszip/jszip.min.js"></script>
 <script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
 <script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
