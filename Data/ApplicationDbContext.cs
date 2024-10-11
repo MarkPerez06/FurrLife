@@ -20,5 +20,6 @@ namespace FurrLife.Data
         public DbSet<OrderProductsView> OrderProductsView { get; set; }
         public DbSet<Discounts> Discounts { get; set; }
         public DbSet<Persons> Persons { get; set; }
+        public DbSet<PetRecord> PetRecord { get; set; }
     }
 }

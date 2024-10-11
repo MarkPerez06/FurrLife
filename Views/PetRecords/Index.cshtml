@@ -1,0 +1,203 @@
+﻿@model IEnumerable<FurrLife.Models.PetRecord>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerFullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerContact)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PetName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Breed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Weight)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhysicalCondition)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PreviousIllnessesOrSurgeries)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VaccinationStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentMedicationsOrTreatments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TemperamentAndPersonality)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BehavioralIssuesOrChanges)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CurrentDietAndFeedingSchedule)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FoodAllergiesOrSensitivities)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LivingConditions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InteractionWithOtherPets)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SpecificIssuesOrSymptoms)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerQuestionsOrTopics)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GroomingHabits)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExerciseRoutines)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReasonForVisit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Diagnosis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TreatmentPlan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FollowUpCareInstructions)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ConsultationSummary)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OwnerConsentGiven)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferralInformation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerContact)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PetName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Breed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Weight)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhysicalCondition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousIllnessesOrSurgeries)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VaccinationStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentMedicationsOrTreatments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TemperamentAndPersonality)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BehavioralIssuesOrChanges)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CurrentDietAndFeedingSchedule)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FoodAllergiesOrSensitivities)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LivingConditions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InteractionWithOtherPets)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SpecificIssuesOrSymptoms)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerQuestionsOrTopics)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroomingHabits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExerciseRoutines)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReasonForVisit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Diagnosis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TreatmentPlan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FollowUpCareInstructions)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ConsultationSummary)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerConsentGiven)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferralInformation)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
