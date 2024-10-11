@@ -12,6 +12,7 @@ namespace FurrLife.Data
         }
         public DbSet<Menu> Menu { get; set; }
         public DbSet<Units> Units { get; set; }
+        public DbSet<Appointments> Appointments { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<CartProducts> CartProducts { get; set; }
         public DbSet<CartProductsView> CartProductsView { get; set; }
@@ -20,6 +21,8 @@ namespace FurrLife.Data
         public DbSet<OrderProductsView> OrderProductsView { get; set; }
         public DbSet<Discounts> Discounts { get; set; }
         public DbSet<Persons> Persons { get; set; }
-        public DbSet<PetRecord> PetRecord { get; set; }
+        public DbSet<PetHealthRecord> PetHealthRecord { get; set; }
+        public DbSet<ImmunizationHistory> ImmunizationHistory { get; set; }
+        public DbSet<MedicalHistory> MedicalHistory { get; set; }
     }
 }
