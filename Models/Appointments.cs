@@ -9,6 +9,7 @@ namespace FurrLife.Models
         public string? Name { get; set; }
         public string? Code { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? DateCreated { get; set; }
+        public DateTime? AppointmentDate { get; set; }
+        public string UserId { get; set; }
     }
 }
