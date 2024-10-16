@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FurrLife.Data;
 using FurrLife.Models;
+using FurrLife.Static;
+using Microsoft.AspNetCore.Identity;
 
 namespace FurrLife.Controllers
 {
@@ -22,7 +24,7 @@ namespace FurrLife.Controllers
         // GET: PetHealthRecords
         public async Task<IActionResult> Index()
         {
-              return _context.PetHealthRecord != null ? 
+            return _context.PetHealthRecord != null ? 
                           View(await _context.PetHealthRecord.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.PetHealthRecord'  is null.");
         }
@@ -48,6 +50,8 @@ namespace FurrLife.Controllers
         // GET: PetHealthRecords/Create
         public IActionResult Create()
         {
+            List<IdentityUser> users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.Users = new SelectList(users, "Id", "UserName");
             return View();
         }
 
@@ -58,6 +62,9 @@ namespace FurrLife.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,PetName,Age,Birthdate,Breed,Gender,Weight,Color,TemperamentAndPersonalityTraits,BehavioralIssues,GroomingHabits,ExerciseRoutines,Allergies,FeedingSchedule,ExistingConditions,UserId,FullName,Phone,Email,Address,CreatedDate")] PetHealthRecord petHealthRecord)
         {
+            List<IdentityUser> users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.Users = new SelectList(users, "Id", "UserName");
+
             if (ModelState.IsValid)
             {
                 _context.Add(petHealthRecord);
@@ -70,6 +77,9 @@ namespace FurrLife.Controllers
         // GET: PetHealthRecords/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            List<IdentityUser> users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.Users = new SelectList(users, "Id", "UserName");
+
             if (id == null || _context.PetHealthRecord == null)
             {
                 return NotFound();
@@ -90,6 +100,9 @@ namespace FurrLife.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,PetName,Age,Birthdate,Breed,Gender,Weight,Color,TemperamentAndPersonalityTraits,BehavioralIssues,GroomingHabits,ExerciseRoutines,Allergies,FeedingSchedule,ExistingConditions,UserId,FullName,Phone,Email,Address,CreatedDate")] PetHealthRecord petHealthRecord)
         {
+            List<IdentityUser> users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.Users = new SelectList(users, "Id", "UserName");
+
             if (id != petHealthRecord.Id)
             {
                 return NotFound();
@@ -137,8 +150,6 @@ namespace FurrLife.Controllers
         }
 
         // POST: PetHealthRecords/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.PetHealthRecord == null)

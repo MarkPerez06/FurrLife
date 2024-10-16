@@ -30,7 +30,7 @@
                             <th>Color</th>
                             <th>Created Date</th>
                             <th class="text-center" style="table-layout: fixed;">
-                                <a asp-action="Create" class="float-end btn btn-primary btn-sm">Create</a>
+                                <a asp-action="Create" class="btn btn-primary btn-sm">Create</a>
                             </th>
                         </tr>
                     </thead>
@@ -72,9 +72,9 @@
                                 <td>
                                     @Html.DisplayFor(modelItem => item.CreatedDate)
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-sm">Edit</a> |
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Delete</a>
+                                    <a onclick="Delete(@item.Id)" class="btn btn-danger btn-sm">Delete</a>
                                 </td>
                             </tr>
                         }
@@ -125,3 +125,48 @@
 <script src="~/assets/js/pages/sweet-alerts.init.js"></script>
 
 <script src="~/assets/js/app.js"></script>
+<script>
+    function Delete(Id) {
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "PetHealthRecords")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Record was successfully deleted!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "PetHealthRecords")';
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire('Oops!', 'Something went wrong!', 'error');
+                    }
+                });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelled!', 'Your record is safe!', 'error');
+            }
+        });
+    }
+</script>

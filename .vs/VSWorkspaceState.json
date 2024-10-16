@@ -1,9 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Controllers",
-    "\\Models"
+    "\\Views",
+    "\\Views\\Products"
   ],
-  "SelectedNode": "\\FurrLife.sln",
+  "SelectedNode": "\\Views\\Products\\Index.cshtml",
   "PreviewInSolutionExplorer": false
 }
