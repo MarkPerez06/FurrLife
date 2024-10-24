@@ -124,18 +124,58 @@ namespace FurrLife.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Save(Products model, IFormFile file)
         {
+            //string uniqueFileName = null;
+            //if (file != null)
+            //{
+            //    string uploadsFolder = Path.Combine(_environment.WebRootPath, "Products");
+            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+            //    {
+            //        file.CopyTo(fileStream);
+            //    }
+            //    model.ImageURL = "/Products/" + uniqueFileName;
+            //}
+
             string uniqueFileName = null;
             if (file != null)
             {
-                string uploadsFolder = Path.Combine(_environment.WebRootPath, "Products");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                // Validate file type and size if needed
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+                if (!allowedExtensions.Contains(extension))
                 {
-                    file.CopyTo(fileStream);
+                    ModelState.AddModelError("Image", "Invalid file type. Please upload an image file.");
+                    return View(model);
                 }
+
+                string uploadsFolder = Path.Combine(_environment.WebRootPath, "Products");
+
+                // Ensure the folder exists
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(file.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                try
+                {
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", "Error uploading the file: " + ex.Message);
+                    return View(model);
+                }
+
                 model.ImageURL = "/Products/" + uniqueFileName;
             }
+
 
             model.DateCreated = DateTime.Now;
             if (model.Id != 0)

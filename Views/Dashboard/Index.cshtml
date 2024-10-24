@@ -1,21 +1,8 @@
 ﻿@using System.Globalization;
 @model IEnumerable<Orders>
 @{
-    if (ViewBag.Persons.IsAdmin == true && ViewBag.Persons.IsStaff == false && ViewBag.Persons.IsMember == false)
-    {
         ViewBag.Title = "Main";
         ViewBag.pTitle = "Main";
-    }
-    else if (ViewBag.Persons.IsAdmin == false && ViewBag.Persons.IsStaff == true && ViewBag.Persons.IsMember == false)
-    {
-        ViewBag.Title = "Staff Account";
-        ViewBag.pTitle = "Staff Account";
-    }
-    else if (ViewBag.Persons.IsAdmin == false && ViewBag.Persons.IsStaff == false && ViewBag.Persons.IsMember == true)
-    {
-        ViewBag.Title = "My Account";
-        ViewBag.pTitle = "My Account";
-    }
 
     ViewBag.pageTitle = "Dashboard";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -28,7 +15,7 @@
     var Year = ViewBag.Year as SelectList;
 }
 
-@if (ViewBag.Persons.IsAdmin == true && ViewBag.Persons.IsStaff == false && ViewBag.Persons.IsMember == false)
+@if (true)
 {
     <div class="row">
         <div class="col-xl-4">
@@ -49,8 +36,8 @@
                 <div class="card-body pt-0">
                     <div class="row">
                         <div class="col-sm-12">
-                            <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> @ViewBag.Persons.FirstName @ViewBag.Persons.MiddleName @ViewBag.Persons.LastName</h5>
-                            <p class="text-muted mb-0 text-truncate">@ViewBag.Persons.Email</p>
+                            <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
+                            <p class="text-muted mb-0 text-truncate">Email</p>
                         </div>
                     </div>
                 </div>
@@ -217,21 +204,21 @@
 }
 
 <!-- end row -->
-@if (ViewBag.Persons.IsAdmin == true || ViewBag.Persons.IsStaff == true && ViewBag.Persons.IsMember == false)
+@if (true)
 {
     <div class="row">
         <div class="col-lg-12">
             <div class="card overflow-hidden">
                 <div class="bg-primary bg-soft">
                     <div class="row">
-                        @if (ViewBag.Persons.IsStaff == true)
+                        @if (true)
                         {
                             <div class="col-10">
                                 <div class="text-primary p-3">
                                     <h5 class="text-primary">Welcome Back !</h5>
                                     <p>FurrLife Dashboard</p>
-                                    <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> @ViewBag.Persons.FirstName @ViewBag.Persons.MiddleName @ViewBag.Persons.LastName</h5>
-                                    <p class="text-muted mb-0 text-truncate">@ViewBag.Persons.Email</p>
+                                    <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
+                                    <p class="text-muted mb-0 text-truncate">Email</p>
                                 </div>
                             </div>
                             <div class="col-2 align-self-end">
@@ -419,7 +406,7 @@
     </div>
 }
 
-@if (ViewBag.Persons.IsMember == true)
+@if (true)
 {
     <div class="row">
         <div class="col-lg-12">
@@ -430,23 +417,23 @@
                             <div class="text-primary p-3">
                                 <h5 class="text-primary">Welcome Back !</h5>
                                 <p>FurrLife Dashboard</p>
-                                <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> @ViewBag.Persons.FirstName @ViewBag.Persons.MiddleName @ViewBag.Persons.LastName</h5>
-                                <p class="text-muted mb-0 text-truncate">@ViewBag.Persons.Email</p>
+                                <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
+                                <p class="text-muted mb-0 text-truncate">Email</p>
                                 <br>
-                                <h5 class="text-primary">Card Number: @ViewBag.Persons.CardNumber</h5>
+                                <h5 class="text-primary">Card Number: </h5>
                                 <h5 class="text-primary">
-                                    Wallet Balance: @if (ViewBag.Persons.Wallet != null)
+                                    Wallet Balance: @if (true)
                                     {
-                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", ViewBag.Persons.Wallet)
+                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", 0)
                                     }
                                 </h5>
                                 <h5 class="text-primary">
-                                    Reward Points: @if (ViewBag.Persons.Salary != null)
+                                    Reward Points: @if (true)
                                     {
-                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", ViewBag.Persons.Salary)
+                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", 0)
                                     }
                                     <br>
-                                    @if (ViewBag.Persons.Salary > 0)
+                                    @if (true)
                                     {
                                         <button onclick="ConvertToeWallet()" type="button" class="btn btn-primary waves-effect waves-light">Convert Reward Points To eWallet</button>
                                     }
@@ -484,7 +471,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Where(m => m.IsPaid == true && m.UserId == ViewBag.Persons.UserId && m.Payment == "Membership Card").OrderByDescending(m => m.Id))
+                                @foreach (var item in Model.Where(m => m.IsPaid == true && m.Payment == "Membership Card").OrderByDescending(m => m.Id))
                                 {
                                     decimal ActualTotal = (item.TotalAmount - (item.TotalAmount * Convert.ToDecimal(item.Discounts)) / 100);
                                     decimal SaveDiscount = (item.TotalAmount - ActualTotal);
