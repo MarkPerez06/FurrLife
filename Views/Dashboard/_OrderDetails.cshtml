@@ -4,7 +4,7 @@
     decimal TotalAmount = 0;
 }
 <div id="LoadNewOrderDetails">
-    <h5 class="mb-2">Order ID: <span class="text-primary" id="ReferenceNo">@ViewBag.OrderDetails.ReferenceNo</span></h5>
+    <h5 class="mb-2">Order No.: <span class="text-primary" id="ReferenceNo">@ViewBag.OrderDetails.ReferenceNo</span></h5>
 
     <div class="table-responsive">
         <table class="table align-middle table-nowrap">
@@ -14,6 +14,8 @@
                     <th scope="col">Product Name</th>
                     <th scope="col">Price</th>
                     <th scope="col">Quantity</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Payment</th>
                     <th scope="col" colspan="2">Total</th>
                 </tr>
             </thead>
@@ -40,9 +42,10 @@
                         <td>
                             @if (item.OrderDiscounts > 0)
                             {
-                                <span class="text-success">@item.OrderDiscounts% OFF</span>
-                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.OrderPrice)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedPrice)</b></p>
-                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.OrderPrice)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", DiscountedPrice)</b></p>
+                                <span class="text-success">- @item.OrderDiscounts% </span>
+
+                                <span class="badge rounded-pill bg-primary1">Save @string.Format(new CultureInfo("en-PH", false), "{0:C}", SaveDiscount)</span>
                             }
                             else
                             {
@@ -61,7 +64,20 @@
                                 <span>x @item.OrderQuantity</span>
                             }
                         </td>
-                        <td>@string.Format(new CultureInfo("en-PH", false),"{0:C}", Total)</td>
+                        <td>
+                            @if (ViewBag.OrderDetails.IsPaid == true)
+                            {
+                                <span class="badge badge-pill badge-soft-success font-size-11">Paid</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-pill badge-soft-danger font-size-11">Unpaid</span>
+                            }
+                        </td>
+                        <td>
+                            @ViewBag.OrderDetails.Payment
+                        </td>
+                        <td>@string.Format(new CultureInfo("en-PH", false), "{0:C}", Total)</td>
                         <td>
                             @if (ViewBag.OrderDetails.IsPaid == false)
                             {
@@ -72,34 +88,7 @@
 
                 }
 
-                @if (ViewBag.OrderDetails.IsPaid == true)
-                {
-                    GrandTotalBG = "bg-success";
-                }
-                else
-                {
-                    GrandTotalBG = "bg-danger";
-                }
-
-                <tr class="@GrandTotalBG">
-                    <td colspan="4">
-                        <h5 class="m-0 text-right text-white">Grand Total:</h5>
-                    </td>
-                    <td colspan="2">
-                        @{
-                            decimal DiscountedTotalAmount = (TotalAmount - (TotalAmount * Convert.ToDecimal(ViewBag.OrderDetails.Discounts)) / 100);
-                            if (ViewBag.OrderDetails.Discounts > 0)
-                            {
-                                <h5 class="text-white" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", DiscountedTotalAmount)</b></h5>
-                            }
-                            else
-                            {
-                                <h5 class="text-white">@string.Format(new CultureInfo("en-PH", false),"{0:C}", TotalAmount)</h5>
-                            }
-                        }
-                    </td>
-                </tr>
-                <tr>
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">Payment Status</h6>
                     </td>
@@ -114,7 +103,7 @@
                         }
                     </td>
                 </tr>
-                <tr>
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">Payment Method</h6>
                     </td>
@@ -123,7 +112,7 @@
                         {
                             @if (ViewBag.OrderDetails.IsPaid == false)
                             {
-                                <div class="col-md-12">
+                                <div class="col-md-12" hidden>
                                     <input id="MembershipCard" onkeyup="GetIDs()" placeholder="Enter Membership Card" type="text" class="form-control" maxlength="10" />
                                 </div>
                             }
@@ -143,7 +132,7 @@
                 {
                     @if (ViewBag.OrderDetails.IsPaid == false)
                     {
-                        <tr>
+                        <tr hidden>
                             <td colspan="2">
                                 <h6 class="m-0 text-right">Card PIN</h6>
                             </td>
@@ -155,7 +144,36 @@
                         </tr>
                     }
                 }
-                <tr>
+
+                @if (ViewBag.OrderDetails.IsPaid == true)
+                {
+                    GrandTotalBG = "bg-success text-white";
+                }
+                else
+                {
+                    GrandTotalBG = "bg-primary1 text-black";
+                }
+
+                <tr class="@GrandTotalBG">
+                    <td colspan="6">
+                        <h5 class="m-0 text-right">Grand Total:</h5>
+                    </td>
+                    <td colspan="2">
+                        @{
+                            decimal DiscountedTotalAmount = (TotalAmount - (TotalAmount * Convert.ToDecimal(ViewBag.OrderDetails.Discounts)) / 100);
+                            if (ViewBag.OrderDetails.Discounts > 0)
+                            {
+                                <h5 class="m-0" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", DiscountedTotalAmount)</b></h5>
+                            }
+                            else
+                            {
+                                <h5 class="m-0">@string.Format(new CultureInfo("en-PH", false), "{0:C}", TotalAmount)</h5>
+                            }
+                        }
+                    </td>
+                </tr>
+
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">Senior Citizen ID</h6>
                     </td>
@@ -174,7 +192,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">PWD ID</h6>
                     </td>
@@ -191,7 +209,7 @@
                         }
                     </td>
                 </tr>
-                <tr>
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">Discount</h6>
                     </td>
@@ -215,7 +233,7 @@
                         }
                     </td>
                 </tr>
-                <tr>
+                <tr hidden>
                     <td colspan="2">
                         <h6 class="m-0 text-right">Customer Request</h6>
                     </td>
@@ -229,7 +247,7 @@
     <div class="modal-footer">
         @if (ViewBag.OrderDetails.IsPaid == false)
         {
-            <button type="button" class="btn btn-success" id="ProceedPayment">Proceed to Payment</button>
+            <button type="button" class="btn btn-primary" id="ProceedPayment">Proceed to Payment</button>
         }
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     </div>

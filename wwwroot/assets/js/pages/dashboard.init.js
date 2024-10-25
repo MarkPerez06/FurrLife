@@ -13,37 +13,47 @@ function LoadBestSellerChart() {
         type: 'GET',
         success: function (data) {
             var options = {
-            	chart: {
-                    height: 380,
-                    type: "line",
-                    zoom: {
-                        enabled: !1
-                    },
+                series: data.series,
+                chart: {
+                    height: 350,
+                    type: "area",
                     toolbar: {
                         show: !1
                     }
-            	},
-                plotOptions: {
-                    stroke: {
-                        width: [1, 2, 1],
-                        curve: "straight",
-                        dashArray: [0, 8, 5]
-                    },
                 },
-            	dataLabels: {
-            		enabled: !1
-            	},
-                series: data.series,
+                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
                 xaxis: {
                     categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
                 },
-            	colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
-            	legend: {
-            		position: "bottom"
-            	},
-            	fill: {
-            		opacity: 1
-            	}
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
+                },
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
+                }
             },
                 chart = new ApexCharts(document.querySelector("#line_chart_dashed"), options);
             chart.render();
@@ -60,36 +70,46 @@ function LoadLeastSellerChart() {
         type: 'GET',
         success: function (data) {
             var options = {
+                series: data.series,
                 chart: {
-                    height: 380,
-                    type: "line",
-                    zoom: {
-                        enabled: !1
-                    },
+                    height: 350,
+                    type: "area",
                     toolbar: {
                         show: !1
                     }
                 },
-                plotOptions: {
-                    stroke: {
-                        width: [1, 2, 1],
-                        curve: "straight",
-                        dashArray: [0, 8, 5]
-                    },
-                },
+                colors: ["#d35400", "#8e44ad", "#1abc9c", "#e74c3c", "#3498db"],
                 dataLabels: {
                     enabled: !1
                 },
-                series: data.series,
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
                 xaxis: {
                     categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
                 },
-                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
-                legend: {
-                    position: "bottom"
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
                 },
-                fill: {
-                    opacity: 1
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
                 }
             },
                 chart = new ApexCharts(document.querySelector("#line_chart_dashed1"), options);
@@ -106,40 +126,96 @@ function LoadForcastingChart() {
         type: 'GET',
         success: function (data) {
             var options = {
+                series: data,
                 chart: {
-                    height: 380,
-                    type: "line",
-                    zoom: {
-                        enabled: !1
-                    },
+                    height: 350,
+                    type: "area",
                     toolbar: {
                         show: !1
                     }
                 },
-                plotOptions: {
-                    stroke: {
-                        width: [1, 2, 1],
-                        curve: "straight",
-                        dashArray: [0, 8, 5]
-                    },
-                },
+                colors: ["#FF6F61", "#4CAF50", "#FFEB3B", "#42A5F5", "#FF9800", "#AB47BC", "#26C6DA", "#EC407A", "#e74c3c", "#16a085"],
                 dataLabels: {
                     enabled: !1
                 },
-                series: data,
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
                 xaxis: {
                     categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
                 },
-                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
-                legend: {
-                    position: "bottom"
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
                 },
-                fill: {
-                    opacity: 1
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
                 }
             },
                 chart = new ApexCharts(document.querySelector("#Forecasting"), options);
             chart.render();
+
+            //var options = {
+            //    series: data.series,
+            //    chart: {
+            //        height: 350,
+            //        type: "area",
+            //        toolbar: {
+            //            show: !1
+            //        }
+            //    },
+            //    colors: ["#ff5733", "#c70039", "#900c3f", "#581845", "#28b463"],
+            //    dataLabels: {
+            //        enabled: !1
+            //    },
+            //    stroke: {
+            //        curve: "smooth",
+            //        width: 2
+            //    },
+            //    fill: {
+            //        type: "gradient",
+            //        gradient: {
+            //            shadeIntensity: 1,
+            //            inverseColors: !1,
+            //            opacityFrom: .45,
+            //            opacityTo: .05,
+            //            stops: [20, 100, 100, 100]
+            //        }
+            //    },
+            //    xaxis: {
+            //        categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            //    },
+            //    markers: {
+            //        size: 3,
+            //        strokeWidth: 3,
+            //        hover: {
+            //            size: 4,
+            //            sizeOffset: 2
+            //        }
+            //    },
+            //    legend: {
+            //        position: "top",
+            //        horizontalAlign: "right"
+            //    }
+            //},
+            //    chart = new ApexCharts(document.querySelector("#Forecasting"), options);
+            //chart.render();
         },
         error: function () {
             console.log('Failed to load the partial view');
@@ -153,37 +229,46 @@ function LoadMonthlyEarningChart() {
         type: 'GET',
         success: function (data) {
             var options = {
+                series: data.series,
                 chart: {
-                    height: 360,
-                    type: "line",
-                    stacked: !0,
+                    height: 350,
+                    type: "area",
                     toolbar: {
                         show: !1
-                    },
-                    zoom: {
-                        enabled: !0
                     }
                 },
-                plotOptions: {
-                    stroke: {
-                        width: [1, 2, 1],
-                        curve: "straight",
-                        dashArray: [0, 8, 5]
-                    },
-                },
+                colors: ["#2ecc71", "#f39c12", "#9b59b6", "#e74c3c", "#16a085"],
                 dataLabels: {
                     enabled: !1
                 },
-                series: data.series,
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
                 xaxis: {
                     categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
                 },
-                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
-                legend: {
-                    position: "bottom"
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
                 },
-                fill: {
-                    opacity: 1
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
                 }
             },
                 chart = new ApexCharts(document.querySelector("#MonthlyEarningsChart"), options);

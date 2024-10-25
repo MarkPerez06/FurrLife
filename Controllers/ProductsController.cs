@@ -124,19 +124,6 @@ namespace FurrLife.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Save(Products model, IFormFile file)
         {
-            //string uniqueFileName = null;
-            //if (file != null)
-            //{
-            //    string uploadsFolder = Path.Combine(_environment.WebRootPath, "Products");
-            //    uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-            //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-            //    using (var fileStream = new FileStream(filePath, FileMode.Create))
-            //    {
-            //        file.CopyTo(fileStream);
-            //    }
-            //    model.ImageURL = "/Products/" + uniqueFileName;
-            //}
-
             string uniqueFileName = null;
             if (file != null)
             {

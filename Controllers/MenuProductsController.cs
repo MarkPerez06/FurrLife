@@ -8,17 +8,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.CodeAnalysis;
 using static FurrLife.Controllers.DashboardController;
+using Microsoft.AspNetCore.Identity;
 
 namespace FurrLife.Controllers
 {
     public class MenuProductsController : Controller
     {
-        private readonly ILogger<MenuProductsController> _logger;
+        private readonly ILogger<CartProductsController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
-        public MenuProductsController(ApplicationDbContext context, ILogger<MenuProductsController> logger, IWebHostEnvironment environment)
+        private readonly SignInManager<IdentityUser> _signInManager;
+        public MenuProductsController(ApplicationDbContext context, ILogger<CartProductsController> logger, IWebHostEnvironment environment, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
             _logger = logger;
             _environment = environment;
         }

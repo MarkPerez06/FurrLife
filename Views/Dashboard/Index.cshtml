@@ -1,11 +1,17 @@
 ﻿@using System.Globalization;
+@using FurrLife.Static
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<Orders>
 @{
-        ViewBag.Title = "Main";
-        ViewBag.pTitle = "Main";
+    ViewBag.Title = "Main";
+    ViewBag.pTitle = "Main";
 
     ViewBag.pageTitle = "Dashboard";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var UserRoleId = user.SecurityStamp;
 }
 <link href="~/assets/libs/ion-rangeslider/css/ion.rangeSlider.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
@@ -15,187 +21,133 @@
     var Year = ViewBag.Year as SelectList;
 }
 
-@if (true)
+@if (UserRoleId == UserRoles.Administrator.Id)
 {
-    <div class="row">
-        <div class="col-xl-4">
-            <div class="card overflow-hidden">
-                <div class="bg-primary bg-soft">
-                    <div class="row">
-                        <div class="col-7">
-                            <div class="text-primary p-3">
-                                <h5 class="text-primary">Welcome Back !</h5>
-                                <p>FurrLife Dashboard</p>
-                            </div>
-                        </div>
-                        <div class="col-5 align-self-end">
-                            <img src="~/assets/images/profile-img.png" alt="" class="img-fluid">
-                        </div>
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-sm-flex flex-wrap">
+                    <h4 class="card-title mb-4">Top 10 Forecasting</h4>
+                    <div class="ms-auto">
                     </div>
                 </div>
-                <div class="card-body pt-0">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
-                            <p class="text-muted mb-0 text-truncate">Email</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-4">Monthly Earning</h4>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <p class="text-muted">This month</p>
-                            <h3>@string.Format(new CultureInfo("en-PH", false),"{0:C}", ViewBag.TransactionsMonthlyAmount)</h3>
-                            @*     <p class="text-muted"><span class="text-success me-2"> 12% <i class="mdi mdi-arrow-up"></i> </span> From previous period</p> *@
 
-                            <div class="mt-4">
-                            </div>
-                        </div>
-                        @*                         <div class="col-sm-6">
-                    <div class="mt-4 mt-sm-0">
-                    <div id="radialBar-chart" class="apex-charts"></div>
-                    </div>
-                    </div> *@
-                    </div>
-                </div>
+                <div id="Forecasting" class="apex-charts" dir="ltr"></div>
             </div>
         </div>
-        <div class="col-xl-8">
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">Orders</p>
-                                    <h4 class="mb-0">@ViewBag.OrdersCount</h4>
-                                </div>
 
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx-copy-alt font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">Transactions</p>
-                                    <h4 class="mb-0">@ViewBag.TransactionsCount</h4>
-                                </div>
-
-                                <div class="flex-shrink-0 align-self-center">
-                                    <div class="mini-stat-icon avatar-sm rounded-circle bg-primary">
-                                        <span class="avatar-title">
-                                            <i class="bx bx-copy-alt font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card mini-stats-wid">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <p class="text-muted fw-medium">All Earning</p>
-                                    <h4 class="mb-0">@string.Format(new CultureInfo("en-PH", false),"{0:C}", ViewBag.TransactionAmount)</h4>
-                                </div>
-
-                                <div class="flex-shrink-0 align-self-center ">
-                                    <div class="avatar-sm rounded-circle bg-primary mini-stat-icon">
-                                        <span class="avatar-title rounded-circle bg-primary">
-                                            <i class="bx bx-archive-in font-size-24"></i>
-                                        </span>
-                                    </div>
-                                </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card mini-stats-wid">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-muted fw-medium">Monthly Earnings</p>
+                                <h4 class="mb-0">@string.Format(new CultureInfo("en-PH", false), "{0:C}", ViewBag.TransactionsMonthlyAmount)</h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end row -->
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-sm-flex flex-wrap">
-                        <h4 class="card-title mb-4">Forecasting</h4>
-                        <div class="ms-auto">
+            <div class="col-md-3">
+                <div class="card mini-stats-wid">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-muted fw-medium">All Earnings</p>
+                                <h4 class="mb-0">@string.Format(new CultureInfo("en-PH", false), "{0:C}", ViewBag.TransactionAmount)</h4>
+                            </div>
                         </div>
                     </div>
-
-                    <div id="Forecasting" class="apex-charts" dir="ltr"></div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card mini-stats-wid">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-muted fw-medium">Orders</p>
+                                <h4 class="mb-0">@ViewBag.OrdersCount</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card mini-stats-wid">
+                    <div class="card-body">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <p class="text-muted fw-medium">Transactions</p>
+                                <h4 class="mb-0">@ViewBag.TransactionsCount</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <div>
+        <div class="col-md-6">
             <div class="card">
-                <select id="Year" class="form-control" value="" onchange="FilterYear()">
-                    <option value="">- Select Year -</option>
-                    @*<option value="">Forecasting</option>*@
-                    @foreach (var item in Year)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
                         <h4 class="card-title mb-4">
-                            Best Seller
+                            Top 5 Best Selling
                         </h4>
                         <div class="ms-auto">
+                            <select id="Year" class="form-control input-sm float-end Year" value="" onchange="FilterYear()">
+                                <option value="">- Year -</option>
+                                @foreach (var item in Year)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <div id="line_chart_dashed" class="apex-charts" dir="ltr"></div>
                 </div>
             </div>
         </div>
-    </div>
-
-@*     <div class="row">
-        <div>
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
                         <h4 class="card-title mb-4">
-                            Least Seller
+                            Top 5 Least Selling
                         </h4>
                         <div class="ms-auto">
+                            <select id="Year" class="form-control input-sm float-end Year" value="" onchange="FilterYear()">
+                                <option value="">- Year -</option>
+                                @foreach (var item in Year)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
                         </div>
                     </div>
                     <div id="line_chart_dashed1" class="apex-charts" dir="ltr"></div>
                 </div>
             </div>
         </div>
-    </div> *@
-
-    <div class="row">
-        <div>
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">
                         <h4 class="card-title mb-4">
-                            Monthly Earning
+                            Monthly Earnings
                         </h4>
                         <div class="ms-auto">
+                            <select id="Year" class="form-control input-sm float-end Year" value="" onchange="FilterYear()">
+                                <option value="">- Year -</option>
+                                @foreach (var item in Year)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
                         </div>
                     </div>
-
                     <div id="MonthlyEarningsChart" class="apex-charts" dir="ltr"></div>
                 </div>
             </div>
@@ -204,27 +156,27 @@
 }
 
 <!-- end row -->
+@* @if (UserRoleId == UserRoles.Veterinarian.Id || UserRoleId == UserRoles.Staff.Id) *@
 @if (true)
 {
-    <div class="row">
+    <div class="row" hidden>
         <div class="col-lg-12">
             <div class="card overflow-hidden">
                 <div class="bg-primary bg-soft">
                     <div class="row">
-                        @if (true)
-                        {
-                            <div class="col-10">
-                                <div class="text-primary p-3">
-                                    <h5 class="text-primary">Welcome Back !</h5>
-                                    <p>FurrLife Dashboard</p>
-                                    <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
-                                    <p class="text-muted mb-0 text-truncate">Email</p>
-                                </div>
+
+                        <div class="col-10">
+                            <div class="text-primary p-3">
+                                <h5 class="text-primary">Welcome Back !</h5>
+                                <p>FurrLife Dashboard</p>
+                                <h5 class="font-size-15 text-truncate mt-3"><i class="bx bx-user"></i> Full Name</h5>
+                                <p class="text-muted mb-0 text-truncate">Email</p>
                             </div>
-                            <div class="col-2 align-self-end">
-                                <img src="~/assets/images/profile-img.png" alt="" class="img-fluid" style="width: 200px">
-                            </div>
-                        }
+                        </div>
+                        <div class="col-2 align-self-end">
+                            <img src="~/assets/images/profile-img.png" alt="" class="img-fluid" style="width: 200px">
+                        </div>
+
                     </div>
                 </div>
                 <div class="card-body pt-4">
@@ -256,10 +208,10 @@
                                     <th class="align-middle">Order ID</th>
                                     <th class="align-middle">Date</th>
                                     <th class="align-middle">Total</th>
-                                    <th class="align-middle">Discount</th>
+                                    <th class="align-middle" hidden>Discount</th>
                                     <th class="align-middle">Payment Status</th>
                                     <th class="align-middle">Payment Method</th>
-                                    <th class="align-middle">View Details</th>
+                                    <th class="align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -276,15 +228,15 @@
                                             @if (item.Discounts > 0)
                                             {
                                                 <span class="text-success">@item.Discounts% OFF</span>
-                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", ActualTotal)</b></p>
-                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", ActualTotal)</b></p>
+                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false), "{0:C}", SaveDiscount)</span>
                                             }
                                             else
                                             {
-                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</b></p>
+                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</b></p>
                                             }
                                         </td>
-                                        <td>
+                                        <td hidden>
                                             @item.Discounts%
                                             @if (item.SeniorCitizenID != null && item.SeniorCitizenID != "")
                                             {
@@ -311,7 +263,7 @@
                                         <td>
                                             <!-- Button trigger modal -->
                                             <button type="button" onclick="OrderDetails(@item.Id)" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".transaction-detailModal">
-                                                View Details
+                                                Open
                                             </button>
                                         </td>
                                     </tr>
@@ -336,10 +288,10 @@
                                     <th class="align-middle">Order ID</th>
                                     <th class="align-middle">Date</th>
                                     <th class="align-middle">Total</th>
-                                    <th class="align-middle">Discount</th>
+                                    <th class="align-middle" hidden>Discount</th>
                                     <th class="align-middle">Payment Status</th>
                                     <th class="align-middle">Payment Method</th>
-                                    <th class="align-middle">View Details</th>
+                                    <th class="align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -356,15 +308,15 @@
                                             @if (item.Discounts > 0)
                                             {
                                                 <span class="text-success">@item.Discounts% OFF</span>
-                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", ActualTotal)</b></p>
-                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", ActualTotal)</b></p>
+                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false), "{0:C}", SaveDiscount)</span>
                                             }
                                             else
                                             {
-                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</b></p>
+                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</b></p>
                                             }
                                         </td>
-                                        <td>
+                                        <td hidden>
                                             @item.Discounts%
                                             @if (item.SeniorCitizenID != null && item.SeniorCitizenID != "")
                                             {
@@ -391,7 +343,7 @@
                                         <td>
                                             <!-- Button trigger modal -->
                                             <button type="button" onclick="OrderDetails(@item.Id)" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".transaction-detailModal">
-                                                View Details
+                                                Open
                                             </button>
                                         </td>
                                     </tr>
@@ -408,7 +360,7 @@
 
 @if (true)
 {
-    <div class="row">
+    <div class="row" hidden>
         <div class="col-lg-12">
             <div class="card overflow-hidden">
                 <div class="bg-primary bg-soft">
@@ -424,13 +376,13 @@
                                 <h5 class="text-primary">
                                     Wallet Balance: @if (true)
                                     {
-                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", 0)
+                                        @string.Format(new CultureInfo("en-PH", false), "{0:C}", 0)
                                     }
                                 </h5>
                                 <h5 class="text-primary">
                                     Reward Points: @if (true)
                                     {
-                                        @string.Format(new CultureInfo("en-PH", false),"{0:C}", 0)
+                                        @string.Format(new CultureInfo("en-PH", false), "{0:C}", 0)
                                     }
                                     <br>
                                     @if (true)
@@ -464,10 +416,10 @@
                                     <th class="align-middle">Order ID</th>
                                     <th class="align-middle">Date</th>
                                     <th class="align-middle">Total</th>
-                                    <th class="align-middle">Discount</th>
+                                    <th class="align-middle" hidden>Discount</th>
                                     <th class="align-middle">Payment Status</th>
                                     <th class="align-middle">Payment Method</th>
-                                    <th class="align-middle">View Details</th>
+                                    <th class="align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -480,16 +432,16 @@
                                         <td>
                                             @item.DateCreated.ToString("MMMM dd, yyyy")
                                         </td>
-                                        <td>
+                                        <td hidden>
                                             @if (item.Discounts > 0)
                                             {
                                                 <span class="text-success">@item.Discounts% OFF</span>
-                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", ActualTotal)</b></p>
-                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false),"{0:C}", SaveDiscount)</span>
+                                                <p class="mb-1" key="t-simplified"><span class="text-muted me-2"><del>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</del></span> <b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", ActualTotal)</b></p>
+                                                <span class="badge rounded-pill bg-success float-start">Save @string.Format(new CultureInfo("en-PH", false), "{0:C}", SaveDiscount)</span>
                                             }
                                             else
                                             {
-                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false),"{0:C}", item.TotalAmount)</b></p>
+                                                <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</b></p>
                                             }
                                         </td>
                                         <td>
@@ -519,7 +471,7 @@
                                         <td>
                                             <!-- Button trigger modal -->
                                             <button type="button" onclick="OrderDetails(@item.Id)" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target=".transaction-detailModal">
-                                                View Details
+                                                Open
                                             </button>
                                         </td>
                                     </tr>
@@ -538,7 +490,7 @@
 <!-- end row -->
 <!-- Transaction Modal -->
 <div class="modal fade transaction-detailModal" tabindex="-1" role="dialog" aria-labelledby="transaction-detailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" style="width: 60vw; max-width: 100%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="transaction-detailModalLabel">Order Details</h5>
@@ -661,7 +613,7 @@
         input.focus();
     }
 
-    
+
 
     function ConvertToeWallet() {
         Swal.fire({
@@ -717,7 +669,7 @@
     }
 
     function FilterYear() {
-        var Year = $("#Year").val();
+        var Year = $(".Year").val();
         $.ajax({
             url: "/Dashboard/FilterYear",
             type: 'GET',

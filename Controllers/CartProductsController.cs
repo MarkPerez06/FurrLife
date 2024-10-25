@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 
 namespace FurrLife.Controllers
 {
@@ -13,43 +14,79 @@ namespace FurrLife.Controllers
         private readonly ILogger<CartProductsController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _environment;
-        public CartProductsController(ApplicationDbContext context, ILogger<CartProductsController> logger, IWebHostEnvironment environment)
+        private readonly SignInManager<IdentityUser> _signInManager;
+        public CartProductsController(ApplicationDbContext context, ILogger<CartProductsController> logger, IWebHostEnvironment environment, SignInManager<IdentityUser> signInManager)
         {
             _context = context;
+            _signInManager = signInManager;
             _logger = logger;
             _environment = environment;
         }
 
+        static string GenerateTrackingNumber()
+        {
+            string prefix = "FLVET"; // Fixed prefix
+            string randomNumber = GenerateRandomNumber(2); // Generate a 2-digit random number
+            string currentDate = DateTime.Now.ToString("yyyy-MM"); // Current year and month (e.g., 2024-10)
+            string sequenceNumber = GenerateSequenceNumber(2); // Generate a 6-digit sequence number
+
+            return $"{prefix}-{randomNumber}{currentDate}{sequenceNumber}";
+        }
+
+        static string GenerateRandomNumber(int length)
+        {
+            Random random = new Random();
+            string result = "";
+            for (int i = 0; i < length; i++)
+            {
+                result += random.Next(0, 2).ToString(); // Append a random digit (0-2)
+            }
+            return result;
+        }
+
+        static string GenerateSequenceNumber(int length)
+        {
+            Random random = new Random();
+            string result = random.Next(1, (int)Math.Pow(10, length)).ToString().PadLeft(length, '0'); // Zero-padded sequence number
+            return result;
+        }
+
         public IActionResult Index()
         {
-            var model = from cp in _context.CartProducts
-                        join p in _context.Products
-                        on cp.ProductId equals p.Id
-                        join m in _context.Menu
-                        on p.MenuId equals m.Id
-                        join u in _context.Units
-                        on p.UnitId equals u.Id
-                        where cp.SessionId == HttpContext.Session.GetString("SessionId")
-                        orderby cp.Id descending
-                        select new CartProductsView
-                        {
-                            CartId = cp.Id,
-                            CartQuantity = cp.Quantity,
-                            CartDateCreated = cp.DateCreated,
-                            CartSessionId = cp.SessionId,
-                            MenuName = m.Name,
-                            MenuDescription = m.Description,
-                            ProductId = p.Id,
-                            ProductName = p.Name,
-                            ProductDescription = p.Description,
-                            ProductPrice = p.Price,
-                            ProductImageURL = p.ImageURL,
-                            ProductRating = p.ProductRating,
-                            ProductDiscounts = p.Discounts,
-                            UnitName = u.Name,
-                            UnitCode = u.Code
-                        };
-            return View(model);
+            if (User.Identity.IsAuthenticated)
+            {
+                var model = from cp in _context.CartProducts
+                            join p in _context.Products
+                            on cp.ProductId equals p.Id
+                            join m in _context.Menu
+                            on p.MenuId equals m.Id
+                            join u in _context.Units
+                            on p.UnitId equals u.Id
+                            where cp.SessionId == HttpContext.Session.GetString("SessionId")
+                            orderby cp.Id descending
+                            select new CartProductsView
+                            {
+                                CartId = cp.Id,
+                                CartQuantity = cp.Quantity,
+                                CartDateCreated = cp.DateCreated,
+                                CartSessionId = cp.SessionId,
+                                MenuName = m.Name,
+                                MenuDescription = m.Description,
+                                ProductId = p.Id,
+                                ProductName = p.Name,
+                                ProductDescription = p.Description,
+                                ProductPrice = p.Price,
+                                ProductImageURL = p.ImageURL,
+                                ProductRating = p.ProductRating,
+                                ProductDiscounts = p.Discounts,
+                                UnitName = u.Name,
+                                UnitCode = u.Code
+                            };
+                return View(model);
+            }
+            else {
+                return Redirect("~/Identity/Account/Login");
+            }
         }
 
         [HttpPost]
@@ -91,7 +128,7 @@ namespace FurrLife.Controllers
             }
 
             var O = _context.Orders.Where(m => m.Id == OrderId).FirstOrDefault();
-            O.ReferenceNo = "#SKS" + OrderId;
+            O.ReferenceNo = GenerateTrackingNumber() + OrderId;
             O.TotalAmount = TotalAmount;
             O.IsPaid = false;
             O.Discounts = 0;
