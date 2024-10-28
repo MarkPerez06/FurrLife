@@ -4881,6 +4881,10 @@
       "PackagePath": "staticwebassets\\assets\\libs\\tui-chart\\tui-chart.min.js"
     },
     {
+      "Id": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\wwwroot\\assets\\libs\\tui-code-snippet\\tui-code-snippet.min.js",
+      "PackagePath": "staticwebassets\\assets\\libs\\tui-code-snippet\\tui-code-snippet.min.js"
+    },
+    {
       "Id": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\wwwroot\\assets\\libs\\tui-date-picker\\tui-date-picker.min.css",
       "PackagePath": "staticwebassets\\assets\\libs\\tui-date-picker\\tui-date-picker.min.css"
     },

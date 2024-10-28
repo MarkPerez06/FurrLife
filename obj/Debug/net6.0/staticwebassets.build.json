@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "j56BkpJzWQia3nuQeIAM51SEXrKQnzSgCvhVClemqRk=",
+  "Hash": "HqwS4nR/419d8l+xy63T/Wpz8M2xzVx8PoqIp/4gGbQ=",
   "Source": "FurrLife",
   "BasePath": "_content/FurrLife",
   "Mode": "Default",
@@ -24259,6 +24259,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\libs\\tui-chart\\tui-chart-polyfill.min.js"
+    },
+    {
+      "Identity": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\wwwroot\\assets\\libs\\tui-code-snippet\\tui-code-snippet.min.js",
+      "SourceId": "FurrLife",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\wwwroot\\",
+      "BasePath": "_content/FurrLife",
+      "RelativePath": "assets/libs/tui-code-snippet/tui-code-snippet.min.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\libs\\tui-code-snippet\\tui-code-snippet.min.js"
     },
     {
       "Identity": "C:\\Users\\MarkAnthonyPerez\\Documents\\GitHub_2024\\FurrLife-2024\\wwwroot\\assets\\libs\\tui-date-picker\\tui-date-picker.min.css",

@@ -6,10 +6,12 @@ namespace FurrLife.Models
     public class Appointments
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
-        public string? Code { get; set; }
-        public bool? IsActive { get; set; }
-        public DateTime? AppointmentDate { get; set; }
-        public string UserId { get; set; }
+        public int CalendarId { get; set; }
+        public string Title { get; set; }
+        public string Category { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public bool IsAllDay { get; set; }
+        public int UserId { get; set; }
     }
 }
