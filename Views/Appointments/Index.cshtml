@@ -25,6 +25,8 @@
     </div>
 </div>
 <div id="calendar"></div>
+<br />
+<div id="calendar1"></div>
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
 <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
@@ -54,7 +56,15 @@
         defaultView: 'month',
         taskView: true, // can be also ['label', 'task']
         scheduleView: true, // can be also ['time', 'allday', 'month']
-        useCreationPopup: true,
+        useCreationPopup: false,
+        useDetailPopup: true,
+    });
+
+    const calendar1 = new tui.Calendar('#calendar1', {
+        defaultView: 'week',
+        taskView: true, // can be also ['label', 'task']
+        scheduleView: true, // can be also ['time', 'allday', 'month']
+        useCreationPopup: false,
         useDetailPopup: true,
     });
 
@@ -105,6 +115,7 @@
             success: function (schedules) {
                 //Add Data to Calendar
                 calendar.createSchedules(schedules);
+                calendar1.createSchedules(schedules);
             },
             error: function (err) {
                 console.error('Failed to load appointments:', err);
