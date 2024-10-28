@@ -30,7 +30,7 @@ namespace FurrLife.Controllers
                 {
                     id = a.Id.ToString(), // Convert Id to string
                     calendarId = "1", // Assuming a static calendarId; modify as needed
-                    title = a.Title + "("+ a.Start.ToString("hh:mm tt") + " - "+ a.End.ToString("hh:mm tt") + ")",
+                    title = a.Title + " ("+ a.Start.ToString("hh:mm tt") + " - "+ a.End.ToString("hh:mm tt") + ")",
                     category = a.IsAllDay ? "allday" : "time", // Set category based on IsAllDay
                     start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"), // Format StartDate
                     end = a.End.ToString("yyyy-MM-ddTHH:mm:ss"),     // Format EndDate
