@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Calendar";
+    ViewBag.pTitle = "Calendar";
+    ViewBag.pageTitle = "Schedule";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css">
+<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+<style>
+    #calendar {
+        height: 800px;
+    }
+
+    .tui-full-calendar-section-button
+    {
+        display: none !important;
+    }
+</style>
+<div class="row">
+   <div class="col-lg-4">
+        <button id="prevMonth" class="btn-primary float-end">Previous</button>
+   </div>
+    <div class="col-lg-4 text-center">
+        <h3 id="currentMonth"></h3>
+    </div>
+    <div class="col-lg-4">
+        <button id="nextMonth" class="btn-primary float-start">Next</button>
+    </div>
+</div>
+<div id="calendar"></div>
+<br />
+<div id="calendar1"></div>
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+
+<script src="~/assets/libs/tui-code-snippet/tui-code-snippet.min.js"></script>
+<script src="~/assets/libs/tui-dom/tui-dom.min.js"></script>
+
+
+<script src="~/assets/libs//moment/min/moment.min.js"></script>
+<script src="~/assets/libs/chance/chance.min.js"></script>
+
+<script src="~/assets/libs/tui-calendar/tui-calendar.min.js"></script>
+
+<script src="~/assets/js/app.js"></script>
+<script>
+    const calendar = new tui.Calendar('#calendar', {
+        defaultView: 'month',
+        taskView: true, 
+        scheduleView: true,
+        useCreationPopup: false,
+        useDetailPopup: true,
+    });
+
+    const calendar1 = new tui.Calendar('#calendar1', {
+        defaultView: 'week',
+        taskView: true,
+        scheduleView: true,
+        useCreationPopup: false,
+        useDetailPopup: true,
+    });
+
+    loadAppointments()
+    function loadAppointments() {
+        $.ajax({
+            url: '/Appointments/GetAppointments',
+            method: 'GET',
+            success: function (schedules) {
+                calendar.createSchedules(schedules);
+                calendar1.createSchedules(schedules);
+            },
+            error: function (err) {
+                console.error('Failed to load appointments:', err);
+            }
+        });
+    }
+
+    function updateMonthYearDisplay() {
+        const currentDate = calendar.getDate();
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        const month = monthNames[currentDate.getMonth()];
+        const year = currentDate.getFullYear();
+        document.getElementById('currentMonth').innerText = `${month} ${year}`;
+    }
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        calendar.prev();
+        updateMonthYearDisplay();
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        calendar.next();
+        updateMonthYearDisplay();
+    });
+
+    updateMonthYearDisplay();
+</script>
+
+

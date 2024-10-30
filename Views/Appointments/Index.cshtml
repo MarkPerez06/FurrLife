@@ -1,37 +1,142 @@
-﻿@* @model IEnumerable<Discounts> *@
+﻿@model IEnumerable<Schedule>
 @{
-    ViewBag.Title = "Appointments";
-    ViewBag.pTitle = "Appointments";
+    ViewBag.Title = "Schedule";
+    ViewBag.pTitle = "Schedule";
     ViewBag.pageTitle = "Maintenance";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var Users = ViewBag.Users as SelectList;
 }
+<!-- DataTables -->
+<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
 
-<link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css">
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
-<style>
-    #calendar {
-        height: 800px;
-    }
-
-    .tui-full-calendar-section-button
-    {
-        display: none !important;
-    }
-</style>
 <div class="row">
-   <div class="col-lg-4">
-        <button id="prevMonth" class="btn-primary float-end">Previous</button>
-   </div>
-    <div class="col-lg-4 text-center">
-        <h3 id="currentMonth"></h3>
-    </div>
-    <div class="col-lg-4">
-        <button id="nextMonth" class="btn-primary float-start">Next</button>
-    </div>
-</div>
-<div id="calendar"></div>
-<br />
-<div id="calendar1"></div>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <table id="datatable-buttons" class="table table-bordered table-striped dt-responsive nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Category</th>
+                            <th>Veterinarian</th>
+                            <th class="text-center" style="table-layout: fixed;">
+                                <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">Create</a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var Count = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            var Name = Users.Where(m => m.Value == item.UserId).FirstOrDefault();
+                            Count++;
+                            <tr>
+                                <td>@Count.</td>
+                                <td>@item.Title</td>
+                                <td>@item.Start.ToString("MMMM dd, yyyy - (hh:mm tt)")</td>
+                                <td>@item.End.ToString("MMMM dd, yyyy - (hh:mm tt)")</td>
+                                <td>
+                                    @if (item.IsAllDay)
+                                    {
+                                        <span class="badge bg-success rounded-pill p-1">All Day</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success rounded-pill p-1">Time</span>
+                                    }
+                                </td>
+                                <td>@Name.Text</td>
+                                <td class="text-center">
+                                    <a href="#" onclick="Edit(@item.Id)" class="btn btn-success waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
+                                        <i class="mdi mdi-pencil ms-1"></i> Edit
+                                    </a>
+                                    <a href="#" onclick="Delete(@item.Id)" class="btn btn-danger waves-effect waves-light btn-sm">
+                                        <i class="mdi mdi-delete ms-1"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+
+<div id="CreateUpdateModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div hidden>
+                            <input id="Id" type="text" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Title" class="form-label">Title</label>
+                                <input id="Title" placeholder="Title" type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Start" class="form-label">Start</label>
+                                <input id="Start" placeholder="Start" type="datetime-local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="End" class="form-label">End</label>
+                                <input id="End" placeholder="End" type="datetime-local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="End" class="form-label">Veterinarian</label>
+                                <select id="UserId" class="form-control">
+                                    <option value="">- Select Veterinarian -</option>
+                                    @foreach (var item in Users)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="IsAllDay">Category</label>
+                                <select id="IsAllDay" class="form-control" value="" required>
+                                    <option value="true">All Day</option>
+                                    <option value="false">Time</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button onclick="SaveForm()" type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- JAVASCRIPT -->
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
 <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
@@ -39,121 +144,161 @@
 <script src="~/assets/libs/node-waves/waves.min.js"></script>
 
 
+<!-- Required datatable js -->
+<script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/assets/libs/jszip/jszip.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
 
-<script src="~/assets/libs/tui-code-snippet/tui-code-snippet.min.js"></script>
-<script src="~/assets/libs/tui-dom/tui-dom.min.js"></script>
+<!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
-
-<script src="~/assets/libs//moment/min/moment.min.js"></script>
-<script src="~/assets/libs/chance/chance.min.js"></script>
-
-<script src="~/assets/libs/tui-calendar/tui-calendar.min.js"></script>
-
-@* <script src="~/assets/js/pages/calendars.js"></script>
-<script src="~/assets/js/pages/schedules.js"></script>
-<script src="~/assets/js/pages/calendar.init.js"></script> *@
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>
 
 <!-- App js -->
+<script src="~/assets/js/pages/modal.init.js"></script>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+
 <script src="~/assets/js/app.js"></script>
+
 <script>
-    //Initialize TUI Calendar
-    const calendar = new tui.Calendar('#calendar', {
-        defaultView: 'month',
-        taskView: true, // can be also ['label', 'task']
-        scheduleView: true, // can be also ['time', 'allday', 'month']
-        useCreationPopup: false,
-        useDetailPopup: true,
-    });
 
-    const calendar1 = new tui.Calendar('#calendar1', {
-        defaultView: 'week',
-        taskView: true, // can be also ['label', 'task']
-        scheduleView: true, // can be also ['time', 'allday', 'month']
-        useCreationPopup: false,
-        useDetailPopup: true,
-    });
+    var ID = $("#id").val();
 
-    //Sample Data
-    // const schedules = [
-    //     {
-    //         id: '1',
-    //         calendarId: '1',
-    //         title: 'Meeting',
-    //         category: 'time',
-    //         start: '2024-10-30T10:00:00',
-    //         end: '2024-10-30T11:00:00',
-    //         isAllDay: false,
-    //     },
-    //     {
-    //         id: '2',
-    //         calendarId: '1',
-    //         title: 'Lunch Break',
-    //         category: 'time',
-    //         start: '2024-10-30T12:00:00',
-    //         end: '2024-10-30T13:00:00',
-    //         isAllDay: false,
-    //     },
-    //     {
-    //         id: '3',
-    //         calendarId: '1',
-    //         title: 'Project Deadline',
-    //         category: 'allday',
-    //         start: '2024-11-01',
-    //         end: '2024-11-01',
-    //         isAllDay: true,
-    //     },
-    //     {
-    //         id: '4',
-    //         calendarId: '1',
-    //         title: 'Doctor Appointment',
-    //         category: 'time',
-    //         start: '2024-11-02T15:00:00',
-    //         end: '2024-11-02T16:00:00',
-    //         isAllDay: false,
-    //     },
-    // ];
-    loadAppointments()
-    function loadAppointments() {
+    function convertDateTimeToDate(dateTime) {
+        var date = new Date(dateTime);
+        var day = date.getDate();
+        var month = date.getMonth() + 1; // Months are zero-based
+        var year = date.getFullYear();
+
+        // Pad single-digit day and month with leading zeros
+        var formattedDay = day < 10 ? '0' + day : day;
+        var formattedMonth = month < 10 ? '0' + month : month;
+        var formattedDate = year + '-' + formattedMonth + '-' + formattedDay;
+        return formattedDate;
+    }
+
+    function SaveForm() {
+        var data = {
+            Id: ID,
+            Title: $("#Title").val(),
+            Start: $("#Start").val(),
+            End: $("#End").val(),
+            IsAllDay: $("#IsAllDay").val(),
+            UserId: $("#UserId").val(),
+        };
+        if (data.Title != "" && data.Start != "" && data.UserId != "") {
+            $.ajax({
+                url: '@Url.Action("Save", "Appointments")',
+                type: 'POST',
+                data: data,
+                success: function (data) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Record was successfully saved!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("Index", "Appointments")';
+                        }
+                    });
+                },
+                error: function (error) {
+                    Swal.fire('Oops!', 'Something went wrong!', 'error');
+                }
+            });
+        }
+    }
+
+    function Create() {
+        ID = 0;
+        $("#ModalTitle").text("Create Appointments").trigger("change");
+    }
+    function Edit(Id) {
+        $("#ModalTitle").text("Update Appointments").trigger("change");
+
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
         $.ajax({
-            url: '/Appointments/GetAppointments',
-            method: 'GET',
-            success: function (schedules) {
-                //Add Data to Calendar
-                calendar.createSchedules(schedules);
-                calendar1.createSchedules(schedules);
+            url: '@Url.Action("Edit", "Appointments")',
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                $("#Id").val(Id).trigger("change");
+                $("#Title").val(result.title).trigger("change");
+                $("#Start").val(result.start).trigger("change");
+                $("#End").val(result.end).trigger("change");
+                $("#IsAllDay").val(result.isAllDay).trigger("change");
+                $("#UserId").val(result.userId).trigger("change");
+
+                console.log(result);
             },
-            error: function (err) {
-                console.error('Failed to load appointments:', err);
+            error: function (error) {
+                Swal.fire('Oops!', 'Something went wrong!', 'error');
             }
         });
     }
+    function Delete(Id) {
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
 
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Appointments")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Record was successfully deleted!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "Appointments")';
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire('Oops!', 'Something went wrong!', 'error');
+                    }
+                });
 
-
-    //Navigation Functions and Month-Year Display
-    function updateMonthYearDisplay() {
-        const currentDate = calendar.getDate();
-        const monthNames = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-        const month = monthNames[currentDate.getMonth()];
-        const year = currentDate.getFullYear();
-        document.getElementById('currentMonth').innerText = `${month} ${year}`;
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelled!', 'Your record is safe!', 'error');
+            }
+        });
     }
-
-    document.getElementById('prevMonth').addEventListener('click', () => {
-        calendar.prev();
-        updateMonthYearDisplay();
-    });
-
-    document.getElementById('nextMonth').addEventListener('click', () => {
-        calendar.next();
-        updateMonthYearDisplay();
-    });
-
-    // Initialize month-year display on page load
-    updateMonthYearDisplay();
 </script>
-
-
