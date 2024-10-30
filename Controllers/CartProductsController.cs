@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using FurrLife.Static;
 
 namespace FurrLife.Controllers
 {
@@ -83,9 +82,6 @@ namespace FurrLife.Controllers
                                 UnitName = u.Name,
                                 UnitCode = u.Code
                             };
-                List<Schedule> Schedule = _context.Schedule.OrderByDescending(m => m.Id).ToList();
-                ViewBag.Schedule = Schedule;
-
                 return View(model);
             }
             else {
@@ -103,7 +99,7 @@ namespace FurrLife.Controllers
             return Json(model);
         }
 
-        public ActionResult PlaceOrder(string Payment, int ScheduleId, string CustomerRequest)
+        public ActionResult PlaceOrder(string Payment, string CustomerRequest)
         {
             Orders orders = new Orders();
             orders.Payment = Payment;
@@ -116,7 +112,6 @@ namespace FurrLife.Controllers
             var OrderId = orders.Id;
             var SessionId = HttpContext.Session.GetString("SessionId");
             var CP = _context.CartProducts.Where(m => m.SessionId == SessionId).ToList();
-
             foreach (var item in CP)
             {
                 OrderProducts OP = new OrderProducts();
@@ -131,13 +126,12 @@ namespace FurrLife.Controllers
                 var DiscountedPrice = (OP.Price - (OP.Price * OP.Discounts) / 100) * OP.Quantity;
                 TotalAmount = TotalAmount + Convert.ToDecimal(DiscountedPrice);
             }
-            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+
             var O = _context.Orders.Where(m => m.Id == OrderId).FirstOrDefault();
             O.ReferenceNo = GenerateTrackingNumber() + OrderId;
             O.TotalAmount = TotalAmount;
             O.IsPaid = false;
             O.Discounts = 0;
-            O.UserId = user.Id;
             _context.Orders.Update(O);
             _context.SaveChanges();
 
@@ -145,23 +139,6 @@ namespace FurrLife.Controllers
             foreach (var item in CP)
             {
                 _context.CartProducts.Remove(item);
-                _context.SaveChanges();
-            }
-
-            var Schedule = _context.Schedule.Where(m => m.Id == ScheduleId).ToList();
-            foreach (var item in Schedule)
-            {
-               var users = _context.Users.Where(m => m.Id == item.UserId).FirstOrDefault();
-
-                Appointments model = new Appointments();
-                model.CalendarId = 1;
-                model.Title = users.UserName + item.Title;
-                model.Start = item.Start;
-                model.End = item.End;
-                model.Category = item.IsAllDay ? "All Day" : "Time";
-                model.IsAllDay = item.IsAllDay;
-                model.UserId = user.Id;
-                _context.Appointments.Add(model);
                 _context.SaveChanges();
             }
 

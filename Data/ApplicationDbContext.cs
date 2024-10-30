@@ -13,7 +13,6 @@ namespace FurrLife.Data
         public DbSet<Menu> Menu { get; set; }
         public DbSet<Units> Units { get; set; }
         public DbSet<Appointments> Appointments { get; set; }
-        public DbSet<Schedule> Schedule { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<CartProducts> CartProducts { get; set; }
         public DbSet<CartProductsView> CartProductsView { get; set; }
