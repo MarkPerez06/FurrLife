@@ -57,12 +57,6 @@ namespace FurrLife.Models
         public string Email { get; set; }
         [DisplayName("Complete Address")]
         public string Address { get; set; }
-
-
-        [DisplayName("Immunization History")]
-        public string ImmunizationHistory { get; set; }
-        [DisplayName("Medical History")]
-        public string MedicalHistory { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 
