@@ -99,7 +99,7 @@ namespace FurrLife.Controllers
             return Json(model);
         }
 
-        public ActionResult PlaceOrder(string Payment, string CustomerRequest)
+        public ActionResult PlaceOrder(string Schedule, string Payment, string CustomerRequest)
         {
             Orders orders = new Orders();
             orders.Payment = Payment;
@@ -112,6 +112,9 @@ namespace FurrLife.Controllers
             var OrderId = orders.Id;
             var SessionId = HttpContext.Session.GetString("SessionId");
             var CP = _context.CartProducts.Where(m => m.SessionId == SessionId).ToList();
+            var user = _signInManager.UserManager.FindByNameAsync(User.Identity.Name);
+
+
             foreach (var item in CP)
             {
                 OrderProducts OP = new OrderProducts();
@@ -120,6 +123,7 @@ namespace FurrLife.Controllers
                 OP.ProductId = item.ProductId;
                 OP.Price = _context.Products.Find(item.ProductId).Price;
                 OP.Discounts = _context.Products.Find(item.ProductId).Discounts;
+                OP.UserId = user.Result.Id;
                 _context.OrderProducts.Add(OP);
                 _context.SaveChanges();
 
@@ -132,6 +136,7 @@ namespace FurrLife.Controllers
             O.TotalAmount = TotalAmount;
             O.IsPaid = false;
             O.Discounts = 0;
+            O.UserId = user.Result.Id;
             _context.Orders.Update(O);
             _context.SaveChanges();
 
