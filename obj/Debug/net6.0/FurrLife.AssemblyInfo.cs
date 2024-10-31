@@ -16,11 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< HEAD
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71cf4110746ae591026632baa59997fc4cca955a")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+485d86f928303e7ae1034aaedc91d6e97c75b3b3")]
->>>>>>> parent of 98e81a6 (Schedule)
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38e8db836cf520387fedc2847c135660b43713f9")]
 [assembly: System.Reflection.AssemblyProductAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
