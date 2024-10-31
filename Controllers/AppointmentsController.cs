@@ -1,5 +1,7 @@
 ﻿using FurrLife.Data;
 using FurrLife.Models;
+using FurrLife.Static;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,19 +9,30 @@ namespace FurrLife.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private readonly ILogger<DiscountsController> _logger;
+        private readonly ILogger<AppointmentsController> _logger;
         private readonly ApplicationDbContext _context;
 
-        public AppointmentsController(ApplicationDbContext context, ILogger<DiscountsController> logger)
+        public AppointmentsController(ApplicationDbContext context, ILogger<AppointmentsController> logger)
         {
             _context = context;
             _logger = logger;
 
         }
 
-        public IActionResult Index()
+
+        [Route("Calendar")]
+        public IActionResult Calendar()
         {
             return View();
+        }
+
+
+        public IActionResult Index()
+        {
+            List<IdentityUser> vetUsers = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.vetUsers = vetUsers;
+            var model = _context.Appointments.ToList();
+            return View(model);
         }
 
         [HttpGet]
@@ -28,38 +41,43 @@ namespace FurrLife.Controllers
             var schedules = _context.Appointments
                 .Select(a => new
                 {
-                    id = a.Id.ToString(), // Convert Id to string
-                    calendarId = "1", // Assuming a static calendarId; modify as needed
-                    title = a.Title + " ("+ a.Start.ToString("hh:mm tt") + " - "+ a.End.ToString("hh:mm tt") + ")",
-                    category = a.IsAllDay ? "allday" : "time", // Set category based on IsAllDay
-                    start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"), // Format StartDate
-                    end = a.End.ToString("yyyy-MM-ddTHH:mm:ss"),     // Format EndDate
+                    id = a.Id.ToString(),
+                    calendarId = "1",
+                    title = a.Title,
+                    category = a.IsAllDay ? "allday" : "time",
+                    start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = a.End.ToString("yyyy-MM-ddTHH:mm:ss"),
                     isAllDay = a.IsAllDay
                 })
                 .ToList();
 
-            return Json(schedules); // Return as JSON
+            return Json(schedules);
         }
 
 
         [HttpPost]
         public ActionResult Save(Appointments model)
         {
-            if (ModelState.IsValid)
+            if (model.Id != 0)
             {
-                if (model.Id != 0)
-                {
-                    _context.Appointments.Update(model);
-                }
-                else
-                {
-                    _context.Appointments.Add(model);
-                }
-                _context.SaveChanges();
-                return Json(new { success = true, message = "Form submitted successfully!" });
+                var appointment = _context.Appointments.Where(m => m.Id == model.Id).FirstOrDefault();
+                appointment.Title = model.Title;
+                appointment.Start = model.Start;
+                appointment.End = model.End;
+                appointment.IsAllDay = model.IsAllDay;
+                appointment.UserId = model.UserId;
+                _context.Appointments.Update(appointment);
             }
-            var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
-            return Json(new { success = false, errors = errors });
+            else
+            {
+                model.CalendarId = 1;
+                model.Category = model.IsAllDay ? "allday" : "time";
+                model.CusUserId = "";
+                model.OrderId = 0;
+                _context.Appointments.Add(model);
+            }
+            _context.SaveChanges();
+            return Json(new { success = true, message = "Form submitted successfully!" });
         }
 
         [HttpPost]

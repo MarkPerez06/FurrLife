@@ -12,6 +12,8 @@ namespace FurrLife.Models
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
         public bool IsAllDay { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+        public string? CusUserId { get; set; }
+        public int OrderId { get; set; }
     }
 }

@@ -141,14 +141,21 @@
                     </div>
                     <hr />
                     <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Immunization History</h4>
+                        <div class="col-lg-6 form-group mb-3">
+                            <h4 class="card-title mb-3 text-uppercase">Immunization History</h4>
+                            <textarea asp-for="ImmunizationHistory" class="form-control" style="height: 250px"></textarea>
+                            <span asp-validation-for="ImmunizationHistory" class="text-danger"></span>
+                        </div>
+                        <div class="col-lg-6 form-group mb-3">
+                            <h4 class="card-title mb-3 text-uppercase">Medical History</h4>
+                            <textarea asp-for="MedicalHistory" class="form-control" style="height: 250px"></textarea>
+                            <input asp-for="CreatedDate" class="form-control" type="hidden"></input>
+                            <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+                        </div>
                     </div>
                     <hr />
                     <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Medical History</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 form-group mb-3 text-center">
+                        <div class="col-lg-12 form-group mb-3 mt-4 text-center">
                             <a asp-action="Index" class="btn btn-secondary1">Back</a>
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
                         </div>

@@ -20,8 +20,8 @@
                     </a>
                 </li>
                 <li>
-                    <a href="@Url.Action("Index", "Appointments")" class="waves-effect">
-                        <span>Appointments</span>
+                    <a href="@Url.Action("Calendar", "Appointments")" class="waves-effect">
+                        <span>Calendar</span>
                     </a>
                 </li>
                 <li>
@@ -61,6 +61,7 @@
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href=@Url.Action("Index", "Appointments")>Appointments</a></li>
                         <li><a href=@Url.Action("Index", "Menu")>Category</a></li>
                         <li><a href=@Url.Action("Index", "Products")>Products & Services</a></li>
                         <li><a href=@Url.Action("Index", "Units")>Product Units</a></li>
