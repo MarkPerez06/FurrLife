@@ -1,0 +1,294 @@
+﻿@{
+    ViewBag.Title = "Consultation";
+    ViewBag.pTitle = "Consultation";
+    ViewBag.pageTitle = "Video Call";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<!-- DataTables -->
+<link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<!-- Responsive datatable examples -->
+<link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<style>
+    #videos {
+        display: flex;
+        gap: 10px;
+    }
+
+    video {
+        width: 45%;
+        border: 1px solid black;
+    }
+</style>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div id="videos">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <video id="remoteVideo" autoplay playsinline></video>
+                </div>
+                <div class="mt-4">
+                    <button id="startCall" class="btn btn-primary">Start Call</button>
+                    <button id="endCall" class="btn btn-primary">End Call</button>
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div> <!-- end row -->
+<!-- JAVASCRIPT -->
+<script src="~/assets/libs/jquery/jquery.min.js"></script>
+<script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="~/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="~/assets/libs/node-waves/waves.min.js"></script>
+
+
+<!-- Required datatable js -->
+<script src="~/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="~/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<!-- Buttons examples -->
+<script src="~/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="~/assets/libs/jszip/jszip.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/pdfmake.min.js"></script>
+<script src="~/assets/libs/pdfmake/build/vfs_fonts.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="~/assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="~/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="~/assets/js/pages/datatables.init.js"></script>
+
+<!-- App js -->
+<script src="~/assets/js/pages/modal.init.js"></script>
+<script src="~/assets/libs/parsleyjs/parsley.min.js"></script>
+<script src="~/assets/js/pages/form-validation.init.js"></script>
+<!-- Sweet Alerts js -->
+<script src="~/assets/libs/sweetalert2/sweetalert2.min.js"></script>
+
+<!-- Sweet alert init js-->
+<script src="~/assets/js/pages/sweet-alerts.init.js"></script>
+
+<script src="~/assets/js/app.js"></script>
+
+<script>
+    const localVideo = document.getElementById("localVideo");
+    const remoteVideo = document.getElementById("remoteVideo");
+    const startCallButton = document.getElementById("startCall");
+    const endCallButton = document.getElementById("endCall");
+
+    let localStream;
+    let remoteStream;
+    let peerConnection;
+
+    const configuration = {
+        iceServers: [
+            { urls: "stun:stun.l.google.com:19302" } // Public STUN server
+        ]
+    };
+
+    // Start local video stream
+    async function startLocalStream() {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+    }
+
+    // Start call
+    async function startCall() {
+        peerConnection = new RTCPeerConnection(configuration);
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+        peerConnection.ontrack = (event) => {
+            if (!remoteStream) {
+                remoteStream = new MediaStream();
+                remoteVideo.srcObject = remoteStream;
+            }
+            remoteStream.addTrack(event.track);
+        };
+
+        peerConnection.onicecandidate = (event) => {
+            if (event.candidate) {
+                sendSignal({ type: "candidate", candidate: event.candidate });
+            }
+        };
+
+        const offer = await peerConnection.createOffer();
+        await peerConnection.setLocalDescription(offer);
+        sendSignal({ type: "offer", offer });
+    }
+
+    // Handle incoming signals
+    function receiveSignal(data) {
+        if (data.type === "offer") handleOffer(data.offer);
+        else if (data.type === "answer") handleAnswer(data.answer);
+        else if (data.type === "candidate") handleCandidate(data.candidate);
+    }
+
+    async function handleOffer(offer) {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        sendSignal({ type: "answer", answer });
+    }
+
+    async function handleAnswer(answer) {
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    }
+
+    function handleCandidate(candidate) {
+        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
+    }
+
+    function sendSignal(data) {
+        // Placeholder function to integrate signaling server
+        console.log("Send signal:", JSON.stringify(data));
+    }
+
+    function endCall() {
+        if (peerConnection) {
+            peerConnection.close();
+            peerConnection = null;
+        }
+        remoteVideo.srcObject = null;
+        remoteStream = null;
+    }
+
+    startCallButton.onclick = async () => {
+        await startLocalStream();
+        startCall();
+    };
+    endCallButton.onclick = endCall;
+</script>
+
+<script>
+    var ID = $("#id").val();
+
+    function convertDateTimeToDate(dateTime) {
+        var date = new Date(dateTime);
+        var day = date.getDate();
+        var month = date.getMonth() + 1; // Months are zero-based
+        var year = date.getFullYear();
+
+        // Pad single-digit day and month with leading zeros
+        var formattedDay = day < 10 ? '0' + day : day;
+        var formattedMonth = month < 10 ? '0' + month : month;
+        var formattedDate = year + '-' + formattedMonth + '-' + formattedDay;
+        return formattedDate;
+    }
+
+    function SaveForm() {
+        var data = {
+            Id: ID,
+            Title: $("#Title").val(),
+            Start: $("#Start").val(),
+            End: $("#End").val(),
+            IsAllDay: $("#IsAllDay").val(),
+            UserId: $("#UserId").val()
+        };
+        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
+            $.ajax({
+                url: '@Url.Action("Save", "Appointments")',
+                type: 'POST',
+                data: data,
+                success: function (data) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Record was successfully saved!',
+                        icon: 'success',
+                        showCancelButton: false,
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '@Url.Action("Index", "Appointments")';
+                        }
+                    });
+                },
+                error: function (error) {
+                    Swal.fire('Oops!', 'Something went wrong!', 'error');
+                }
+            });
+        }
+    }
+
+    function Create() {
+        ID = 0;
+        $("#ModalTitle").text("Create Appointments").trigger("change");
+    }
+    function Edit(Id) {
+        $("#ModalTitle").text("Update Appointments").trigger("change");
+
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
+            $.ajax({
+                url: '@Url.Action("Edit", "Appointments")',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (result) {
+                    $("#Id").val(Id).trigger("change");
+                    $("#Title").val(result.title).trigger("change");
+                    $("#Start").val(result.start).trigger("change");
+                    $("#End").val(result.end).trigger("change");
+                    $("#IsAllDay").val(result.isAllDay).trigger("change");
+                    $("#UserId").val(result.userId).trigger("change");
+                },
+                error: function (error) {
+                    Swal.fire('Oops!', 'Something went wrong!', 'error');
+                }
+            });
+        }
+    }
+    function Delete(Id) {
+        ID = Id;
+        var data = {
+            Id: Id,
+        };
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("Delete", "Appointments")',
+                    type: 'POST',
+                    data: data,
+                    success: function (data) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'Record was successfully deleted!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '@Url.Action("Index", "Appointments")';
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        Swal.fire('Oops!', 'Something went wrong!', 'error');
+                    }
+                });
+
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                Swal.fire('Cancelled!', 'Your record is safe!', 'error');
+            }
+        });
+    }
+</script>

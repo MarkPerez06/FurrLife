@@ -82,9 +82,13 @@ namespace FurrLife.Controllers
                                 UnitName = u.Name,
                                 UnitCode = u.Code
                             };
+
+                List<Appointments> openSchedule = _context.Appointments.Where(m => m.CusUserId == "" && m.End >= DateTime.Now).ToList();
+                ViewBag.openSchedule = openSchedule;
                 return View(model);
             }
-            else {
+            else
+            {
                 return Redirect("~/Identity/Account/Login");
             }
         }
@@ -99,7 +103,7 @@ namespace FurrLife.Controllers
             return Json(model);
         }
 
-        public ActionResult PlaceOrder(string Schedule, string Payment, string CustomerRequest)
+        public ActionResult PlaceOrder(int ScheduleId, string Payment, string CustomerRequest)
         {
             Orders orders = new Orders();
             orders.Payment = Payment;
@@ -112,8 +116,9 @@ namespace FurrLife.Controllers
             var OrderId = orders.Id;
             var SessionId = HttpContext.Session.GetString("SessionId");
             var CP = _context.CartProducts.Where(m => m.SessionId == SessionId).ToList();
-            var user = _signInManager.UserManager.FindByNameAsync(User.Identity.Name);
 
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            //var user = _signInManager.UserManager.FindByNameAsync(User.Identity.Name);
 
             foreach (var item in CP)
             {
@@ -123,7 +128,7 @@ namespace FurrLife.Controllers
                 OP.ProductId = item.ProductId;
                 OP.Price = _context.Products.Find(item.ProductId).Price;
                 OP.Discounts = _context.Products.Find(item.ProductId).Discounts;
-                OP.UserId = user.Result.Id;
+                OP.UserId = user.Id;
                 _context.OrderProducts.Add(OP);
                 _context.SaveChanges();
 
@@ -136,10 +141,18 @@ namespace FurrLife.Controllers
             O.TotalAmount = TotalAmount;
             O.IsPaid = false;
             O.Discounts = 0;
-            O.UserId = user.Result.Id;
+            O.UserId = user.Id;
             _context.Orders.Update(O);
             _context.SaveChanges();
 
+            if (ScheduleId > 0)
+            {
+                var appointment = _context.Appointments.Where(m => m.Id == ScheduleId).FirstOrDefault();
+                appointment.CusUserId = user.Id;
+                appointment.OrderId = O.Id;
+                _context.Appointments.Update(appointment);
+                _context.SaveChanges();
+            }
 
             foreach (var item in CP)
             {
@@ -150,7 +163,7 @@ namespace FurrLife.Controllers
             return Json(O.ReferenceNo);
         }
 
-        
+
 
         [HttpPost]
         public ActionResult Delete(CartProducts model)

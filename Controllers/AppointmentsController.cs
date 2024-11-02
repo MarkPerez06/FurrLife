@@ -26,6 +26,11 @@ namespace FurrLife.Controllers
             return View();
         }
 
+        [Route("Consultation")]
+        public IActionResult Consultation()
+        {
+            return View();
+        }
 
         public IActionResult Index()
         {
