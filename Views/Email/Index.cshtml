@@ -1,0 +1,23 @@
+﻿@model FurrLife.Models.Email
+
+<h2>Send Email</h2>
+@using (Html.BeginForm("Index", "Email", FormMethod.Post))
+{
+    <div>
+        <label>To:</label>
+        @Html.TextBoxFor(m => m.ToEmail)
+    </div>
+    <div>
+        <label>Subject:</label>
+        @Html.TextBoxFor(m => m.Subject)
+    </div>
+    <div>
+        <label>Body:</label>
+        @Html.TextAreaFor(m => m.Body)
+    </div>
+    <div>
+        <input type="submit" value="Send Email" />
+    </div>
+}
+
+<p>@ViewBag.Message</p>
