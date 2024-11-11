@@ -24,9 +24,23 @@ namespace FurrLife.Controllers
         // GET: PetHealthRecords
         public async Task<IActionResult> Index()
         {
-            return _context.PetHealthRecord != null ? 
-                          View(await _context.PetHealthRecord.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.PetHealthRecord'  is null.");
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            var model = await _context.PetHealthRecord.ToListAsync();
+
+            if (user.SecurityStamp == UserRoles.Customer.Id)
+            {
+                model = await _context.PetHealthRecord.Where(m => m.CusUserId == user.Id).ToListAsync();
+                return View(model);
+            }
+            else if (user.SecurityStamp == UserRoles.Veterinarian.Id)
+            {
+                model = await _context.PetHealthRecord.Where(m => m.UserId == user.Id).ToListAsync();
+                return View(model);
+            }
+            else
+            {
+                return View(model);
+            }
         }
 
         // GET: PetHealthRecords/Details/5
@@ -67,6 +81,8 @@ namespace FurrLife.Controllers
 
             if (ModelState.IsValid)
             {
+                var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+                petHealthRecord.CusUserId = user.Id;
                 petHealthRecord.CreatedDate = DateTime.Now;
                 _context.Add(petHealthRecord);
                 await _context.SaveChangesAsync();
@@ -99,7 +115,7 @@ namespace FurrLife.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PetName,Age,Birthdate,Breed,Gender,Weight,Color,TemperamentAndPersonalityTraits,BehavioralIssues,GroomingHabits,ExerciseRoutines,Allergies,FeedingSchedule,ExistingConditions,UserId,FullName,Phone,Email,Address,ImmunizationHistory,MedicalHistory,CreatedDate")] PetHealthRecord petHealthRecord)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,PetName,Age,Birthdate,Breed,Gender,Weight,Color,TemperamentAndPersonalityTraits,BehavioralIssues,GroomingHabits,ExerciseRoutines,Allergies,FeedingSchedule,ExistingConditions,UserId,FullName,Phone,Email,Address,ImmunizationHistory,MedicalHistory,CreatedDate,CusUserId")] PetHealthRecord petHealthRecord)
         {
             List<IdentityUser> users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
             ViewBag.Users = new SelectList(users, "Id", "UserName");

@@ -1,6 +1,14 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\0d5b805a-3579-4e7f-bcef-2b117511eb99_272-vet-2-1024x1024-1.jpg",
+      "PackagePath": "staticwebassets\\Products\\0d5b805a-3579-4e7f-bcef-2b117511eb99_272-vet-2-1024x1024-1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\18f4bd4a-3a71-4d6d-9e1d-0983abac49c2_dog.png",
+      "PackagePath": "staticwebassets\\Products\\18f4bd4a-3a71-4d6d-9e1d-0983abac49c2_dog.png"
+    },
+    {
       "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\34925e86-8607-4fd2-8757-9895b6f0b969_product1.png",
       "PackagePath": "staticwebassets\\Products\\34925e86-8607-4fd2-8757-9895b6f0b969_product1.png"
     },
@@ -11,6 +19,18 @@
     {
       "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\76401f81-7df9-480a-9634-5f3482dbcbe4_services.jpg",
       "PackagePath": "staticwebassets\\Products\\76401f81-7df9-480a-9634-5f3482dbcbe4_services.jpg"
+    },
+    {
+      "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\807ab23e-9b01-4573-be9b-0d20c7bcedb0_OIP (1).jpg",
+      "PackagePath": "staticwebassets\\Products\\807ab23e-9b01-4573-be9b-0d20c7bcedb0_OIP (1).jpg"
+    },
+    {
+      "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\97a845ea-c476-4624-8de3-f03ccbec8e3d_vet-tech-pic.jpg",
+      "PackagePath": "staticwebassets\\Products\\97a845ea-c476-4624-8de3-f03ccbec8e3d_vet-tech-pic.jpg"
+    },
+    {
+      "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\b55826f2-3987-4656-b573-683172c7c650_vet-lab-e1522251569189.jpg",
+      "PackagePath": "staticwebassets\\Products\\b55826f2-3987-4656-b573-683172c7c650_vet-lab-e1522251569189.jpg"
     },
     {
       "Id": "C:\\Users\\0001\\Documents\\Github_2024\\FurrLife\\wwwroot\\Products\\feb5cf2e-ca05-45cb-9091-3cad37f7f74a_product2.png",

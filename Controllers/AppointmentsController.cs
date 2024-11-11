@@ -43,7 +43,11 @@ namespace FurrLife.Controllers
         [HttpGet]
         public IActionResult GetAppointments()
         {
-            var schedules = _context.Appointments
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+
+            if (user.SecurityStamp == UserRoles.Customer.Id)
+            {
+                var schedules = _context.Appointments.Where(m => m.CusUserId == user.Id)
                 .Select(a => new
                 {
                     id = a.Id.ToString(),
@@ -55,8 +59,24 @@ namespace FurrLife.Controllers
                     isAllDay = a.IsAllDay
                 })
                 .ToList();
-
-            return Json(schedules);
+                return Json(schedules);
+            }
+            else
+            {
+                var schedules = _context.Appointments.Where(m => m.UserId == user.Id)
+                .Select(a => new
+                {
+                    id = a.Id.ToString(),
+                    calendarId = "1",
+                    title = a.Title,
+                    category = a.IsAllDay ? "allday" : "time",
+                    start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = a.End.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    isAllDay = a.IsAllDay
+                })
+                .ToList();
+                return Json(schedules);
+            }
         }
 
 

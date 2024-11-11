@@ -99,7 +99,12 @@
                         </div>
                         <div class="col-lg-6 form-group mb-3">
                             <label asp-for="ExistingConditions" class="control-label"></label>
-                            <textarea asp-for="ExistingConditions" class="form-control"></textarea>
+                            <select asp-for="ExistingConditions" class="form-control">
+                                <option value="">- Select Existing Conditions -</option>
+                                <option value="Condition 1">Condition 1</option>
+                                <option value="Condition 2">Condition 2</option>
+                                <option value="Condition 3">Condition 3</option>
+                            </select>
                             <span asp-validation-for="ExistingConditions" class="text-danger"></span>
                         </div>
                         <div class="col-lg-6 form-group mb-3">

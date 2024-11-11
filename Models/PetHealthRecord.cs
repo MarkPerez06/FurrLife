@@ -46,6 +46,7 @@ namespace FurrLife.Models
         public string ExistingConditions { get; set; }
         [DisplayName("Veterinarian")]
         public string UserId { get; set; }
+        public string? CusUserId { get; set; }
 
 
         //Owner's Information

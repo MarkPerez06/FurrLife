@@ -423,7 +423,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.Where(m => m.IsPaid == true && m.Payment == "Membership Card").OrderByDescending(m => m.Id))
+                                @foreach (var item in Model.Where(m => m.IsPaid == true).OrderByDescending(m => m.Id))
                                 {
                                     decimal ActualTotal = (item.TotalAmount - (item.TotalAmount * Convert.ToDecimal(item.Discounts)) / 100);
                                     decimal SaveDiscount = (item.TotalAmount - ActualTotal);
@@ -432,7 +432,7 @@
                                         <td>
                                             @item.DateCreated.ToString("MMMM dd, yyyy")
                                         </td>
-                                        <td hidden>
+                                        <td>
                                             @if (item.Discounts > 0)
                                             {
                                                 <span class="text-success">@item.Discounts% OFF</span>
@@ -444,7 +444,7 @@
                                                 <p class="mb-1" key="t-simplified"><b>@string.Format(new CultureInfo("en-PH", false), "{0:C}", item.TotalAmount)</b></p>
                                             }
                                         </td>
-                                        <td>
+                                        <td hidden>
                                             @item.Discounts%
                                             @if (item.SeniorCitizenID != null && item.SeniorCitizenID != "")
                                             {

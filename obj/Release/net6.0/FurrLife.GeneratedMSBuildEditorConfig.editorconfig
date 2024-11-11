@@ -186,12 +186,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXENhbGVuZGFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/0001/Documents/Github_2024/FurrLife/Views/Appointments/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXEluZGV4LmNzaHRtbA==
+[C:/Users/0001/Documents/Github_2024/FurrLife/Views/Appointments/Consultation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXENvbnN1bHRhdGlvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/0001/Documents/Github_2024/FurrLife/Views/Appointments/Meeting.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXE1lZXRpbmcuY3NodG1s
+[C:/Users/0001/Documents/Github_2024/FurrLife/Views/Appointments/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXBwb2ludG1lbnRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/0001/Documents/Github_2024/FurrLife/Views/CartProducts/Index.cshtml]
@@ -212,6 +212,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/0001/Documents/Github_2024/FurrLife/Views/Discounts/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGlzY291bnRzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/0001/Documents/Github_2024/FurrLife/Views/Email/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1haWxcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/0001/Documents/Github_2024/FurrLife/Views/MenuProducts/Index.cshtml]
