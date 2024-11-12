@@ -1,6 +1,13 @@
 ﻿@using System.Globalization;
+@using FurrLife.Static
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<OrderProductsView>
 @{
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var userId = user.Id;
+    var UserRoleId = user.SecurityStamp;
+
     decimal TotalAmount = 0;
 }
 <div id="LoadNewOrderDetails">
@@ -245,7 +252,7 @@
         </table>
     </div>
     <div class="modal-footer">
-        @if (ViewBag.OrderDetails.IsPaid == false)
+        @if (ViewBag.OrderDetails.IsPaid == false && UserRoleId != UserRoles.Customer.Id)
         {
             <button type="button" class="btn btn-primary" id="ProceedPayment">Proceed to Payment</button>
         }
