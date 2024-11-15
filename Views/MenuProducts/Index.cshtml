@@ -23,69 +23,17 @@
 <link href="~/assets/libs/bootstrap-touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
 <link src="~/assets/libs/simplebar/simplebar.min.css" rel="stylesheet" type="text/css" />
 
-@* <div class="row">
-    <div class="col-lg-3 mt-4">
-        <div>
-            <h5 class="font-size-14 mb-3 card-title">MENU</h5>
-            <ul class="list-unstyled product-list" id="Load_Menu">
-            </ul>
-        </div>
-        <div class="mt-2 pt-3">
-            <h5 class="font-size-14 mb-3 card-title">PRICE</h5>
-            <input type="text" id="pricerange" onchange="OnChangePricerange()">
-        </div>
-
-        <div class="mt-2 pt-3" id="Load_Discounts">
-        </div>
-
-        <div class="mt-2 pt-3">
-            <h5 class="font-size-14 mb-3 card-title">TRENDING PRODUCT</h5>
-            <div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck0" value="0" onchange="OnChangeProductRating(0)">
-                    <label class="form-check-label" for="productratingCheck0">
-                        All <i class="bx bxs-star text-warning"></i> Stars
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck5" value="5" onchange="OnChangeProductRating(5)">
-                    <label class="form-check-label" for="productratingCheck5">
-                        5 <i class="bx bxs-star text-warning"></i>  Stars
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck4" value="4" onchange="OnChangeProductRating(4)">
-                    <label class="form-check-label" for="productratingCheck4">
-                        4 <i class="bx bxs-star text-warning"></i>  Stars
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck3" value="3" onchange="OnChangeProductRating(3)">
-                    <label class="form-check-label" for="productratingCheck3">
-                        3 <i class="bx bxs-star text-warning"></i>  Stars
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck2" value="2" onchange="OnChangeProductRating(2)">
-                    <label class="form-check-label" for="productratingCheck2">
-                        2 <i class="bx bxs-star text-warning"></i>  Stars
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="radio" name="productratingCheck" id="productratingCheck1" value="1" onchange="OnChangeProductRating(1)">
-                    <label class="form-check-label" for="productratingCheck1">
-                        1 <i class="bx bxs-star text-warning"></i> Star
-                    </label>
-                </div>
-            </div>
-        </div>
+<div style="position: relative;" style="padding-top: -100px">
+    <img src="~/assets/cover.webp" style="width: 100%; display: block;" alt="Veterinary Cover">
+    <div style="position: absolute; top: 250px; left: 40px; color: black; padding: 10px 20px; font-size: 1.5rem; border-radius: 5px;">
+        FURRLIFE<br />
+        Devoted to your pet’s happiness and health.
     </div>
-    <div class="col-lg-9 mt-4">
-      
-    </div>
-</div> *@
+</div>
+<br>
+
 <div class="row mb-2">
-    <div class="col-xl-12 col-sm-6">
+    <div class="col-xl-12 col-sm-12">
         <div class="mt-2">
             <ul class="list-unstyled product-list" id="Load_Menu">
             </ul>
@@ -94,7 +42,9 @@
 </div>
 <div class="row" id="Load_Products">
 </div>
-
+<br />
+<br />
+<br />
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Filter Products</h5>

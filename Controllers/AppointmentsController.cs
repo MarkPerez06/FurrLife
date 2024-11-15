@@ -27,6 +27,12 @@ namespace FurrLife.Controllers
             return View();
         }
 
+        [Route("Chat")]
+        public IActionResult Chat()
+        {
+            return View();
+        }
+
         [Route("Consultation")]
         public IActionResult Consultation()
         {
@@ -45,6 +51,11 @@ namespace FurrLife.Controllers
             if (user.SecurityStamp == UserRoles.Veterinarian.Id)
             {
                 model = _context.Appointments.Where(m => m.UserId == user.Id).ToList();
+            }
+
+            if (user.SecurityStamp == UserRoles.Customer.Id)
+            {
+                model = _context.Appointments.Where(m => m.CusUserId == user.Id).ToList();
             }
 
             return View(model);

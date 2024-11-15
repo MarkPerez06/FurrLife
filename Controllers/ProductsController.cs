@@ -24,9 +24,9 @@ namespace FurrLife.Controllers
         public IActionResult Index()
         {
             var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
-            if (user == null && user.SecurityStamp == UserRoles.Administrator.Id)
+            if (user == null || user.SecurityStamp != UserRoles.Administrator.Id)
             {
-                return Redirect("~/Dashboard");
+                return Redirect("~/MenuProducts");
             }
 
             List<Discounts> discounts = _context.Discounts.Where(m => m.IsActive == true).OrderBy(m => m.Percentage).ToList();

@@ -21,9 +21,9 @@ namespace FurrLife.Controllers
         public IActionResult Index()
         {
             var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
-            if (user == null && user.SecurityStamp == UserRoles.Administrator.Id)
+            if (user == null || user.SecurityStamp != UserRoles.Administrator.Id)
             {
-                return Redirect("~/Dashboard");
+                return Redirect("~/MenuProducts");
             }
             IEnumerable<Discounts> model = _context.Discounts.OrderByDescending(m => m.Id).ToList();
             return View(model);

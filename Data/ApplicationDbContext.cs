@@ -24,5 +24,7 @@ namespace FurrLife.Data
         public DbSet<PetHealthRecord> PetHealthRecord { get; set; }
         public DbSet<ImmunizationHistory> ImmunizationHistory { get; set; }
         public DbSet<MedicalHistory> MedicalHistory { get; set; }
+        public DbSet<Messages> Messages { get; set; }
+        public DbSet<Feedbacks> Feedbacks { get; set; }
     }
 }
