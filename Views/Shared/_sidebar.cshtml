@@ -1,4 +1,13 @@
-﻿<!-- ========== Left Sidebar Start ========== -->
+﻿@using Microsoft.AspNetCore.Identity
+@using FurrLife.Models
+@using FurrLife.Static
+@{
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var UserId = user.Id;
+    var UserRoleId = user.SecurityStamp;
+}
+<!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
 
     <div data-simplebar class="h-100">
@@ -34,10 +43,10 @@
                         <span>Pet Records</span>
                     </a>
                 </li>
-@*                 <li>
-                    <a href="@Url.Action("Index", "Services")" class="waves-effect">
-                        <span>Services</span>
-                    </a>
+                @*                 <li>
+                <a href="@Url.Action("Index", "Services")" class="waves-effect">
+                <span>Services</span>
+                </a>
                 </li> *@
                 <li>
                     <a href="@Url.Action("Index", "MenuProducts")" class="waves-effect">
@@ -45,18 +54,23 @@
                     </a>
                 </li>
 
-                <li>
-                    <a href="javascript: void(0);" class="waves-effect">
-                        <span>Manage Accounts</span>
-                        <div class="arrow-down"></div>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href=@Url.Action("Index", "Administrator")>Administrator</a></li>
-                        <li><a href=@Url.Action("Index", "Veterinarian")>Veterinarian</a></li>
-                        <li><a href=@Url.Action("Index", "Staff")>Staff</a></li>
-                        <li><a href=@Url.Action("Index", "Customer")>Customer</a></li>
-                    </ul>
-                </li>
+
+                @if (UserRoleId == UserRoles.Administrator.Id)
+                {
+                    <li>
+                        <a href="javascript: void(0);" class="waves-effect">
+                            <span>Manage Accounts</span>
+                            <div class="arrow-down"></div>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href=@Url.Action("Index", "Administrator")>Administrator</a></li>
+                            <li><a href=@Url.Action("Index", "Veterinarian")>Veterinarian</a></li>
+                            <li><a href=@Url.Action("Index", "Staff")>Staff</a></li>
+                            <li><a href=@Url.Action("Index", "Customer")>Customer</a></li>
+                        </ul>
+                    </li>
+                }
+
 
 
 
@@ -66,11 +80,17 @@
                         <div class="arrow-down"></div>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
-                        <li><a href=@Url.Action("Index", "Appointments")>Appointments</a></li>
-                        <li><a href=@Url.Action("Index", "Menu")>Category</a></li>
-                        <li><a href=@Url.Action("Index", "Products")>Products & Services</a></li>
-                        <li><a href=@Url.Action("Index", "Units")>Product Units</a></li>
-                        <li><a href=@Url.Action("Index", "Discounts")>Product Discounts</a></li>
+                        @if (UserRoleId == UserRoles.Administrator.Id || UserRoleId == UserRoles.Veterinarian.Id || UserRoleId == UserRoles.Staff.Id)
+                        {
+                            <li><a href=@Url.Action("Index", "Appointments")>Appointments</a></li>
+                        }
+                        @if (UserRoleId == UserRoles.Administrator.Id)
+                        {
+                            <li><a href=@Url.Action("Index", "Menu")>Category</a></li>
+                            <li><a href=@Url.Action("Index", "Products")>Products & Services</a></li>
+                            <li><a href=@Url.Action("Index", "Units")>Product Units</a></li>
+                            <li><a href=@Url.Action("Index", "Discounts")>Product Discounts</a></li>
+                        }
                     </ul>
                 </li>
 

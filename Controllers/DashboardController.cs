@@ -13,6 +13,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using FurrLife.Static;
 
 namespace FurrLife.Controllers
 {
@@ -77,6 +78,7 @@ namespace FurrLife.Controllers
                 ViewBag.TransactionsCount = TransactionsModel.Count;
                 var Year = _context.Orders.Where(m => m.IsPaid == true).Select(m => new { Year = m.DateCreated.Year }).Distinct().OrderByDescending(m => m.Year).ToList();
                 ViewBag.Year = new SelectList(Year, "Year", "Year");
+
                 var model = _context.Orders.ToList();
                 return View(model);
             }

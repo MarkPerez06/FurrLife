@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using FurrLife.Static;
 
 namespace FurrLife.Controllers
 {
@@ -22,6 +23,12 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            if (user == null && user.SecurityStamp == UserRoles.Administrator.Id)
+            {
+                return Redirect("~/Dashboard");
+            }
+
             List<Discounts> discounts = _context.Discounts.Where(m => m.IsActive == true).OrderBy(m => m.Percentage).ToList();
             ViewBag.Discounts = new SelectList(discounts, "Percentage", "Name");
 

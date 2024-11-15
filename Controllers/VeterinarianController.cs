@@ -25,6 +25,11 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            if (user == null && user.SecurityStamp == UserRoles.Administrator.Id)
+            {
+                return Redirect("~/Dashboard");
+            }
             var users = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
             return View(users);
         }

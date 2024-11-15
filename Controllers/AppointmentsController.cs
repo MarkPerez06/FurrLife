@@ -3,6 +3,7 @@ using FurrLife.Models;
 using FurrLife.Static;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace FurrLife.Controllers
@@ -36,7 +37,16 @@ namespace FurrLife.Controllers
         {
             List<IdentityUser> vetUsers = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
             ViewBag.vetUsers = vetUsers;
+            
+
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
             var model = _context.Appointments.ToList();
+
+            if (user.SecurityStamp == UserRoles.Veterinarian.Id)
+            {
+                model = _context.Appointments.Where(m => m.UserId == user.Id).ToList();
+            }
+
             return View(model);
         }
 
@@ -61,9 +71,25 @@ namespace FurrLife.Controllers
                 .ToList();
                 return Json(schedules);
             }
-            else
+            else if (user.SecurityStamp == UserRoles.Veterinarian.Id)
             {
                 var schedules = _context.Appointments.Where(m => m.UserId == user.Id)
+                .Select(a => new
+                {
+                    id = a.Id.ToString(),
+                    calendarId = "1",
+                    title = a.Title,
+                    category = a.IsAllDay ? "allday" : "time",
+                    start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    end = a.End.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    isAllDay = a.IsAllDay
+                })
+                .ToList();
+                return Json(schedules);
+            }
+            else
+            {
+                var schedules = _context.Appointments
                 .Select(a => new
                 {
                     id = a.Id.ToString(),

@@ -30,17 +30,12 @@ namespace FurrLife.Controllers
             if (user.SecurityStamp == UserRoles.Customer.Id)
             {
                 model = await _context.PetHealthRecord.Where(m => m.CusUserId == user.Id).ToListAsync();
-                return View(model);
             }
-            else if (user.SecurityStamp == UserRoles.Veterinarian.Id)
+            if (user.SecurityStamp == UserRoles.Veterinarian.Id)
             {
                 model = await _context.PetHealthRecord.Where(m => m.UserId == user.Id).ToListAsync();
-                return View(model);
             }
-            else
-            {
-                return View(model);
-            }
+            return View(model);
         }
 
         // GET: PetHealthRecords/Details/5
@@ -178,14 +173,14 @@ namespace FurrLife.Controllers
             {
                 _context.PetHealthRecord.Remove(petHealthRecord);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PetHealthRecordExists(int id)
         {
-          return (_context.PetHealthRecord?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.PetHealthRecord?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

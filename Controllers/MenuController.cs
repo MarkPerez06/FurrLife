@@ -1,5 +1,6 @@
 ﻿using FurrLife.Data;
 using FurrLife.Models;
+using FurrLife.Static;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -19,6 +20,11 @@ namespace FurrLife.Controllers
 
         public IActionResult Index()
         {
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            if (user == null && user.SecurityStamp == UserRoles.Administrator.Id)
+            {
+                return Redirect("~/Dashboard");
+            }
             IEnumerable<Menu> model = _context.Menu.OrderByDescending(m => m.Id).ToList();
             return View(model);
         }
