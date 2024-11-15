@@ -1,9 +1,16 @@
-﻿@model IEnumerable<FurrLife.Models.Feedbacks>
+﻿@using FurrLife.Static
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<FurrLife.Models.Feedbacks>
 @{
     ViewBag.Title = "Feedback";
     ViewBag.pTitle = "Feedback";
     ViewBag.pageTitle = "Feedback";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var userId = user.Id;
+    var UserRoleId = user.SecurityStamp;
 }
 <!-- DataTables -->
 <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -52,7 +59,10 @@
                                 </td>
                                 <td class="text-center">
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success btn-sm">Edit</a>
-                                    <a onclick="Delete(@item.Id)" class="btn btn-danger btn-sm">Delete</a>
+                                    @if(UserRoleId != UserRoles.Customer.Id){
+                                        <a onclick="Delete(@item.Id)" class="btn btn-danger btn-sm">Delete</a>
+                                    }
+                                   
                                 </td>
                             </tr>
                         }

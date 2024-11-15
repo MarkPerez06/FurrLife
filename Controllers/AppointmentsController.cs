@@ -28,8 +28,33 @@ namespace FurrLife.Controllers
         }
 
         [Route("Chat")]
-        public IActionResult Chat()
+        public IActionResult Chat(int AppointmentId)
         {
+            var Username = "";
+            var model = _context.Appointments.Where(m => m.Id == AppointmentId).FirstOrDefault();
+            if (model != null)
+            {
+                var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+                if (user != null && user.SecurityStamp == UserRoles.Customer.Id)
+                {
+                    var vet = _context.Users.Where(m => m.Id == model.UserId).FirstOrDefault();
+                    if (vet != null)
+                    {
+                        Username = vet.UserName;
+                    }
+                }
+
+                if (user != null && user.SecurityStamp != UserRoles.Customer.Id && model.CusUserId != "")
+                {
+                    var cus = _context.Users.Where(m => m.Id == model.CusUserId).FirstOrDefault();
+                    if (cus != null)
+                    {
+                        Username = cus.UserName;
+                    }
+                }
+
+            }
+            ViewBag.Username = Username;
             return View();
         }
 
@@ -100,7 +125,7 @@ namespace FurrLife.Controllers
             }
             else
             {
-                var schedules = _context.Appointments
+                var schedules = _context.Appointments.Where(m => m.CusUserId != "")
                 .Select(a => new
                 {
                     id = a.Id.ToString(),

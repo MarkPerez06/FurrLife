@@ -8,6 +8,7 @@ namespace FurrLife.Models
         public int Id { get; set; }
         public string Feedback { get; set; }
         public string UserId { get; set; }
+        [DisplayName("Show to Shop Page")]
         public bool IsShow { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
     }
