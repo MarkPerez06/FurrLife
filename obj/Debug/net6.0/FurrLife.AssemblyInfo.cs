@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e972dfd5e236792d96c93d2f3980e6af11a04501")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4841b5fede45db1f7588948222da1646d34c0daa")]
 [assembly: System.Reflection.AssemblyProductAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FurrLife")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

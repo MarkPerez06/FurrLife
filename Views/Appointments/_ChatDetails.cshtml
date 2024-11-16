@@ -1,0 +1,102 @@
+﻿@using System.Globalization;
+@using FurrLife.Static
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<Messages>
+@{
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var userId = user.Id;
+    var UserRoleId = user.SecurityStamp;
+    var Users = ViewBag.Users as SelectList;
+    decimal TotalAmount = 0;
+}
+
+<ul class="list-unstyled mb-0" data-simplebar style="max-height: 486px;" id="chat-box">
+    @foreach (var item in Model)
+    {
+        if (UserRoleId == UserRoles.Customer.Id)
+        {
+            if (item.CustId != "")
+            {
+                <li class="right">
+                    <div class="conversation-list">
+                        <div class="ctext-wrap">
+                            <div class="conversation-name">@Users.Where(m => m.Value == item.CustId).FirstOrDefault().Text</div>
+                            <p>
+                                @item.Message
+                            </p>
+                            <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> @item.DateCreated.ToString("MMM. dd, 2024 hh:mm tt")</p>
+                        </div>
+
+                    </div>
+                </li>
+            }
+            if (item.UserId != "")
+            {
+                <li>
+                    <div class="conversation-list">
+                        <div class="ctext-wrap">
+                            <div class="conversation-name">@Users.Where(m => m.Value == item.UserId).FirstOrDefault().Text</div>
+                            <p>
+                                @item.Message
+                            </p>
+                            <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> @item.DateCreated.ToString("MMM. dd, 2024 hh:mm tt")</p>
+                        </div>
+
+                    </div>
+                </li>
+            }
+        }
+
+        if (UserRoleId != UserRoles.Customer.Id)
+        {
+            if (item.CustId != "")
+            {
+                <li>
+                    <div class="conversation-list">
+                        <div class="ctext-wrap">
+                            <div class="conversation-name">@Users.Where(m => m.Value == item.CustId).FirstOrDefault().Text</div>
+                            <p>
+                                @item.Message
+                            </p>
+                            <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> @item.DateCreated.ToString("MMM. dd, 2024 hh:mm tt")</p>
+                        </div>
+
+                    </div>
+                </li>
+            }
+            if (item.UserId != "")
+            {
+                <li class="right">
+                    <div class="conversation-list">
+                        <div class="ctext-wrap">
+                            <div class="conversation-name">@Users.Where(m => m.Value == item.UserId).FirstOrDefault().Text</div>
+                            <p>
+                                @item.Message
+                            </p>
+                            <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> @item.DateCreated.ToString("MMM. dd, 2024 hh:mm tt")</p>
+                        </div>
+
+                    </div>
+                </li>
+            }
+        }
+
+
+
+    }
+</ul>
+
+<script>
+    $(document).ready(function () {
+        // Ensure the chat box exists before executing the scroll logic
+        const chatBox = document.querySelector('#chat-box');
+        if (chatBox) {
+            const lastMessage = chatBox.querySelector('.message:last-child');
+            // Scroll the chat box to the last message if it exists
+            if (lastMessage) {
+                lastMessage.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+        }
+    });
+</script>

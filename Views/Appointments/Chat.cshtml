@@ -28,159 +28,21 @@
                 </div>
             </div>
         </div>
-
-
         <div>
-            <div class="chat-conversation p-3">
-                <ul class="list-unstyled mb-0" data-simplebar style="max-height: 486px;">
-                    <li>
-                        <div class="chat-day-title">
-                            <span class="title">Today</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="conversation-list">
-                            <div class="dropdown">
-
-                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Save</a>
-                                    <a class="dropdown-item" href="#">Forward</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                </div>
-                            </div>
-                            <div class="ctext-wrap">
-                                <div class="conversation-name">Steven Franklin</div>
-                                <p>
-                                    Hello!
-                                </p>
-                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 10:00</p>
-                            </div>
-
-                        </div>
-                    </li>
-
-                    <li class="right">
-                        <div class="conversation-list">
-                            <div class="dropdown">
-
-                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Save</a>
-                                    <a class="dropdown-item" href="#">Forward</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                </div>
-                            </div>
-                            <div class="ctext-wrap">
-                                <div class="conversation-name">Henry Wells</div>
-                                <p>
-                                    Hi, How are you? What about our next meeting?
-                                </p>
-
-                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 10:02</p>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li>
-                        <div class="conversation-list">
-                            <div class="dropdown">
-
-                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Save</a>
-                                    <a class="dropdown-item" href="#">Forward</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                </div>
-                            </div>
-                            <div class="ctext-wrap">
-                                <div class="conversation-name">Steven Franklin</div>
-                                <p>
-                                    Yeah everything is fine
-                                </p>
-
-                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 10:06</p>
-                            </div>
-
-                        </div>
-                    </li>
-
-                    <li class="last-chat">
-                        <div class="conversation-list">
-                            <div class="dropdown">
-
-                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Save</a>
-                                    <a class="dropdown-item" href="#">Forward</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                </div>
-                            </div>
-                            <div class="ctext-wrap">
-                                <div class="conversation-name">Steven Franklin</div>
-                                <p>& Next meeting tomorrow 10.00AM</p>
-                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 10:06</p>
-                            </div>
-
-                        </div>
-                    </li>
-
-                    <li class=" right">
-                        <div class="conversation-list">
-                            <div class="dropdown">
-
-                                <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Save</a>
-                                    <a class="dropdown-item" href="#">Forward</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                </div>
-                            </div>
-                            <div class="ctext-wrap">
-                                <div class="conversation-name">Henry Wells</div>
-                                <p>
-                                    Wow that's great
-                                </p>
-
-                                <p class="chat-time mb-0"><i class="bx bx-time-five align-middle me-1"></i> 10:07</p>
-                            </div>
-                        </div>
-                    </li>
-
-
-                </ul>
+            <div class="chat-conversation p-3" id="Load_ChatDetails" style="min-height: 500px;">
+                
             </div>
             <div class="p-3 chat-input-section">
                 <div class="row">
                     <div class="col">
                         <div class="position-relative">
-                            <input type="text" class="form-control chat-input" placeholder="Enter Message...">
+                            <input id="Message" type="text" class="form-control chat-input" placeholder="Enter Message...">
                             <div class="chat-input-links" id="tooltip-container">
-                                <ul class="list-inline mb-0">
-                                    <li class="list-inline-item"><a href="javascript: void(0);" title="Emoji"><i class="mdi mdi-emoticon-happy-outline"></i></a></li>
-                                    <li class="list-inline-item"><a href="javascript: void(0);" title="Images"><i class="mdi mdi-file-image-outline"></i></a></li>
-                                    <li class="list-inline-item"><a href="javascript: void(0);" title="Add Files"><i class="mdi mdi-file-document-outline"></i></a></li>
-                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send"></i></button>
+                        <button onclick="SaveForm()" type="submit" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send"></i></button>
                     </div>
                 </div>
             </div>
@@ -228,127 +90,48 @@
 
 <script src="~/assets/js/app.js"></script>
 <script>
-    var ID = $("#id").val();
 
-    function convertDateTimeToDate(dateTime) {
-        var date = new Date(dateTime);
-        var day = date.getDate();
-        var month = date.getMonth() + 1; // Months are zero-based
-        var year = date.getFullYear();
+    // Get the current URL
+    const url = new URL(window.location.href);
 
-        // Pad single-digit day and month with leading zeros
-        var formattedDay = day < 10 ? '0' + day : day;
-        var formattedMonth = month < 10 ? '0' + month : month;
-        var formattedDate = year + '-' + formattedMonth + '-' + formattedDay;
-        return formattedDate;
+    // Retrieve the value of AppointmentId from the query string
+    const AppointmentId = url.searchParams.get('AppointmentId');
+
+    ChatDetails();
+
+    function ChatDetails() {
+        $.ajax({
+            url: "/Appointments/_ChatDetails",
+            type: 'GET',
+            data: {
+                AppointmentId: AppointmentId,
+            },
+            success: function (partialView) {
+                $("#Load_ChatDetails").html(partialView);
+            },
+            error: function () {
+                console.log('Failed to load the partial view');
+            }
+        });
     }
 
     function SaveForm() {
         var data = {
-            Id: ID,
-            Title: $("#Title").val(),
-            Start: $("#Start").val(),
-            End: $("#End").val(),
-            IsAllDay: $("#IsAllDay").val(),
-            UserId: $("#UserId").val()
+            Message: $("#Message").val(),
+            AppointmentId: AppointmentId,
         };
-        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
+        if (data.Message != "" && data.AppointmentId != "") {
             $.ajax({
-                url: '@Url.Action("Save", "Appointments")',
+                url: '@Url.Action("SendChat", "Appointments")',
                 type: 'POST',
                 data: data,
                 success: function (data) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Record was successfully saved!',
-                        icon: 'success',
-                        showCancelButton: false,
-                        allowOutsideClick: false,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = '@Url.Action("Index", "Appointments")';
-                        }
-                    });
+                    ChatDetails();
                 },
                 error: function (error) {
                     Swal.fire('Oops!', 'Something went wrong!', 'error');
                 }
             });
         }
-    }
-
-    function Create() {
-        ID = 0;
-        $("#ModalTitle").text("Create Appointments").trigger("change");
-    }
-    function Edit(Id) {
-        $("#ModalTitle").text("Update Appointments").trigger("change");
-
-        ID = Id;
-        var data = {
-            Id: Id,
-        };
-        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
-            $.ajax({
-                url: '@Url.Action("Edit", "Appointments")',
-                type: 'POST',
-                data: data,
-                dataType: 'json',
-                success: function (result) {
-                    $("#Id").val(Id).trigger("change");
-                    $("#Title").val(result.title).trigger("change");
-                    $("#Start").val(result.start).trigger("change");
-                    $("#End").val(result.end).trigger("change");
-                    $("#IsAllDay").val(result.isAllDay).trigger("change");
-                    $("#UserId").val(result.userId).trigger("change");
-                },
-                error: function (error) {
-                    Swal.fire('Oops!', 'Something went wrong!', 'error');
-                }
-            });
-        }
-    }
-    function Delete(Id) {
-        ID = Id;
-        var data = {
-            Id: Id,
-        };
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'No, cancel',
-            allowOutsideClick: false,
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '@Url.Action("Delete", "Appointments")',
-                    type: 'POST',
-                    data: data,
-                    success: function (data) {
-                        Swal.fire({
-                            title: 'Deleted!',
-                            text: 'Record was successfully deleted!',
-                            icon: 'success',
-                            showCancelButton: false,
-                            allowOutsideClick: false,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = '@Url.Action("Index", "Appointments")';
-                            }
-                        });
-                    },
-                    error: function (error) {
-                        Swal.fire('Oops!', 'Something went wrong!', 'error');
-                    }
-                });
-
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire('Cancelled!', 'Your record is safe!', 'error');
-            }
-        });
     }
 </script>

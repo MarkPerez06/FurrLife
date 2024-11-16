@@ -3,6 +3,7 @@ using FurrLife.Models;
 using FurrLife.Static;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -58,6 +59,50 @@ namespace FurrLife.Controllers
             return View();
         }
 
+        [HttpGet]
+
+        public IActionResult _ChatDetails(int AppointmentId)
+        {
+            List<IdentityUser> users = _context.Users.ToList();
+            ViewBag.Users = new SelectList(users, "Id", "UserName");
+
+            var model = _context.Messages.Where(m => m.AppointmentId == AppointmentId).ToList();
+            return PartialView("_ChatDetails", model);
+        }
+
+        [HttpPost]
+        public ActionResult SendChat(int AppointmentId, string Message)
+        {
+            if (AppointmentId != 0)
+            {
+                var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+
+                var appointment = _context.Appointments.Where(m => m.Id == AppointmentId).FirstOrDefault();
+
+                Messages messages = new Messages();
+                messages.AppointmentId = AppointmentId;
+                messages.Message = Message;
+                messages.DateCreated = DateTime.Now;
+                if (user != null && user.SecurityStamp == UserRoles.Customer.Id)
+                {
+                    messages.CustId = user.Id;
+                    messages.UserId = "";
+                }
+
+                if (user != null && user.SecurityStamp != UserRoles.Customer.Id)
+                {
+                    messages.CustId = "";
+                    messages.UserId = user.Id;
+                }
+
+                _context.Messages.Add(messages);
+            }
+            _context.SaveChanges();
+            return Json(new { success = true, message = "Form submitted successfully!" });
+        }
+
+
+
         [Route("Consultation")]
         public IActionResult Consultation()
         {
@@ -68,7 +113,7 @@ namespace FurrLife.Controllers
         {
             List<IdentityUser> vetUsers = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
             ViewBag.vetUsers = vetUsers;
-            
+
 
             var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
             var model = _context.Appointments.ToList();
