@@ -66,7 +66,7 @@ namespace FurrLife.Controllers
             List<IdentityUser> users = _context.Users.ToList();
             ViewBag.Users = new SelectList(users, "Id", "UserName");
 
-            var model = _context.Messages.Where(m => m.AppointmentId == AppointmentId).ToList();
+            var model = _context.Messages.Where(m => m.AppointmentId == AppointmentId).OrderByDescending(m=> m.DateCreated).ToList();
             return PartialView("_ChatDetails", model);
         }
 
