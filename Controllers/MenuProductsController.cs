@@ -37,6 +37,9 @@ namespace FurrLife.Controllers
             List<Menu> menu = _context.Menu.Where(m => m.IsActive == true).OrderBy(m => m.Name).ToList();
             ViewBag.Menu = new SelectList(menu, "Id", "Name");
 
+            List<Feedbacks> Feedbacks = _context.Feedbacks.Where(m => m.IsShow == true).OrderByDescending(m => m.Id).ToList();
+            ViewBag.Feedbacks = Feedbacks;
+
             var products = _context.Products.OrderByDescending(m => m.Price).FirstOrDefault();
             if (products != null)
             {

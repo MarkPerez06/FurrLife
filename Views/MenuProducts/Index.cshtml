@@ -4,6 +4,8 @@
     ViewBag.pTitle = "FurrLife";
     ViewBag.pageTitle = "Menu";
 
+    var Feedbacks = ViewBag.Feedbacks as List<Feedbacks>;
+
     // Get the SignInManager and UserManager instances from the HttpContext.RequestServices
     var _signInManager = Context.RequestServices.GetRequiredService<SignInManager<IdentityUser>>();
     var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
@@ -44,7 +46,22 @@
 </div>
 <br />
 <br />
+<hr />
+<center>
+    <h3>Feedback and Reviews</h3>
+    <br />
+    @foreach (var f in Feedbacks)
+    {
+        <label>@f.Feedback</label>
+        <hr />
+    }
+</center>
+
 <br />
+<br />
+<br />
+<br />
+
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1" id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Filter Products</h5>

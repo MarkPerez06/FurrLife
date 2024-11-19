@@ -1,6 +1,8 @@
 ﻿@using System.Globalization;
 @model IEnumerable<Products>
-@foreach (var item in Model)
+
+
+@foreach (var item in Model.OrderBy(m => m.MenuId))
 {
     var IsActiveStatus = "";
 

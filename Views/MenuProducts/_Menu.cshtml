@@ -6,7 +6,7 @@
     <a href="javascript: void(0);" onclick="LoadProductsAll('MenuProducts','_ProductsBestSeller')"><i class="mdi mdi-chevron-right me-1"></i> Best Seller</a>
 }
 
-@foreach (var item in Model)
+@foreach (var item in Model.OrderBy(m => m.Id))
 {
     <a href="javascript: void(0);" onclick="LoadMenu('@item.Id','@item.Name','@item.Description')" ><i class="mdi mdi-chevron-right me-1"></i> @item.Name</a>
 }
