@@ -22,6 +22,9 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+builder.Services.AddSignalR();
+
+
 //builder.WebHost.ConfigureKestrel(serverOptions =>
 //{
 //    serverOptions.ListenAnyIP(5008); // Set your desired port here
@@ -51,6 +54,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapHub<FurrLife.Hubs.ConsultationHub>("/consultationHub");
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=MenuProducts}/{action=Index}/{id?}");

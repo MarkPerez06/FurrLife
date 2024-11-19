@@ -1998,3 +1998,4 @@ C:\Users\0001\Documents\Github_2024\FurrLife\obj\Debug\net6.0\refint\FurrLife.dl
 C:\Users\0001\Documents\Github_2024\FurrLife\obj\Debug\net6.0\FurrLife.pdb
 C:\Users\0001\Documents\Github_2024\FurrLife\obj\Debug\net6.0\FurrLife.genruntimeconfig.cache
 C:\Users\0001\Documents\Github_2024\FurrLife\obj\Debug\net6.0\ref\FurrLife.dll
+C:\Users\0001\Documents\Github_2024\FurrLife\bin\Debug\net6.0\System.Net.WebSockets.WebSocketProtocol.dll

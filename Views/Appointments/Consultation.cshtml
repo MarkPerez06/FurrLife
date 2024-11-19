@@ -10,6 +10,10 @@
 <!-- Responsive datatable examples -->
 <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.14/signalr.min.js"></script>
+
+
 <style>
     #videos {
         display: flex;
@@ -84,28 +88,49 @@
     const startCallButton = document.getElementById("startCall");
     const endCallButton = document.getElementById("endCall");
 
-    let localStream;
-    let remoteStream;
-    let peerConnection;
+    let localStream, remoteStream, peerConnection;
+    let connectionId, remoteConnectionId;
 
-    const configuration = {
-        iceServers: [
-            { urls: "stun:stun.l.google.com:19302" } // Public STUN server
-        ]
-    };
+    const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
 
-    // Start local video stream
-    async function startLocalStream() {
+    // Initialize SignalR
+    const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl("/consultationHub")
+        .build();
+
+    hubConnection.on("ReceiveSignal", async (signal, senderId) => {
+        remoteConnectionId = senderId; // Set remote connection ID dynamically
+        const data = JSON.parse(signal);
+
+        if (data.offer) {
+            await handleOffer(data.offer);
+        } else if (data.answer) {
+            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+        } else if (data.candidate) {
+            await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+        } else if (data.endCall) {
+            endCall(true); // End call triggered by remote peer
+        }
+    });
+
+    hubConnection.start().then(() => {
+        hubConnection.invoke("GetConnectionId").then(id => {
+            connectionId = id;
+        });
+    });
+
+    startCallButton.addEventListener("click", async () => {
+        startCallButton.disabled = true;
+        endCallButton.disabled = false;
+
         localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         localVideo.srcObject = localStream;
-    }
 
-    // Start call
-    async function startCall() {
-        peerConnection = new RTCPeerConnection(configuration);
+        peerConnection = new RTCPeerConnection(config);
+
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
-        peerConnection.ontrack = (event) => {
+        peerConnection.ontrack = event => {
             if (!remoteStream) {
                 remoteStream = new MediaStream();
                 remoteVideo.srcObject = remoteStream;
@@ -113,58 +138,78 @@
             remoteStream.addTrack(event.track);
         };
 
-        peerConnection.onicecandidate = (event) => {
+        peerConnection.onicecandidate = event => {
             if (event.candidate) {
-                sendSignal({ type: "candidate", candidate: event.candidate });
+                sendSignal({ candidate: event.candidate });
             }
         };
 
         const offer = await peerConnection.createOffer();
         await peerConnection.setLocalDescription(offer);
-        sendSignal({ type: "offer", offer });
-    }
+        sendSignal({ offer });
+    });
 
-    // Handle incoming signals
-    function receiveSignal(data) {
-        if (data.type === "offer") handleOffer(data.offer);
-        else if (data.type === "answer") handleAnswer(data.answer);
-        else if (data.type === "candidate") handleCandidate(data.candidate);
-    }
-
-    async function handleOffer(offer) {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        sendSignal({ type: "answer", answer });
-    }
-
-    async function handleAnswer(answer) {
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
-    }
-
-    function handleCandidate(candidate) {
-        peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    }
+    endCallButton.addEventListener("click", () => {
+        endCall(false);
+    });
 
     function sendSignal(data) {
-        // Placeholder function to integrate signaling server
-        console.log("Send signal:", JSON.stringify(data));
+        hubConnection.invoke("SendSignal", JSON.stringify(data), remoteConnectionId || "");
     }
 
-    function endCall() {
+    function endCall(isRemote = false) {
         if (peerConnection) {
             peerConnection.close();
             peerConnection = null;
         }
-        remoteVideo.srcObject = null;
-        remoteStream = null;
+
+        if (localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+            localVideo.srcObject = null;
+        }
+
+        if (remoteStream) {
+            remoteStream.getTracks().forEach(track => track.stop());
+            remoteVideo.srcObject = null;
+        }
+
+        if (!isRemote) {
+            sendSignal({ endCall: true });
+        }
+
+        startCallButton.disabled = false;
+        endCallButton.disabled = true;
+        alert("Call ended.");
     }
 
-    startCallButton.onclick = async () => {
-        await startLocalStream();
-        startCall();
-    };
-    endCallButton.onclick = endCall;
+    async function handleOffer(offer) {
+        peerConnection = new RTCPeerConnection(config);
+
+        peerConnection.ontrack = event => {
+            if (!remoteStream) {
+                remoteStream = new MediaStream();
+                remoteVideo.srcObject = remoteStream;
+            }
+            remoteStream.addTrack(event.track);
+        };
+
+        peerConnection.onicecandidate = event => {
+            if (event.candidate) {
+                sendSignal({ candidate: event.candidate });
+            }
+        };
+
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+
+        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+        const answer = await peerConnection.createAnswer();
+        await peerConnection.setLocalDescription(answer);
+        sendSignal({ answer });
+    }
 </script>
 
 <script>
