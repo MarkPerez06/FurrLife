@@ -102,6 +102,61 @@ namespace FurrLife.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult LoadPetHealthRecordChart()
+        {
+            int Year = Convert.ToInt32(DateTime.Now.Year);
+            if (TempData["SelectedYear"] != null)
+            {
+                Year = Convert.ToInt32(TempData["SelectedYear"]);
+            }
+
+            var Series = new List<SeriesData>();
+
+            // Fetch all relevant pet health records grouped by existing conditions (or any other field)
+            var topPetConditionsData = (from pr in _context.PetHealthRecord
+                                        where pr.CreatedDate.Year == Year
+                                        group pr by pr.ExistingConditions into g
+                                        orderby g.Count() descending
+                                        select new
+                                        {
+                                            Condition = g.Key,
+                                            RecordCount = g.Count()
+                                        }).Take(5).ToList();
+
+            // Prepare monthly record data for the top pet conditions
+            var monthlyRecordsData = (from pr in _context.PetHealthRecord
+                                      where pr.CreatedDate.Year == Year
+                                      group pr by new { pr.ExistingConditions, pr.CreatedDate.Month } into g
+                                      select new
+                                      {
+                                          Condition = g.Key.ExistingConditions,
+                                          Month = g.Key.Month,
+                                          RecordCount = g.Count()
+                                      }).ToList();
+
+            // Build the series data
+            foreach (var condition in topPetConditionsData)
+            {
+                var monthlyCounts = new int[12];
+
+                // Fill in the monthly counts for records with this condition
+                foreach (var monthlyData in monthlyRecordsData.Where(m => m.Condition == condition.Condition))
+                {
+                    monthlyCounts[monthlyData.Month - 1] = monthlyData.RecordCount; // Month is 1-based
+                }
+
+                Series.Add(new SeriesData
+                {
+                    name = condition.Condition,
+                    data = monthlyCounts.ToList()
+                });
+            }
+
+            var Result = new { Series, Year };
+            return Json(Result);
+        }
+
+
         public ActionResult LoadBestSellerChart()
         {
             int Year = Convert.ToInt32(DateTime.Now.Year);
