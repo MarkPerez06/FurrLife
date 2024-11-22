@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using FurrLife.Static;
+using static FurrLife.Controllers.DashboardController;
 
 namespace FurrLife.Controllers
 {
@@ -47,6 +48,12 @@ namespace FurrLife.Controllers
         {
             public string name { get; set; }
             public List<decimal> data { get; set; }
+        }
+
+        public class SeriesDataDouble
+        {
+            public string name { get; set; }
+            public List<double> data { get; set; }
         }
 
         public class Top5Products
@@ -101,8 +108,7 @@ namespace FurrLife.Controllers
 
             return RedirectToAction("Index");
         }
-
-        public ActionResult LoadPetHealthRecordChart()
+        public ActionResult LoadPetHealthRecordChartWithPredictions()
         {
             int Year = Convert.ToInt32(DateTime.Now.Year);
             if (TempData["SelectedYear"] != null)
@@ -110,11 +116,11 @@ namespace FurrLife.Controllers
                 Year = Convert.ToInt32(TempData["SelectedYear"]);
             }
 
-            var Series = new List<SeriesData>();
+            var Series = new List<SeriesDataDouble>();
 
-            // Fetch all relevant pet health records grouped by existing conditions (or any other field)
+            // Fetch top 5 conditions based on record counts for all years
             var topPetConditionsData = (from pr in _context.PetHealthRecord
-                                        where pr.CreatedDate.Year == Year
+                                        where pr.CreatedDate.Year <= Year
                                         group pr by pr.ExistingConditions into g
                                         orderby g.Count() descending
                                         select new
@@ -123,38 +129,195 @@ namespace FurrLife.Controllers
                                             RecordCount = g.Count()
                                         }).Take(5).ToList();
 
-            // Prepare monthly record data for the top pet conditions
+            // Fetch monthly records grouped by condition and year
             var monthlyRecordsData = (from pr in _context.PetHealthRecord
-                                      where pr.CreatedDate.Year == Year
-                                      group pr by new { pr.ExistingConditions, pr.CreatedDate.Month } into g
+                                      where pr.CreatedDate.Year <= Year
+                                      group pr by new { pr.ExistingConditions, pr.CreatedDate.Year, pr.CreatedDate.Month } into g
                                       select new
                                       {
                                           Condition = g.Key.ExistingConditions,
+                                          Year = g.Key.Year,
                                           Month = g.Key.Month,
                                           RecordCount = g.Count()
                                       }).ToList();
 
-            // Build the series data
+            // Build series data with predictions
             foreach (var condition in topPetConditionsData)
             {
-                var monthlyCounts = new int[12];
+                // Initialize an array for storing average monthly data
+                var averageMonthlyCounts = new double[12];
 
-                // Fill in the monthly counts for records with this condition
-                foreach (var monthlyData in monthlyRecordsData.Where(m => m.Condition == condition.Condition))
+                // Calculate monthly averages across historical years
+                for (int month = 1; month <= 12; month++)
                 {
-                    monthlyCounts[monthlyData.Month - 1] = monthlyData.RecordCount; // Month is 1-based
+                    // Get all records for the given condition and month
+                    var monthlyData = monthlyRecordsData
+                        .Where(m => m.Condition == condition.Condition && m.Month == month)
+                        .Select(m => m.RecordCount);
+
+                    // Compute the average for this month
+                    if (monthlyData.Any())
+                    {
+                        averageMonthlyCounts[month - 1] = monthlyData.Average();
+                    }
                 }
 
-                Series.Add(new SeriesData
+                // Predict next year's data using the monthly averages
+                var nextYearPredictions = new List<double>(averageMonthlyCounts);
+
+                // Add the series for historical data and predictions
+                Series.Add(new SeriesDataDouble
                 {
                     name = condition.Condition,
-                    data = monthlyCounts.ToList()
+                    data = nextYearPredictions // Use the averaged data for the full next year
                 });
             }
 
-            var Result = new { Series, Year };
+            var Result = new { Series, Year = Year + 1 }; // Return the predicted year
             return Json(Result);
         }
+
+        public ActionResult LoadAppointmentsChartWithPredictions()
+        {
+            int Year = Convert.ToInt32(DateTime.Now.Year);
+            if (TempData["SelectedYear"] != null)
+            {
+                Year = Convert.ToInt32(TempData["SelectedYear"]);
+            }
+
+            var Series = new List<SeriesDataDouble>();
+
+            // Retrieve historical data grouped by year and month
+            var historicalAppointments = (from a in _context.Appointments
+                                          where a.Start.Year <= Year
+                                          group a by new { a.Start.Year, a.Start.Month } into g
+                                          select new
+                                          {
+                                              Year = g.Key.Year,
+                                              Month = g.Key.Month,
+                                              TotalAppointments = g.Count()
+                                          }).ToList();
+
+            // Calculate monthly averages across historical years
+            var monthlyAverages = new int[12];
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthlyData = historicalAppointments.Where(a => a.Month == month);
+                if (monthlyData.Any())
+                {
+                    monthlyAverages[month - 1] = (int)monthlyData.Average(a => a.TotalAppointments);
+                }
+            }
+
+            // Retrieve current year appointments
+            var currentYearAppointments = (from a in _context.Appointments
+                                           where a.Start.Year == Year
+                                           group a by a.Start.Month into g
+                                           select new
+                                           {
+                                               Month = g.Key,
+                                               TotalAppointments = g.Count()
+                                           }).ToList();
+
+            // Populate current year monthly data
+            var currentYearData = new double[12];
+            foreach (var appointment in currentYearAppointments)
+            {
+                currentYearData[appointment.Month - 1] = appointment.TotalAppointments; // Month is 1-based
+            }
+
+            // Predict next year's appointments
+            var predictedAppointments = new List<double>();
+            for (int month = 0; month < 12; month++)
+            {
+                // Use historical average and trend from the current year
+                double trend = currentYearData[month] - (month > 0 ? currentYearData[month - 1] : 0); // Calculate trend
+                double prediction = monthlyAverages[month] + trend; // Combine average and trend
+                predictedAppointments.Add(Math.Max(0, prediction)); // Ensure no negative predictions
+            }
+
+            // Add series data
+            // Current year appointments
+            Series.Add(new SeriesDataDouble { name = "Appointments " + Year, data = currentYearData.ToList() });
+
+            // Predicted next year's appointments
+            Series.Add(new SeriesDataDouble { name = "Predicted Appointments " + (Year + 1), data = predictedAppointments });
+
+            var Result = new { Series, Year = Year + 1 };
+            return Json(Result);
+        }
+
+
+
+        public ActionResult LoadMonthlyEarningChartWithPredictions()
+        {
+            int Year = Convert.ToInt32(DateTime.Now.Year);
+            if (TempData["SelectedYear"] != null)
+            {
+                Year = Convert.ToInt32(TempData["SelectedYear"]);
+            }
+
+            var Series = new List<SeriesDataMonthlyEarning>();
+
+            // Retrieve earnings for all previous years grouped by year and month
+            var historicalEarnings = (from o in _context.Orders
+                                      where o.IsPaid == true && o.DateCreated.Year <= Year
+                                      group o by new { o.DateCreated.Year, o.DateCreated.Month } into g
+                                      select new
+                                      {
+                                          Year = g.Key.Year,
+                                          Month = g.Key.Month,
+                                          TotalEarning = g.Sum(item => item.TotalAmount - (item.TotalAmount * item.Discounts) / 100)
+                                      }).ToList();
+
+            // Calculate averages per month across historical years
+            var monthlyAverages = new decimal[12];
+            for (int month = 1; month <= 12; month++)
+            {
+                var monthlyData = historicalEarnings.Where(e => e.Month == month);
+                if (monthlyData.Any())
+                {
+                    monthlyAverages[month - 1] = monthlyData.Average(e => e.TotalEarning);
+                }
+            }
+
+            // Retrieve earnings for the current year
+            var currentYearEarnings = (from o in _context.Orders
+                                       where o.IsPaid == true && o.DateCreated.Year == Year
+                                       group o by o.DateCreated.Month into g
+                                       select new
+                                       {
+                                           Month = g.Key,
+                                           TotalEarning = g.Sum(item => item.TotalAmount - (item.TotalAmount * item.Discounts) / 100)
+                                       }).ToList();
+
+            // Populate current year earnings
+            decimal[] earnings = new decimal[12];
+            foreach (var earning in currentYearEarnings)
+            {
+                earnings[earning.Month - 1] = earning.TotalEarning; // Month is 1-based
+            }
+
+            // Predict earnings for the next year based on historical averages
+            var predictedEarnings = new List<decimal>();
+            for (int month = 0; month < 12; month++)
+            {
+                // Use the average for the month and the trend from the current year
+                decimal trend = earnings[month] - (month > 0 ? earnings[month - 1] : 0); // Current trend
+                decimal prediction = monthlyAverages[month] + trend; // Combine trend with historical average
+                predictedEarnings.Add(Math.Max(0, prediction)); // Ensure no negative earnings
+            }
+
+            // Actual earnings for the current year
+            Series.Add(new SeriesDataMonthlyEarning { name = "Monthly Earning " + Year, data = earnings.ToList() });
+
+            // Predicted earnings for the next year
+            Series.Add(new SeriesDataMonthlyEarning { name = "Predicted Monthly Earning " + (Year + 1), data = predictedEarnings });
+
+            var Result = new { Series, Year = Year + 1 };
+            return Json(Result);
+        }
+
 
 
         public ActionResult LoadBestSellerChart()
@@ -215,77 +378,6 @@ namespace FurrLife.Controllers
             return Json(Result);
         }
 
-
-        //public ActionResult LoadBestSellerChart()
-        //{
-        //    int Year = Convert.ToInt32(DateTime.Now.Year);
-        //    if (TempData["SelectedYear"] != null)
-        //    {
-        //        Year = Convert.ToInt32(TempData["SelectedYear"]);
-        //    }
-        //    var Series = new List<SeriesData>();
-
-
-        //    var TopProducts = from o in _context.Orders
-        //                      join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                      join p in _context.Products on op.ProductId equals p.Id
-        //                      where o.IsPaid == true
-        //                      group new { op, p } by new { p.Id, p.Name } into g
-        //                      orderby g.Sum(item => item.op.Quantity) descending
-        //                      select new Top5Products
-        //                      {
-        //                          Id = g.Key.Id,
-        //                          Name = g.Key.Name,
-        //                          Count = g.Sum(item => item.op.Quantity)
-        //                      };
-        //    var top5 = TopProducts.Take(5).ToList();
-
-        //    foreach (var item in top5)
-        //    {
-        //        int Jan = GetBestSellerSeries(item.Id, Year, 1);
-        //        int Feb = GetBestSellerSeries(item.Id, Year, 2);
-        //        int Mar = GetBestSellerSeries(item.Id, Year, 3);
-        //        int Apr = GetBestSellerSeries(item.Id, Year, 4);
-        //        int May = GetBestSellerSeries(item.Id, Year, 5);
-        //        int Jun = GetBestSellerSeries(item.Id, Year, 6);
-        //        int Jul = GetBestSellerSeries(item.Id, Year, 7);
-        //        int Aug = GetBestSellerSeries(item.Id, Year, 8);
-        //        int Sep = GetBestSellerSeries(item.Id, Year, 9);
-        //        int Oct = GetBestSellerSeries(item.Id, Year, 10);
-        //        int Nov = GetBestSellerSeries(item.Id, Year, 11);
-        //        int Dec = GetBestSellerSeries(item.Id, Year, 12);
-
-        //        Series.Add(new SeriesData { name = item.Name, data = new List<int> { Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec } });
-        //    }
-
-        //    var Result = new { Series, Year };
-        //    return Json(Result);
-
-        //}
-        //public int GetBestSellerSeries(int Id, int Year, int Month)
-        //{
-        //    int ProductCount = 0;
-        //    var TopProducts = from o in _context.Orders
-        //                      join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                      join p in _context.Products on op.ProductId equals p.Id
-        //                      where o.IsPaid == true && o.DateCreated.Year == Year && o.DateCreated.Month == Month
-        //                      group new { op, p } by new { p.Id, p.Name } into g
-        //                      orderby g.Sum(item => item.op.Quantity) descending
-        //                      select new Top5Products
-        //                      {
-        //                          Id = g.Key.Id,
-        //                          Name = g.Key.Name,
-        //                          Count = g.Sum(item => item.op.Quantity)
-        //                      };
-
-        //    var TP = TopProducts.Where(m => m.Id == Id).FirstOrDefault();
-        //    if (TP != null)
-        //    {
-        //        ProductCount = TP.Count;
-        //    }
-        //    return ProductCount;
-        //}
-
         public ActionResult LoadLeastSellerChart()
         {
             int Year = Convert.ToInt32(DateTime.Now.Year);
@@ -344,76 +436,6 @@ namespace FurrLife.Controllers
             return Json(Result);
         }
 
-        //public ActionResult LoadLeastSellerChart()
-        //{
-        //    int Year = Convert.ToInt32(DateTime.Now.Year);
-        //    if (TempData["SelectedYear"] != null)
-        //    {
-        //        Year = Convert.ToInt32(TempData["SelectedYear"]);
-        //    }
-        //    var Series = new List<SeriesData>();
-
-
-        //    var TopProducts = from o in _context.Orders
-        //                      join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                      join p in _context.Products on op.ProductId equals p.Id
-        //                      where o.IsPaid == true
-        //                      group new { op, p } by new { p.Id, p.Name } into g
-        //                      orderby g.Sum(item => item.op.Quantity) ascending
-        //                      select new Top5Products
-        //                      {
-        //                          Id = g.Key.Id,
-        //                          Name = g.Key.Name,
-        //                          Count = g.Sum(item => item.op.Quantity)
-        //                      };
-        //    var top5 = TopProducts.Take(5).ToList();
-
-        //    foreach (var item in top5)
-        //    {
-        //        int Jan = GetBestLeastSeries(item.Id, Year, 1);
-        //        int Feb = GetBestLeastSeries(item.Id, Year, 2);
-        //        int Mar = GetBestLeastSeries(item.Id, Year, 3);
-        //        int Apr = GetBestLeastSeries(item.Id, Year, 4);
-        //        int May = GetBestLeastSeries(item.Id, Year, 5);
-        //        int Jun = GetBestLeastSeries(item.Id, Year, 6);
-        //        int Jul = GetBestLeastSeries(item.Id, Year, 7);
-        //        int Aug = GetBestLeastSeries(item.Id, Year, 8);
-        //        int Sep = GetBestLeastSeries(item.Id, Year, 9);
-        //        int Oct = GetBestLeastSeries(item.Id, Year, 10);
-        //        int Nov = GetBestLeastSeries(item.Id, Year, 11);
-        //        int Dec = GetBestLeastSeries(item.Id, Year, 12);
-
-        //        Series.Add(new SeriesData { name = item.Name, data = new List<int> { Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec } });
-        //    }
-
-        //    var Result = new { Series, Year };
-        //    return Json(Result);
-        //}
-
-        //public int GetBestLeastSeries(int Id, int Year, int Month)
-        //{
-        //    int ProductCount = 0;
-        //    var TopProducts = from o in _context.Orders
-        //                      join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                      join p in _context.Products on op.ProductId equals p.Id
-        //                      where o.IsPaid == true && o.DateCreated.Year == Year && o.DateCreated.Month == Month
-        //                      group new { op, p } by new { p.Id, p.Name } into g
-        //                      orderby g.Sum(item => item.op.Quantity) ascending
-        //                      select new Top5Products
-        //                      {
-        //                          Id = g.Key.Id,
-        //                          Name = g.Key.Name,
-        //                          Count = g.Sum(item => item.op.Quantity)
-        //                      };
-
-        //    var TP = TopProducts.Where(m => m.Id == Id).FirstOrDefault();
-        //    if (TP != null)
-        //    {
-        //        ProductCount = TP.Count;
-        //    }
-        //    return ProductCount;
-        //}
-
         public ActionResult LoadForcastingChart()
         {
             var Series = new List<SeriesDataForecasting>();
@@ -469,75 +491,6 @@ namespace FurrLife.Controllers
             return Json(Series);
         }
 
-
-        //public ActionResult LoadForcastingChart()
-        //{
-        //    var Series = new List<SeriesDataForecasting>();
-
-        //    var YearList = _context.Orders.Where(m => m.IsPaid == true).Select(m => new YearList { Year = m.DateCreated.Year }).Distinct().ToList();
-
-        //    var TopProducts = from o in _context.Orders
-        //                      join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                      join p in _context.Products on op.ProductId equals p.Id
-        //                      where o.IsPaid == true
-        //                      group new { op, p } by new { p.Id, p.Name } into g
-        //                      orderby g.Sum(item => item.op.Quantity) descending
-        //                      select new Top5Products
-        //                      {
-        //                          Id = g.Key.Id,
-        //                          Name = g.Key.Name,
-        //                          Count = g.Sum(item => item.op.Quantity)
-        //                      };
-
-        //    var top5 = TopProducts.Take(10).ToList();
-
-        //    foreach (var item in top5)
-        //    {
-        //        decimal Jan = GetForecastingSeries(item.Id, YearList, 1);
-        //        decimal Feb = GetForecastingSeries(item.Id, YearList, 2);
-        //        decimal Mar = GetForecastingSeries(item.Id, YearList, 3);
-        //        decimal Apr = GetForecastingSeries(item.Id, YearList, 4);
-        //        decimal May = GetForecastingSeries(item.Id, YearList, 5);
-        //        decimal Jun = GetForecastingSeries(item.Id, YearList, 6);
-        //        decimal Jul = GetForecastingSeries(item.Id, YearList, 7);
-        //        decimal Aug = GetForecastingSeries(item.Id, YearList, 8);
-        //        decimal Sep = GetForecastingSeries(item.Id, YearList, 9);
-        //        decimal Oct = GetForecastingSeries(item.Id, YearList, 10);
-        //        decimal Nov = GetForecastingSeries(item.Id, YearList, 11);
-        //        decimal Dec = GetForecastingSeries(item.Id, YearList, 12);
-
-        //        Series.Add(new SeriesDataForecasting { name = item.Name, data = new List<decimal> { Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec } });
-        //    }
-        //    return Json(Series);
-        //}
-
-        //public decimal GetForecastingSeries(int Id, List<YearList> YearList, int Month)
-        //{
-        //    int ProductCount = 0;
-        //    foreach (var item in YearList)
-        //    {
-        //        var TopProducts = from o in _context.Orders
-        //                          join op in _context.OrderProducts on o.Id equals op.OrderId
-        //                          join p in _context.Products on op.ProductId equals p.Id
-        //                          where o.IsPaid == true && o.DateCreated.Year == item.Year && o.DateCreated.Month == Month
-        //                          group new { op, p } by new { p.Id, p.Name } into g
-        //                          orderby g.Sum(item => item.op.Quantity) descending
-        //                          select new Top5Products
-        //                          {
-        //                              Id = g.Key.Id,
-        //                              Name = g.Key.Name,
-        //                              Count = g.Sum(item => item.op.Quantity)
-        //                          };
-
-        //        var TP = TopProducts.Where(m => m.Id == Id).FirstOrDefault();
-        //        if (TP != null)
-        //        {
-        //            ProductCount = ProductCount + TP.Count;
-        //        }
-        //    }
-        //    return ProductCount / YearList.Count;
-        //}
-
         public ActionResult LoadMonthlyEarningChart()
         {
             int Year = Convert.ToInt32(DateTime.Now.Year);
@@ -575,50 +528,6 @@ namespace FurrLife.Controllers
         }
 
 
-        //public ActionResult LoadMonthlyEarningChart()
-        //{
-        //    int Year = Convert.ToInt32(DateTime.Now.Year);
-        //    if (TempData["SelectedYear"] != null)
-        //    {
-        //        Year = Convert.ToInt32(TempData["SelectedYear"]);
-        //    }
-
-        //    var Series = new List<SeriesDataMonthlyEarning>();
-
-        //    decimal Jan = GetMonthlyEarningSeries(Year, 1);
-        //    decimal Feb = GetMonthlyEarningSeries(Year, 2);
-        //    decimal Mar = GetMonthlyEarningSeries(Year, 3);
-        //    decimal Apr = GetMonthlyEarningSeries(Year, 4);
-        //    decimal May = GetMonthlyEarningSeries(Year, 5);
-        //    decimal Jun = GetMonthlyEarningSeries(Year, 6);
-        //    decimal Jul = GetMonthlyEarningSeries(Year, 7);
-        //    decimal Aug = GetMonthlyEarningSeries(Year, 8);
-        //    decimal Sep = GetMonthlyEarningSeries(Year, 9);
-        //    decimal Oct = GetMonthlyEarningSeries(Year, 10);
-        //    decimal Nov = GetMonthlyEarningSeries(Year, 11);
-        //    decimal Dec = GetMonthlyEarningSeries(Year, 12);
-
-        //    Series.Add(new SeriesDataMonthlyEarning { name = "Monthly Earning " + Year, data = new List<decimal> { Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec } });
-
-        //    var Result = new { Series, Year };
-        //    return Json(Result);
-        //}
-
-        //public decimal GetMonthlyEarningSeries(int Year, int Month)
-        //{
-        //    decimal MonthlyEarning = 0;
-        //    var model = _context.Orders.Where(m => m.IsPaid == true && m.DateCreated.Year == Year && m.DateCreated.Month == Month).ToList();
-
-        //    if (model != null)
-        //    {
-        //        foreach (var item in model)
-        //        {
-        //            MonthlyEarning = MonthlyEarning + (item.TotalAmount - (item.TotalAmount * item.Discounts) / 100);
-        //        }
-
-        //    }
-        //    return MonthlyEarning;
-        //}
 
         public ActionResult ConvertToeWallet()
         {

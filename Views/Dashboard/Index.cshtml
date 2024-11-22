@@ -24,26 +24,27 @@
 
 @if (UserRoleId == UserRoles.Administrator.Id)
 {
-    <div class="col-xl-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="d-sm-flex flex-wrap">
-                    <h4 class="card-title mb-4">Top 10 Forecasting</h4>
-                    <div class="ms-auto">
-                    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="d-sm-flex flex-wrap">
+                <h4 class="card-title mb-4">Prediction of Monthly Sales</h4>
+                <div class="ms-auto">
                 </div>
-
-                <div id="Forecasting" class="apex-charts" dir="ltr"></div>
             </div>
-        </div>
 
+            <div id="LoadMonthlyEarningChartWithPredictions" class="apex-charts" dir="ltr"></div>
+        </div>
+    </div>
+
+    <div class="col-xl-12">
         <div class="row">
             <div class="col-md-3">
                 <div class="card mini-stats-wid">
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-muted fw-medium">Monthly Earnings</p>
+                                <p class="text-muted fw-medium">MONTHLY EARNINGS</p>
                                 <h4 class="mb-0">@string.Format(new CultureInfo("en-PH", false), "{0:C}", ViewBag.TransactionsMonthlyAmount)</h4>
                             </div>
                         </div>
@@ -55,7 +56,7 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-muted fw-medium">All Earnings</p>
+                                <p class="text-muted fw-medium">TOTAL EARNINGS</p>
                                 <h4 class="mb-0">@string.Format(new CultureInfo("en-PH", false), "{0:C}", ViewBag.TransactionAmount)</h4>
                             </div>
                         </div>
@@ -67,7 +68,7 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-muted fw-medium">Orders</p>
+                                <p class="text-muted fw-medium">TOTAL ORDERS</p>
                                 <h4 class="mb-0">@ViewBag.OrdersCount</h4>
                             </div>
                         </div>
@@ -79,12 +80,52 @@
                     <div class="card-body">
                         <div class="d-flex">
                             <div class="flex-grow-1">
-                                <p class="text-muted fw-medium">Transactions</p>
+                                <p class="text-muted fw-medium">TOTAL TRANSACTIONS</p>
                                 <h4 class="mb-0">@ViewBag.TransactionsCount</h4>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-sm-flex flex-wrap">
+                            <h4 class="card-title mb-4">Prediction of Pet Health Conditions</h4>
+                            <div class="ms-auto">
+                            </div>
+                        </div>
+
+                        <div id="LoadPetHealthRecordChartWithPredictions" class="apex-charts" dir="ltr"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-sm-flex flex-wrap">
+                            <h4 class="card-title mb-4">Prediction of Appointments</h4>
+                            <div class="ms-auto">
+                            </div>
+                        </div>
+
+                        <div id="LoadAppointmentsChartWithPredictions" class="apex-charts" dir="ltr"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" hidden>
+            <div class="card-body">
+                <div class="d-sm-flex flex-wrap">
+                    <h4 class="card-title mb-4">Top 10 Forecasting</h4>
+                    <div class="ms-auto">
+                    </div>
+                </div>
+
+                <div id="Forecasting" class="apex-charts" dir="ltr"></div>
             </div>
         </div>
     </div>
@@ -132,7 +173,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" hidden>
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex flex-wrap">

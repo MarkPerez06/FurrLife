@@ -2,10 +2,185 @@ setTimeout(function () {
     $("#subscribeModal").modal("show")
 }, 2e3);
 
+LoadPetHealthRecordChartWithPredictions();
+LoadAppointmentsChartWithPredictions();
+LoadMonthlyEarningChartWithPredictions();
 LoadBestSellerChart();
 LoadMonthlyEarningChart();
 LoadForcastingChart()
 LoadLeastSellerChart()
+
+function LoadPetHealthRecordChartWithPredictions() {
+    $.ajax({
+        url: "/Dashboard/LoadPetHealthRecordChartWithPredictions",
+        type: 'GET',
+        success: function (data) {
+            var options = {
+                series: data.series,
+                chart: {
+                    height: 350,
+                    type: "area",
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
+                xaxis: {
+                    categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
+                },
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
+                },
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
+                }
+            },
+                chart = new ApexCharts(document.querySelector("#LoadPetHealthRecordChartWithPredictions"), options);
+            chart.render();
+        },
+        error: function () {
+            console.log('Failed to load the partial view');
+        }
+    });
+}
+
+function LoadAppointmentsChartWithPredictions() {
+    $.ajax({
+        url: "/Dashboard/LoadAppointmentsChartWithPredictions",
+        type: 'GET',
+        success: function (data) {
+            var options = {
+                series: data.series,
+                chart: {
+                    height: 350,
+                    type: "area",
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
+                xaxis: {
+                    categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
+                },
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
+                },
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
+                }
+            },
+                chart = new ApexCharts(document.querySelector("#LoadAppointmentsChartWithPredictions"), options);
+            chart.render();
+        },
+        error: function () {
+            console.log('Failed to load the partial view');
+        }
+    });
+}
+
+
+function LoadMonthlyEarningChartWithPredictions() {
+    $.ajax({
+        url: "/Dashboard/LoadMonthlyEarningChartWithPredictions",
+        type: 'GET',
+        success: function (data) {
+            var options = {
+                series: data.series,
+                chart: {
+                    height: 350,
+                    type: "area",
+                    toolbar: {
+                        show: !1
+                    }
+                },
+                colors: ["#556ee6", "#34c38f", "#ff0000", "#b200ff", "#f1b44c"],
+                dataLabels: {
+                    enabled: !1
+                },
+                stroke: {
+                    curve: "smooth",
+                    width: 2
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        inverseColors: !1,
+                        opacityFrom: .45,
+                        opacityTo: .05,
+                        stops: [20, 100, 100, 100]
+                    }
+                },
+                xaxis: {
+                    categories: ["Jan " + data.year, "Feb " + data.year, "Mar " + data.year, "Apr " + data.year, "May " + data.year, "Jun " + data.year, "Jul " + data.year, "Aug " + data.year, "Sep " + data.year, "Oct " + data.year, "Nov " + data.year, "Dec " + data.year]
+                },
+                markers: {
+                    size: 3,
+                    strokeWidth: 3,
+                    hover: {
+                        size: 4,
+                        sizeOffset: 2
+                    }
+                },
+                legend: {
+                    position: "top",
+                    horizontalAlign: "right"
+                }
+            },
+                chart = new ApexCharts(document.querySelector("#LoadMonthlyEarningChartWithPredictions"), options);
+            chart.render();
+        },
+        error: function () {
+            console.log('Failed to load the partial view');
+        }
+    });
+}
 
 function LoadBestSellerChart() {
     $.ajax({
