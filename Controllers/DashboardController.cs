@@ -243,7 +243,7 @@ namespace FurrLife.Controllers
             // Predicted next year's appointments
             Series.Add(new SeriesDataDouble { name = "Predicted Appointments " + (Year + 1), data = predictedAppointments });
 
-            var Result = new { Series, Year = Year + 1 };
+            var Result = new { Series, Year = "" };
             return Json(Result);
         }
 
@@ -314,7 +314,7 @@ namespace FurrLife.Controllers
             // Predicted earnings for the next year
             Series.Add(new SeriesDataMonthlyEarning { name = "Predicted Monthly Earning " + (Year + 1), data = predictedEarnings });
 
-            var Result = new { Series, Year = Year + 1 };
+            var Result = new { Series, Year = "" };
             return Json(Result);
         }
 
