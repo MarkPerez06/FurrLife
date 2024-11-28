@@ -38,7 +38,16 @@
                         <div class="ctext-wrap">
                             <div class="conversation-name">@Users.Where(m => m.Value == item.UserId).FirstOrDefault().Text</div>
                             <p>
-                                @item.Message
+                                @{
+                                    if (item.Message.Contains("ChatUploads"))
+                                    {
+                                        <img src="@item.Message" height="200px" alt="" />
+                                    }
+                                    else
+                                    {
+                                        <span>@item.Message</span>
+                                    }
+                                }
                             </p>
                             <small><i class="bx bx-time-five align-middle"></i> @item.DateCreated.ToString("MMM. dd, 2024 hh:mm tt")</small>
                         </div>

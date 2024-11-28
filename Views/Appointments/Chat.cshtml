@@ -14,7 +14,6 @@
 <!-- Responsive datatable examples -->
 <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-
 <div class="w-100 user-chat">
     <div class="card">
         <div class="p-4 border-bottom ">
@@ -24,7 +23,6 @@
                     <p class="text-muted mb-0"><i class="mdi mdi-circle text-success align-middle me-1"></i> Active now</p>
                 </div>
                 <div class="col-md-8 col-3">
-
                 </div>
             </div>
         </div>
@@ -33,7 +31,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="position-relative">
-                            <input id="Message" type="text" class="form-control chat-input" placeholder="Enter Message...">
+                            <textarea id="Message" type="text" class="form-control chat-input" placeholder="Enter Message..." style="height: 70px"></textarea>
                             <div class="chat-input-links" id="tooltip-container">
                             </div>
                         </div>
@@ -42,8 +40,29 @@
                         <button onclick="SaveForm()" type="submit" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light"><span class="d-none d-sm-inline-block me-2">Send</span> <i class="mdi mdi-send"></i></button>
                     </div>
                 </div>
+
+                <div class="row mt-2">
+                    <form asp-controller="Appointments" asp-action="UploadFile" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col">
+                                <div class="position-relative">
+                                    <input type="hidden" id="AppointmentId" class="form-control" name="AppointmentId" value="" />
+                                    <input type="file" class="form-control chat-input" name="file" id="file" required />
+                                    <div class="chat-input-links" id="tooltip-container">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary btn-rounded chat-send w-md waves-effect waves-light">Upload</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+
             </div>
-            <div class="chat-conversation p-3" id="Load_ChatDetails" style="min-height: 500px;">
+            <div class="chat-conversation p-3" id="Load_ChatDetails" style="min-height: 500px; border-top: solid #eff2f7 2px">
             </div>
         </div>
     </div>
@@ -89,12 +108,10 @@
 
 <script src="~/assets/js/app.js"></script>
 <script>
-
-    // Get the current URL
     const url = new URL(window.location.href);
-
-    // Retrieve the value of AppointmentId from the query string
     const AppointmentId = url.searchParams.get('AppointmentId');
+    $("#AppointmentId").val(AppointmentId);
+    // Get the current URL
 
     ChatDetails();
 
