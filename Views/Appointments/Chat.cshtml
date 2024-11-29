@@ -14,6 +14,9 @@
 <!-- Responsive datatable examples -->
 <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.14/signalr.min.js"></script>
+
 <div class="w-100 user-chat">
     <div class="card">
         <div class="p-4 border-bottom ">
@@ -112,10 +115,23 @@
     const AppointmentId = url.searchParams.get('AppointmentId');
     $("#AppointmentId").val(AppointmentId);
     // Get the current URL
-
     ChatDetails();
+    document.addEventListener("DOMContentLoaded", function () {
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .build();
 
-    setInterval(ChatDetails, 3000);
+        connection.on("RefreshChat", function () {
+            ChatDetails();
+        });
+
+        connection.start()
+            .then(() => console.log("SignalR connected!"))
+            .catch(err => console.error("SignalR connection failed: ", err));
+    });
+
+
+    // setInterval(ChatDetails, 3000);
 
     function ChatDetails() {
         $.ajax({
@@ -145,6 +161,7 @@
                 data: data,
                 success: function (data) {
                     ChatDetails();
+                    $("#Message").val("")
                 },
                 error: function (error) {
                     Swal.fire('Oops!', 'Something went wrong!', 'error');

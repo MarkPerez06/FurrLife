@@ -1,4 +1,5 @@
 using FurrLife.Data;
+using FurrLife.Hubs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -54,7 +55,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapHub<FurrLife.Hubs.ConsultationHub>("/consultationHub");
+app.MapHub<ConsultationHub>("/consultationHub");
+app.MapHub<ChatHub>("/chatHub");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=MenuProducts}/{action=Index}/{id?}");

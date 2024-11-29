@@ -1,9 +1,11 @@
 ﻿using FurrLife.Data;
+using FurrLife.Hubs;
 using FurrLife.Models;
 using FurrLife.Static;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
@@ -13,11 +15,12 @@ namespace FurrLife.Controllers
     {
         private readonly ILogger<AppointmentsController> _logger;
         private readonly ApplicationDbContext _context;
-
-        public AppointmentsController(ApplicationDbContext context, ILogger<AppointmentsController> logger)
+        private readonly IHubContext<ChatHub> _hubContext;
+        public AppointmentsController(ApplicationDbContext context, ILogger<AppointmentsController> logger, IHubContext<ChatHub> hubContext)
         {
             _context = context;
             _logger = logger;
+            _hubContext = hubContext;
 
         }
 
@@ -66,7 +69,7 @@ namespace FurrLife.Controllers
             List<IdentityUser> users = _context.Users.ToList();
             ViewBag.Users = new SelectList(users, "Id", "UserName");
 
-            var model = _context.Messages.Where(m => m.AppointmentId == AppointmentId).OrderByDescending(m=> m.DateCreated).ToList();
+            var model = _context.Messages.Where(m => m.AppointmentId == AppointmentId).OrderByDescending(m => m.DateCreated).ToList();
             return PartialView("_ChatDetails", model);
         }
 
@@ -98,6 +101,9 @@ namespace FurrLife.Controllers
                 _context.Messages.Add(messages);
             }
             _context.SaveChanges();
+
+
+            _hubContext.Clients.All.SendAsync("RefreshChat");
             return Json(new { success = true, message = "Form submitted successfully!" });
         }
 
@@ -110,55 +116,55 @@ namespace FurrLife.Controllers
 
             var model = new Messages();
 
-                // Check if the file is a PDF or an image
-                var allowedExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
-                var fileExtension = Path.GetExtension(file.FileName).ToLower();
-                if (!allowedExtensions.Contains(fileExtension))
-                    return BadRequest("Unsupported file type.");
+            // Check if the file is a PDF or an image
+            var allowedExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            if (!allowedExtensions.Contains(fileExtension))
+                return BadRequest("Unsupported file type.");
 
-                // Create the ApplicationFormRequirements directory if it doesn't exist
-                var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ChatUploads");
-                if (!Directory.Exists(uploadsPath))
-                    Directory.CreateDirectory(uploadsPath);
+            // Create the ApplicationFormRequirements directory if it doesn't exist
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ChatUploads");
+            if (!Directory.Exists(uploadsPath))
+                Directory.CreateDirectory(uploadsPath);
 
-                
-                // Create a new file name with GUID appended
-                var uniqueFileName = $"{model.AppointmentId + Guid.NewGuid().ToString()}{fileExtension}";
-                var filePath = Path.Combine(uploadsPath, uniqueFileName);
 
-                // Save the file to the server
-                using (var stream = new FileStream(filePath, FileMode.Create))
+            // Create a new file name with GUID appended
+            var uniqueFileName = $"{model.AppointmentId + Guid.NewGuid().ToString()}{fileExtension}";
+            var filePath = Path.Combine(uploadsPath, uniqueFileName);
+
+            // Save the file to the server
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            if (AppointmentId != 0)
+            {
+                var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+
+                var appointment = _context.Appointments.Where(m => m.Id == AppointmentId).FirstOrDefault();
+
+                Messages messages = new Messages();
+                messages.AppointmentId = AppointmentId;
+                messages.Message = "/ChatUploads/" + uniqueFileName;
+                messages.DateCreated = DateTime.Now;
+                if (user != null && user.SecurityStamp == UserRoles.Customer.Id)
                 {
-                    await file.CopyToAsync(stream);
+                    messages.CustId = user.Id;
+                    messages.UserId = "";
                 }
 
-                if (AppointmentId != 0)
+                if (user != null && user.SecurityStamp != UserRoles.Customer.Id)
                 {
-                    var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
-
-                    var appointment = _context.Appointments.Where(m => m.Id == AppointmentId).FirstOrDefault();
-
-                    Messages messages = new Messages();
-                    messages.AppointmentId = AppointmentId;
-                    messages.Message = "/ChatUploads/" + uniqueFileName;
-                    messages.DateCreated = DateTime.Now;
-                    if (user != null && user.SecurityStamp == UserRoles.Customer.Id)
-                    {
-                        messages.CustId = user.Id;
-                        messages.UserId = "";
-                    }
-
-                    if (user != null && user.SecurityStamp != UserRoles.Customer.Id)
-                    {
-                        messages.CustId = "";
-                        messages.UserId = user.Id;
-                    }
-
-                    _context.Messages.Add(messages);
+                    messages.CustId = "";
+                    messages.UserId = user.Id;
                 }
-                _context.SaveChanges();
 
-            return Json(new { success = true, message = "Form submitted successfully!" });
+                _context.Messages.Add(messages);
+            }
+            _context.SaveChanges();
+            await _hubContext.Clients.All.SendAsync("RefreshChat");
+            return RedirectToAction("Chat", new { AppointmentId });
         }
 
 
