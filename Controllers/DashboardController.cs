@@ -238,10 +238,10 @@ namespace FurrLife.Controllers
 
             // Add series data
             // Current year appointments
-            Series.Add(new SeriesDataDouble { name = "Appointments " + Year, data = currentYearData.ToList() });
+            Series.Add(new SeriesDataDouble { name = "" + Year, data = currentYearData.ToList() });
 
             // Predicted next year's appointments
-            Series.Add(new SeriesDataDouble { name = "Predicted Appointments " + (Year + 1), data = predictedAppointments });
+            Series.Add(new SeriesDataDouble { name = "" + (Year + 1), data = predictedAppointments });
 
             var Result = new { Series, Year = "" };
             return Json(Result);
@@ -309,10 +309,10 @@ namespace FurrLife.Controllers
             }
 
             // Actual earnings for the current year
-            Series.Add(new SeriesDataMonthlyEarning { name = "Monthly Earning " + Year, data = earnings.ToList() });
+            Series.Add(new SeriesDataMonthlyEarning { name = "" + Year, data = earnings.ToList() });
 
             // Predicted earnings for the next year
-            Series.Add(new SeriesDataMonthlyEarning { name = "Predicted Monthly Earning " + (Year + 1), data = predictedEarnings });
+            Series.Add(new SeriesDataMonthlyEarning { name = "" + (Year + 1), data = predictedEarnings });
 
             var Result = new { Series, Year = "" };
             return Json(Result);

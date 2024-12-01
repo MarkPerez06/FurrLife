@@ -166,10 +166,38 @@ namespace FurrLife.Controllers
             await _hubContext.Clients.All.SendAsync("RefreshChat");
             return RedirectToAction("Chat", new { AppointmentId });
         }
-
+        
 
         [Route("Consultation")]
         public IActionResult Consultation()
+        {
+            List<IdentityUser> vetUsers = _context.Users.Where(m => m.SecurityStamp == UserRoles.Veterinarian.Id).ToList();
+            ViewBag.vetUsers = vetUsers;
+
+
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+            var model = _context.Appointments.Where(m => m.CalendarId == 2).OrderByDescending(m => m.End).ToList();
+
+            if (user.SecurityStamp == UserRoles.Veterinarian.Id)
+            {
+                model = _context.Appointments.Where(m => m.UserId == user.Id && m.CalendarId == 2).OrderByDescending(m => m.End).ToList();
+            }
+
+            if (user.SecurityStamp == UserRoles.Customer.Id)
+            {
+                model = _context.Appointments.Where(m => m.CusUserId == user.Id && m.CalendarId == 2).OrderByDescending(m => m.End).ToList();
+            }
+
+            List<Appointments> openSchedule = _context.Appointments.Where(m => m.CusUserId == "" && m.CalendarId == 2 && m.End >= DateTime.Now).ToList();
+            ViewBag.openSchedule = openSchedule;
+            return View(model);
+        }
+
+        
+
+
+        [Route("OnlineConsultation")]
+        public IActionResult OnlineConsultation(int ConsultationId)
         {
             return View();
         }
@@ -181,16 +209,16 @@ namespace FurrLife.Controllers
 
 
             var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
-            var model = _context.Appointments.ToList();
+            var model = _context.Appointments.Where(m => m.CalendarId == 1).OrderByDescending(m => m.End).ToList();
 
             if (user.SecurityStamp == UserRoles.Veterinarian.Id)
             {
-                model = _context.Appointments.Where(m => m.UserId == user.Id).ToList();
+                model = _context.Appointments.Where(m => m.UserId == user.Id && m.CalendarId == 1).OrderByDescending(m => m.End).ToList();
             }
 
             if (user.SecurityStamp == UserRoles.Customer.Id)
             {
-                model = _context.Appointments.Where(m => m.CusUserId == user.Id).ToList();
+                model = _context.Appointments.Where(m => m.CusUserId == user.Id && m.CalendarId == 1).OrderByDescending(m => m.End).ToList();
             }
 
             return View(model);
@@ -207,7 +235,7 @@ namespace FurrLife.Controllers
                 .Select(a => new
                 {
                     id = a.Id.ToString(),
-                    calendarId = "1",
+                    calendarId = a.CalendarId,
                     title = a.Title,
                     category = a.IsAllDay ? "allday" : "time",
                     start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -223,7 +251,7 @@ namespace FurrLife.Controllers
                 .Select(a => new
                 {
                     id = a.Id.ToString(),
-                    calendarId = "1",
+                    calendarId = a.CalendarId,
                     title = a.Title,
                     category = a.IsAllDay ? "allday" : "time",
                     start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -239,7 +267,7 @@ namespace FurrLife.Controllers
                 .Select(a => new
                 {
                     id = a.Id.ToString(),
-                    calendarId = "1",
+                    calendarId = a.CalendarId,
                     title = a.Title,
                     category = a.IsAllDay ? "allday" : "time",
                     start = a.Start.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -251,6 +279,21 @@ namespace FurrLife.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult AddConsultation(int ScheduleId)
+        {
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name).FirstOrDefault();
+
+            if (ScheduleId > 0)
+            {
+                var appointment = _context.Appointments.Where(m => m.Id == ScheduleId).FirstOrDefault();
+                appointment.CusUserId = user.Id;
+                _context.Appointments.Update(appointment);
+                _context.SaveChanges();
+            }
+            return Json(user);
+        }
+
 
         [HttpPost]
         public ActionResult Save(Appointments model)
@@ -258,7 +301,15 @@ namespace FurrLife.Controllers
             if (model.Id != 0)
             {
                 var appointment = _context.Appointments.Where(m => m.Id == model.Id).FirstOrDefault();
-                appointment.Title = model.Title;
+                if (model.CalendarId == 1)
+                {
+                    appointment.Title = "Store Appointment";
+                }
+                else
+                {
+                    appointment.Title = "Online Consultation";
+                }
+                appointment.CalendarId = model.CalendarId;
                 appointment.Start = model.Start;
                 appointment.End = model.End;
                 appointment.IsAllDay = model.IsAllDay;
@@ -267,7 +318,14 @@ namespace FurrLife.Controllers
             }
             else
             {
-                model.CalendarId = 1;
+                if (model.CalendarId == 1)
+                {
+                    model.Title = "Store Appointment";
+                }
+                else
+                {
+                    model.Title = "Online Consultation";
+                }
                 model.Category = model.IsAllDay ? "allday" : "time";
                 model.CusUserId = "";
                 model.OrderId = 0;

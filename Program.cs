@@ -60,7 +60,7 @@ app.MapHub<ChatHub>("/chatHub");
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=MenuProducts}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

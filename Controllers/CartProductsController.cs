@@ -83,7 +83,7 @@ namespace FurrLife.Controllers
                                 UnitCode = u.Code
                             };
 
-                List<Appointments> openSchedule = _context.Appointments.Where(m => m.CusUserId == "" && m.End >= DateTime.Now).ToList();
+                List<Appointments> openSchedule = _context.Appointments.Where(m => m.CusUserId == "" && m.CalendarId == 1 && m.End >= DateTime.Now).ToList();
                 ViewBag.openSchedule = openSchedule;
                 return View(model);
             }

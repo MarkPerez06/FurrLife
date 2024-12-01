@@ -1,8 +1,20 @@
-﻿@{
-    ViewBag.Title = "Consultation";
-    ViewBag.pTitle = "Consultation";
-    ViewBag.pageTitle = "Video Call";
+﻿@using FurrLife.Static
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<Appointments>
+@{
+    ViewBag.Title = "Consultations";
+    ViewBag.pTitle = "Consultations";
+    ViewBag.pageTitle = "Maintenance";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var vetUsers = ViewBag.vetUsers as List<IdentityUser>;
+
+    var _userManager = Context.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+    var user = await _userManager.FindByNameAsync(User.Identity?.Name);
+    var userId = user.Id;
+    var UserRoleId = user.SecurityStamp;
+
+    var openSchedule = ViewBag.openSchedule as List<Appointments>;
 }
 <!-- DataTables -->
 <link href="~/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -10,38 +22,175 @@
 <!-- Responsive datatable examples -->
 <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.14/signalr.min.js"></script>
-
-
-<style>
-    #videos {
-        display: flex;
-        gap: 10px;
-    }
-
-    video {
-        width: 45%;
-        border: 1px solid black;
-    }
-</style>
 
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
-                <div id="videos">
-                    <video id="localVideo" autoplay muted playsinline></video>
-                    <video id="remoteVideo" autoplay playsinline></video>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <select id="ScheduleId" class="form-control" name="ScheduleId">
+                                <option value="0">- Select Schedule -</option>
+                                @foreach (var item in openSchedule)
+                                {
+                                    if (item.Start.ToString("MMM. dd, yyyy") == item.End.ToString("MMM. dd, yyyy"))
+                                    {
+                                        <option value="@item.Id"> @item.Start.ToString("MMM. dd, yyyy") (@item.Start.ToString("hhhh:mmtt") - @item.End.ToString("hhhh:mmtt"))</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Id"> @item.Start.ToString("MMM. dd, yyyy") (@item.Start.ToString("hhhh:mmtt")) - @item.End.ToString("MMM. dd, yyyy") (@item.End.ToString("hhhh:mmtt"))</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary" onclick="AddConsultation()">
+                            Schedule a Consultation
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
                 </div>
-                <div class="mt-4">
-                    <button id="startCall" class="btn btn-primary">Start Call</button>
-                    <button id="endCall" class="btn btn-primary">End Call</button>
-                </div>
+                <table id="datatable-buttons" class="table table-bordered table-striped dt-responsive nowrap w-100">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Type</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Category</th>
+                            <th>Veterinarian</th>
+                            <th class="text-center" style="table-layout: fixed;">
+                                @if (UserRoleId != UserRoles.Customer.Id)
+                                {
+                                    <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">Create</a>
+                                }
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var Count = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            Count++;
+                            <tr>
+                                <td>@Count.</td>
+                                <td>@item.Title</td>
+                                <td>@item.Start.ToString("MMM. dd, yyyy - hhhh:mmtt")</td>
+                                <td>@item.End.ToString("MMM. dd, yyyy - hhhh:mmtt")</td>
+                                <td>
+                                    @if (item.IsAllDay)
+                                    {
+                                        <span class="badge bg-success rounded-pill p-1">All Day</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info rounded-pill p-1">Time</span>
+                                    }
+                                </td>
+                                <td>
+                                    @vetUsers.Where(m => m.Id == item.UserId).FirstOrDefault().UserName
+                                </td>
+                                <td class="text-center">
+                                    @if (item.CusUserId == null || item.CusUserId == "")
+                                    {
+                                        <a href="#" onclick="Edit(@item.Id)" class="btn btn-success waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">
+                                            Edit
+                                        </a>
+                                        <a href="#" onclick="Delete(@item.Id)" class="btn btn-danger waves-effect waves-light btn-sm">
+                                            Delete
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a href="~/OnlineConsultation?ConsultationId=@item.Id" target="_blank" class="btn btn-info waves-effect waves-light btn-sm">
+                                            Call
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div> <!-- end col -->
 </div> <!-- end row -->
+
+<div id="CreateUpdateModal" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ModalTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" novalidate>
+                    <div class="row">
+                        <div hidden>
+                            <input id="Id" type="text" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="CalendarId" class="form-label">Type</label>
+                                <select id="CalendarId" class="form-control" required>
+                                    <option value="">- Select Type -</option>
+                                    @*     <option value="1">Store Appointment</option> *@
+                                    <option value="2">Online Consultation</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Start" class="form-label">Start</label>
+                                <input id="Start" placeholder="Start" type="datetime-local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="End" class="form-label">End</label>
+                                <input id="End" placeholder="End" type="datetime-local" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="IsAllDay">Category</label>
+                                <select id="IsAllDay" class="form-control" required>
+                                    <option value="">- Select Category -</option>
+                                    <option value="true">All Day</option>
+                                    <option value="false">Time</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="Veterinarian">Veterinarian</label>
+                                <select id="UserId" class="form-control" name="Veterinarian">
+                                    <option value="">- Select Veterinarian -</option>
+                                    @foreach (var item in vetUsers)
+                                    {
+                                        <option value="@item.Id">@item.UserName</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Close</button>
+                        <button onclick="SaveForm()" type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                    </div>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <!-- JAVASCRIPT -->
 <script src="~/assets/libs/jquery/jquery.min.js"></script>
 <script src="~/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -81,138 +230,53 @@
 <script src="~/assets/js/pages/sweet-alerts.init.js"></script>
 
 <script src="~/assets/js/app.js"></script>
-
 <script>
-    const localVideo = document.getElementById("localVideo");
-    const remoteVideo = document.getElementById("remoteVideo");
-    const startCallButton = document.getElementById("startCall");
-    const endCallButton = document.getElementById("endCall");
 
-    let localStream, remoteStream, peerConnection;
-    let connectionId, remoteConnectionId;
-
-    const config = { iceServers: [{ urls: "stun:stun.l.google.com:19302" }] };
-
-    // Initialize SignalR
-    const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("/consultationHub")
-        .build();
-
-    hubConnection.on("ReceiveSignal", async (signal, senderId) => {
-        remoteConnectionId = senderId; // Set remote connection ID dynamically
-        const data = JSON.parse(signal);
-
-        if (data.offer) {
-            await handleOffer(data.offer);
-        } else if (data.answer) {
-            await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
-        } else if (data.candidate) {
-            await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
-        } else if (data.endCall) {
-            endCall(true); // End call triggered by remote peer
+    function AddConsultation() {
+        var ScheduleId = $("#ScheduleId").val();
+        if (ScheduleId != null && ScheduleId != "") {
+            Swal.fire({
+                title: 'Schedule Consultation!',
+                text: 'Are you sure you want to Schedule Consultation?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Done',
+                cancelButtonText: 'Back',
+                allowOutsideClick: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("AddConsultation", "Appointments")',
+                        type: 'POST',
+                        data: {
+                            ScheduleId: ScheduleId,
+                        },
+                        success: function (data) {
+                            Swal.fire({
+                                title: "Success!",
+                                text: 'Consultation was successfully added!',
+                                icon: 'success',
+                                showCancelButton: false,
+                                allowOutsideClick: false,
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '@Url.Action("Consultation", "Appointments")';
+                                }
+                            });
+                        },
+                        error: function (error) {
+                            Swal.fire('Oops!', 'Something went wrong!', 'error');
+                        }
+                    });
+                }
+            });
+        } else {
+            Swal.fire('Invalid!', 'Please select the Consultation Schedule!', 'info');
         }
-    });
-
-    hubConnection.start().then(() => {
-        hubConnection.invoke("GetConnectionId").then(id => {
-            connectionId = id;
-        });
-    });
-
-    startCallButton.addEventListener("click", async () => {
-        startCallButton.disabled = true;
-        endCallButton.disabled = false;
-
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = localStream;
-
-        peerConnection = new RTCPeerConnection(config);
-
-        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-        peerConnection.ontrack = event => {
-            if (!remoteStream) {
-                remoteStream = new MediaStream();
-                remoteVideo.srcObject = remoteStream;
-            }
-            remoteStream.addTrack(event.track);
-        };
-
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                sendSignal({ candidate: event.candidate });
-            }
-        };
-
-        const offer = await peerConnection.createOffer();
-        await peerConnection.setLocalDescription(offer);
-        sendSignal({ offer });
-    });
-
-    endCallButton.addEventListener("click", () => {
-        endCall(false);
-    });
-
-    function sendSignal(data) {
-        hubConnection.invoke("SendSignal", JSON.stringify(data), remoteConnectionId || "");
     }
 
-    function endCall(isRemote = false) {
-        if (peerConnection) {
-            peerConnection.close();
-            peerConnection = null;
-        }
 
-        if (localStream) {
-            localStream.getTracks().forEach(track => track.stop());
-            localVideo.srcObject = null;
-        }
 
-        if (remoteStream) {
-            remoteStream.getTracks().forEach(track => track.stop());
-            remoteVideo.srcObject = null;
-        }
-
-        if (!isRemote) {
-            sendSignal({ endCall: true });
-        }
-
-        startCallButton.disabled = false;
-        endCallButton.disabled = true;
-        alert("Call ended.");
-    }
-
-    async function handleOffer(offer) {
-        peerConnection = new RTCPeerConnection(config);
-
-        peerConnection.ontrack = event => {
-            if (!remoteStream) {
-                remoteStream = new MediaStream();
-                remoteVideo.srcObject = remoteStream;
-            }
-            remoteStream.addTrack(event.track);
-        };
-
-        peerConnection.onicecandidate = event => {
-            if (event.candidate) {
-                sendSignal({ candidate: event.candidate });
-            }
-        };
-
-        await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = localStream;
-
-        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-        const answer = await peerConnection.createAnswer();
-        await peerConnection.setLocalDescription(answer);
-        sendSignal({ answer });
-    }
-</script>
-
-<script>
     var ID = $("#id").val();
 
     function convertDateTimeToDate(dateTime) {
@@ -231,13 +295,13 @@
     function SaveForm() {
         var data = {
             Id: ID,
-            Title: $("#Title").val(),
+            CalendarId: $("#CalendarId").val(),
             Start: $("#Start").val(),
             End: $("#End").val(),
             IsAllDay: $("#IsAllDay").val(),
             UserId: $("#UserId").val()
         };
-        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
+        if (data.CalendarId != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
             $.ajax({
                 url: '@Url.Action("Save", "Appointments")',
                 type: 'POST',
@@ -251,7 +315,7 @@
                         allowOutsideClick: false,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '@Url.Action("Index", "Appointments")';
+                            window.location.href = '@Url.Action("Consultation", "Appointments")';
                         }
                     });
                 },
@@ -264,10 +328,10 @@
 
     function Create() {
         ID = 0;
-        $("#ModalTitle").text("Create Appointments").trigger("change");
+        $("#ModalTitle").text("Create Consultations").trigger("change");
     }
     function Edit(Id) {
-        $("#ModalTitle").text("Update Appointments").trigger("change");
+        $("#ModalTitle").text("Update Consultations").trigger("change");
 
         ID = Id;
         var data = {
@@ -322,7 +386,7 @@
                             allowOutsideClick: false,
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                window.location.href = '@Url.Action("Index", "Appointments")';
+                                window.location.href = '@Url.Action("Consultation", "Appointments")';
                             }
                         });
                     },

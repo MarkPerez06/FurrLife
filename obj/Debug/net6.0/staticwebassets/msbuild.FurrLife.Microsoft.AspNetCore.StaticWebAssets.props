@@ -20912,6 +20912,22 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\06c5f6826-3f78-46c6-a035-77078fde8163.jpg))</OriginalItemSpec>
     </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0892fe762-64bb-41b4-807e-0cf8c757d87f.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>ChatUploads/0892fe762-64bb-41b4-807e-0cf8c757d87f.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0892fe762-64bb-41b4-807e-0cf8c757d87f.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0b64043f7-b87e-4ae0-8e38-9c2fc97beda5.jpg))">
       <SourceType>Package</SourceType>
       <SourceId>FurrLife</SourceId>
@@ -20959,6 +20975,22 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0dfd60f9c-c8fe-441e-bd5d-69ad64ca538f.jpg))</OriginalItemSpec>
+    </StaticWebAsset>
+    <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0ea36aab2-e8eb-478a-8695-dc0584a9f02b.jpg))">
+      <SourceType>Package</SourceType>
+      <SourceId>FurrLife</SourceId>
+      <ContentRoot>$(MSBuildThisFileDirectory)..\staticwebassets\</ContentRoot>
+      <BasePath>_content/FurrLife</BasePath>
+      <RelativePath>ChatUploads/0ea36aab2-e8eb-478a-8695-dc0584a9f02b.jpg</RelativePath>
+      <AssetKind>All</AssetKind>
+      <AssetMode>All</AssetMode>
+      <AssetRole>Primary</AssetRole>
+      <RelatedAsset></RelatedAsset>
+      <AssetTraitName></AssetTraitName>
+      <AssetTraitValue></AssetTraitValue>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <OriginalItemSpec>$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\ChatUploads\0ea36aab2-e8eb-478a-8695-dc0584a9f02b.jpg))</OriginalItemSpec>
     </StaticWebAsset>
     <StaticWebAsset Include="$([System.IO.Path]::GetFullPath($(MSBuildThisFileDirectory)..\staticwebassets\Products\0d5b805a-3579-4e7f-bcef-2b117511eb99_272-vet-2-1024x1024-1.jpg))">
       <SourceType>Package</SourceType>

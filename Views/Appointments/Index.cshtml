@@ -29,12 +29,12 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Title</th>
+                            <th>Type</th>
                             <th>Start</th>
                             <th>End</th>
                             <th>Category</th>
                             <th>Veterinarian</th>
-                            <th class="text-center" style="table-layout: fixed;">
+                            <th class="text-center" style="table-layout: fixed !important;">
                                 @if (UserRoleId != UserRoles.Customer.Id)
                                 {
                                     <a onclick="Create()" class="btn btn-primary waves-effect waves-light btn-sm" data-bs-toggle="modal" data-bs-target="#CreateUpdateModal">Create</a>
@@ -108,8 +108,12 @@
                         </div>
                         <div class="col-md-12">
                             <div class="mb-3">
-                                <label for="Title" class="form-label">Title</label>
-                                <input id="Title" placeholder="Title" type="text" class="form-control" required>
+                                <label for="CalendarId" class="form-label">Type</label>
+                                <select id="CalendarId" class="form-control" required>
+                                    <option value="">- Select Type -</option>
+                                    <option value="1">Store Appointment</option>
+@*                                     <option value="2">Online Consultation</option> *@
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-12">
@@ -215,13 +219,13 @@
     function SaveForm() {
         var data = {
             Id: ID,
-            Title: $("#Title").val(),
+            CalendarId: $("#CalendarId").val(),
             Start: $("#Start").val(),
             End: $("#End").val(),
             IsAllDay: $("#IsAllDay").val(),
             UserId: $("#UserId").val()
         };
-        if (data.Title != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
+        if (data.CalendarId != "" && data.Start != "" && data.End != "" && data.UserId != "" && data.IsAllDay != "") {
             $.ajax({
                 url: '@Url.Action("Save", "Appointments")',
                 type: 'POST',
