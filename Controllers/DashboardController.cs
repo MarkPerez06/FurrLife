@@ -511,6 +511,19 @@ namespace FurrLife.Controllers
                                        TotalEarning = g.Sum(item => item.TotalAmount - (item.TotalAmount * item.Discounts) / 100)
                                    }).ToList();
 
+
+            var user = _context.Users.Where(m => m.UserName == User.Identity.Name && m.SecurityStamp == UserRoles.Customer.Id).FirstOrDefault();
+            if (user != null)
+            {
+                monthlyEarnings = (from o in _context.Orders
+                                   where o.IsPaid == true && o.DateCreated.Year == Year && o.UserId == user.Id
+                                   group o by o.DateCreated.Month into g
+                                   select new
+                                   {
+                                       Month = g.Key,
+                                       TotalEarning = g.Sum(item => item.TotalAmount - (item.TotalAmount * item.Discounts) / 100)
+                                   }).ToList();
+            }
             // Create an array to hold earnings for each month (Jan to Dec)
             decimal[] earnings = new decimal[12];
 
@@ -521,7 +534,7 @@ namespace FurrLife.Controllers
             }
 
             // Add the data to the series
-            Series.Add(new SeriesDataMonthlyEarning { name = "Monthly Earning " + Year, data = earnings.ToList() });
+            Series.Add(new SeriesDataMonthlyEarning { name = "Monthly Expenses " + Year, data = earnings.ToList() });
 
             var Result = new { Series, Year };
             return Json(Result);

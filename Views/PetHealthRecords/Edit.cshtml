@@ -12,197 +12,223 @@
 <!-- Responsive datatable examples -->
 <link href="~/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="~/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+@* <style>
+    /* Make font size larger */
+    body {
+        font-size: 18px; /* Adjust as needed */
+        font-family: Arial, sans-serif; /* Optional: specify a font family */
+    }
+
+    /* Remove border for input, select, and textarea */
+    input, select, textarea {
+        border: none;
+        outline: none; /* Remove focus outline */
+        background-color: transparent; /* Optional: make the background transparent */
+        font-size: inherit; /* Ensure font size matches the larger text */
+    }
+</style> *@
+
+
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
                 <form asp-action="Edit">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="CusUserId" />
-                    <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Pet Information</h4>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="PetName" class="control-label"></label>
-                            <input asp-for="PetName" class="form-control" />
-                            <span asp-validation-for="PetName" class="text-danger"></span>
+                    <div class="row mb-4" id="PDF">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CusUserId" />
+                        <div class="row">
+                            <br />
+                            <br />
+                            <br />
+                            <h4 class="card-title mb-3 text-uppercase">Pet Information</h4>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="PetName" class="control-label"></label>
+                                <input asp-for="PetName" class="form-control" />
+                                <span asp-validation-for="PetName" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Age" class="control-label"></label>
+                                <input asp-for="Age" class="form-control" />
+                                <span asp-validation-for="Age" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Birthdate" class="control-label"></label>
+                                <input asp-for="Birthdate" class="form-control" type="date" />
+                                <span asp-validation-for="Birthdate" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Breed" class="control-label"></label>
+                                <input asp-for="Breed" class="form-control" />
+                                <span asp-validation-for="Breed" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Gender" class="control-label"></label>
+                                <input asp-for="Gender" class="form-control" />
+                                <span asp-validation-for="Gender" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Weight" class="control-label"></label>
+                                <input asp-for="Weight" class="form-control" />
+                                <span asp-validation-for="Weight" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Color" class="control-label"></label>
+                                <input asp-for="Color" class="form-control" />
+                                <span asp-validation-for="Color" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Age" class="control-label"></label>
-                            <input asp-for="Age" class="form-control" />
-                            <span asp-validation-for="Age" class="text-danger"></span>
+                        <hr />
+                        <div class="row">
+                            <h4 class="card-title mb-3 text-uppercase">Behavioral Observations</h4>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="TemperamentAndPersonalityTraits" class="control-label"></label>
+                                <textarea asp-for="TemperamentAndPersonalityTraits" class="form-control"></textarea>
+                                <span asp-validation-for="TemperamentAndPersonalityTraits" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="BehavioralIssues" class="control-label"></label>
+                                <textarea asp-for="BehavioralIssues" class="form-control"></textarea>
+                                <span asp-validation-for="BehavioralIssues" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Birthdate" class="control-label"></label>
-                            <input asp-for="Birthdate" class="form-control" type="date" />
-                            <span asp-validation-for="Birthdate" class="text-danger"></span>
+                        <hr />
+                        <div class="row">
+                            <h4 class="card-title mb-3 text-uppercase">Routine Care</h4>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="GroomingHabits" class="control-label"></label>
+                                <textarea asp-for="GroomingHabits" class="form-control"></textarea>
+                                <span asp-validation-for="GroomingHabits" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="ExerciseRoutines" class="control-label"></label>
+                                <textarea asp-for="ExerciseRoutines" class="form-control"></textarea>
+                                <span asp-validation-for="ExerciseRoutines" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Breed" class="control-label"></label>
-                            <input asp-for="Breed" class="form-control" />
-                            <span asp-validation-for="Breed" class="text-danger"></span>
+                        <hr />
+                        <div class="row">
+                            <h4 class="card-title mb-3 text-uppercase">Health Concerns</h4>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="Allergies" class="control-label"></label>
+                                <textarea asp-for="Allergies" class="form-control"></textarea>
+                                <span asp-validation-for="Allergies" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="FeedingSchedule" class="control-label"></label>
+                                <textarea asp-for="FeedingSchedule" class="form-control"></textarea>
+                                <span asp-validation-for="FeedingSchedule" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="ExistingConditions" class="control-label"></label>
+                                <select asp-for="ExistingConditions" class="form-control">
+                                    <option value="">- Select Existing Condition -</option>
+                                    <option value="Allergies">Allergies</option>
+                                    <option value="Anal Sac Diseases">Anal Sac Diseases</option>
+                                    <option value="Anemia">Anemia</option>
+                                    <option value="Arthritis">Arthritis</option>
+                                    <option value="Asthma">Asthma</option>
+                                    <option value="Atopic Dermatitis">Atopic Dermatitis</option>
+                                    <option value="Bloat and Gastric Torsion">Bloat and Gastric Torsion</option>
+                                    <option value="Bronchitis">Bronchitis</option>
+                                    <option value="Cancer">Cancer</option>
+                                    <option value="Cataracts">Cataracts</option>
+                                    <option value="Cholangitis">Cholangitis</option>
+                                    <option value="Chronic Kidney Disease">Chronic Kidney Disease</option>
+                                    <option value="Cushing's Disease">Cushing's Disease</option>
+                                    <option value="Dental Disease">Dental Disease</option>
+                                    <option value="Diabetes Mellitus">Diabetes Mellitus</option>
+                                    <option value="Diarrhea">Diarrhea</option>
+                                    <option value="Ear Infections">Ear Infections</option>
+                                    <option value="Eclampsia">Eclampsia</option>
+                                    <option value="Elbow Dysplasia">Elbow Dysplasia</option>
+                                    <option value="Epilepsy">Epilepsy</option>
+                                    <option value="Feline Infectious Peritonitis">Feline Infectious Peritonitis</option>
+                                    <option value="Feline Leukemia Virus">Feline Leukemia Virus</option>
+                                    <option value="Feline Lower Urinary Tract Disease">Feline Lower Urinary Tract Disease</option>
+                                    <option value="Feline Panleukopenia">Feline Panleukopenia</option>
+                                    <option value="Feline Viral Rhinotracheitis">Feline Viral Rhinotracheitis</option>
+                                    <option value="Fleas and Ticks">Fleas and Ticks</option>
+                                    <option value="Gastrointestinal Issues">Gastrointestinal Issues</option>
+                                    <option value="Heart Disease">Heart Disease</option>
+                                    <option value="Heartworm Disease">Heartworm Disease</option>
+                                    <option value="Hip Dysplasia">Hip Dysplasia</option>
+                                    <option value="Hyperthyroidism">Hyperthyroidism</option>
+                                    <option value="Hypothyroidism">Hypothyroidism</option>
+                                    <option value="Inflammatory Bowel Disease">Inflammatory Bowel Disease</option>
+                                    <option value="Kennel Cough">Kennel Cough</option>
+                                    <option value="Liver Disease">Liver Disease</option>
+                                    <option value="Lyme Disease">Lyme Disease</option>
+                                    <option value="Obesity">Obesity</option>
+                                    <option value="Otitis Externa">Otitis Externa</option>
+                                    <option value="Parvovirus">Parvovirus</option>
+                                    <option value="Periodontal Disease">Periodontal Disease</option>
+                                    <option value="Pyoderma">Pyoderma</option>
+                                    <option value="Rabies">Rabies</option>
+                                    <option value="Respiratory Infections">Respiratory Infections</option>
+                                    <option value="Ringworm">Ringworm</option>
+                                    <option value="Seizures">Seizures</option>
+                                    <option value="Skin Infections">Skin Infections</option>
+                                    <option value="Urinary Tract Infections">Urinary Tract Infections</option>
+                                    <option value="Vomiting">Vomiting</option>
+                                    <option value="Worm Infestations">Worm Infestations</option>
+                                </select>
+                                <span asp-validation-for="ExistingConditions" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <label asp-for="UserId" class="control-label"></label>
+                                <select asp-for="UserId" class="form-control">
+                                    <option value="">- Select Veterinarian -</option>
+                                    @foreach (var item in Users)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="UserId" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Gender" class="control-label"></label>
-                            <input asp-for="Gender" class="form-control" />
-                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        <hr />
+                        <div class="row">
+                            <h4 class="card-title mb-3 text-uppercase">Owner's Information</h4>
+                            <div class="col-lg-4 form-group mb-3">
+                                <label asp-for="FullName" class="control-label"></label>
+                                <input asp-for="FullName" class="form-control" />
+                                <span asp-validation-for="FullName" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-2 form-group mb-3">
+                                <label asp-for="Phone" class="control-label"></label>
+                                <input asp-for="Phone" class="form-control" />
+                                <span asp-validation-for="Phone" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Email" class="control-label"></label>
+                                <input asp-for="Email" class="form-control" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-3 form-group mb-3">
+                                <label asp-for="Address" class="control-label"></label>
+                                <textarea asp-for="Address" class="form-control"></textarea>
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Weight" class="control-label"></label>
-                            <input asp-for="Weight" class="form-control" />
-                            <span asp-validation-for="Weight" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-3 form-group mb-3">
-                            <label asp-for="Color" class="control-label"></label>
-                            <input asp-for="Color" class="form-control" />
-                            <span asp-validation-for="Color" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Behavioral Observations</h4>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="TemperamentAndPersonalityTraits" class="control-label"></label>
-                            <textarea asp-for="TemperamentAndPersonalityTraits" class="form-control"></textarea>
-                            <span asp-validation-for="TemperamentAndPersonalityTraits" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="BehavioralIssues" class="control-label"></label>
-                            <textarea asp-for="BehavioralIssues" class="form-control"></textarea>
-                            <span asp-validation-for="BehavioralIssues" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Routine Care</h4>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="GroomingHabits" class="control-label"></label>
-                            <textarea asp-for="GroomingHabits" class="form-control"></textarea>
-                            <span asp-validation-for="GroomingHabits" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="ExerciseRoutines" class="control-label"></label>
-                            <textarea asp-for="ExerciseRoutines" class="form-control"></textarea>
-                            <span asp-validation-for="ExerciseRoutines" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Health Concerns</h4>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="Allergies" class="control-label"></label>
-                            <textarea asp-for="Allergies" class="form-control"></textarea>
-                            <span asp-validation-for="Allergies" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="FeedingSchedule" class="control-label"></label>
-                            <textarea asp-for="FeedingSchedule" class="form-control"></textarea>
-                            <span asp-validation-for="FeedingSchedule" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="ExistingConditions" class="control-label"></label>
-                            <select asp-for="ExistingConditions" class="form-control">
-                                <option value="">- Select Existing Condition -</option>
-                                <option value="Allergies">Allergies</option>
-                                <option value="Anal Sac Diseases">Anal Sac Diseases</option>
-                                <option value="Anemia">Anemia</option>
-                                <option value="Arthritis">Arthritis</option>
-                                <option value="Asthma">Asthma</option>
-                                <option value="Atopic Dermatitis">Atopic Dermatitis</option>
-                                <option value="Bloat and Gastric Torsion">Bloat and Gastric Torsion</option>
-                                <option value="Bronchitis">Bronchitis</option>
-                                <option value="Cancer">Cancer</option>
-                                <option value="Cataracts">Cataracts</option>
-                                <option value="Cholangitis">Cholangitis</option>
-                                <option value="Chronic Kidney Disease">Chronic Kidney Disease</option>
-                                <option value="Cushing's Disease">Cushing's Disease</option>
-                                <option value="Dental Disease">Dental Disease</option>
-                                <option value="Diabetes Mellitus">Diabetes Mellitus</option>
-                                <option value="Diarrhea">Diarrhea</option>
-                                <option value="Ear Infections">Ear Infections</option>
-                                <option value="Eclampsia">Eclampsia</option>
-                                <option value="Elbow Dysplasia">Elbow Dysplasia</option>
-                                <option value="Epilepsy">Epilepsy</option>
-                                <option value="Feline Infectious Peritonitis">Feline Infectious Peritonitis</option>
-                                <option value="Feline Leukemia Virus">Feline Leukemia Virus</option>
-                                <option value="Feline Lower Urinary Tract Disease">Feline Lower Urinary Tract Disease</option>
-                                <option value="Feline Panleukopenia">Feline Panleukopenia</option>
-                                <option value="Feline Viral Rhinotracheitis">Feline Viral Rhinotracheitis</option>
-                                <option value="Fleas and Ticks">Fleas and Ticks</option>
-                                <option value="Gastrointestinal Issues">Gastrointestinal Issues</option>
-                                <option value="Heart Disease">Heart Disease</option>
-                                <option value="Heartworm Disease">Heartworm Disease</option>
-                                <option value="Hip Dysplasia">Hip Dysplasia</option>
-                                <option value="Hyperthyroidism">Hyperthyroidism</option>
-                                <option value="Hypothyroidism">Hypothyroidism</option>
-                                <option value="Inflammatory Bowel Disease">Inflammatory Bowel Disease</option>
-                                <option value="Kennel Cough">Kennel Cough</option>
-                                <option value="Liver Disease">Liver Disease</option>
-                                <option value="Lyme Disease">Lyme Disease</option>
-                                <option value="Obesity">Obesity</option>
-                                <option value="Otitis Externa">Otitis Externa</option>
-                                <option value="Parvovirus">Parvovirus</option>
-                                <option value="Periodontal Disease">Periodontal Disease</option>
-                                <option value="Pyoderma">Pyoderma</option>
-                                <option value="Rabies">Rabies</option>
-                                <option value="Respiratory Infections">Respiratory Infections</option>
-                                <option value="Ringworm">Ringworm</option>
-                                <option value="Seizures">Seizures</option>
-                                <option value="Skin Infections">Skin Infections</option>
-                                <option value="Urinary Tract Infections">Urinary Tract Infections</option>
-                                <option value="Vomiting">Vomiting</option>
-                                <option value="Worm Infestations">Worm Infestations</option>
-                            </select>
-                            <span asp-validation-for="ExistingConditions" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <label asp-for="UserId" class="control-label"></label>
-                            <select asp-for="UserId" class="form-control">
-                                <option value="">- Select Veterinarian -</option>
-                                @foreach (var item in Users)
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
-                            <span asp-validation-for="UserId" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <h4 class="card-title mb-3 text-uppercase">Owner's Information</h4>
-                        <div class="col-lg-4 form-group mb-3">
-                            <label asp-for="FullName" class="control-label"></label>
-                            <input asp-for="FullName" class="form-control" />
-                            <span asp-validation-for="FullName" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-2 form-group mb-3">
-                            <label asp-for="Phone" class="control-label"></label>
-                            <input asp-for="Phone" class="form-control" />
-                            <span asp-validation-for="Phone" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-2 form-group mb-3">
-                            <label asp-for="Email" class="control-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-4 form-group mb-3">
-                            <label asp-for="Address" class="control-label"></label>
-                            <input asp-for="Address" class="form-control" />
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <hr />
-                    <div class="row">
-                        <div class="col-lg-6 form-group mb-3">
-                            <h4 class="card-title mb-3 text-uppercase">Immunization History</h4>
-                            <textarea asp-for="ImmunizationHistory" class="form-control" style="height: 250px"></textarea>
-                            <span asp-validation-for="ImmunizationHistory" class="text-danger"></span>
-                        </div>
-                        <div class="col-lg-6 form-group mb-3">
-                            <h4 class="card-title mb-3 text-uppercase">Medical History</h4>
-                            <textarea asp-for="MedicalHistory" class="form-control" style="height: 250px"></textarea>
-                            <input asp-for="CreatedDate" class="form-control" type="hidden"></input>
-                            <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+                        <hr />
+                        <div class="row">
+                            <div class="col-lg-6 form-group mb-3">
+                                <h4 class="card-title mb-3 text-uppercase">Immunization History</h4>
+                                <textarea asp-for="ImmunizationHistory" class="form-control" style="height: 250px"></textarea>
+                                <span asp-validation-for="ImmunizationHistory" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 form-group mb-3">
+                                <h4 class="card-title mb-3 text-uppercase">Medical History</h4>
+                                <textarea asp-for="MedicalHistory" class="form-control" style="height: 250px"></textarea>
+                                <input asp-for="CreatedDate" class="form-control" type="hidden"></input>
+                                <span asp-validation-for="MedicalHistory" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
                     <hr />
@@ -210,6 +236,7 @@
                         <div class="col-lg-12 form-group mb-3 mt-4 text-center">
                             <a asp-action="Index" class="btn btn-secondary1">Back</a>
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            <button onclick="convertToPDF()" class="btn btn-secondary">Download PDF</button>
                         </div>
                     </div>
                 </form>
@@ -262,3 +289,37 @@
 <script src="~/assets/js/pages/sweet-alerts.init.js"></script>
 
 <script src="~/assets/js/app.js"></script>
+
+<script>
+    async function convertToPDF() {
+        const { jsPDF } = window.jspdf; // Access jsPDF from the library
+        const content = document.getElementById('PDF'); // Get the div element
+
+        // Temporarily remove borders for input, select, and textarea
+        content.classList.add('no-border');
+
+        // Use html2canvas to capture the content as a canvas
+        const canvas = await html2canvas(content, { scale: 2 });
+        const imgData = canvas.toDataURL('image/png'); // Convert the canvas to an image
+
+        // Create a new jsPDF instance
+        const pdf = new jsPDF();
+
+        // Define margin
+        const margin = 10; // 10px margin
+        const pdfWidth = pdf.internal.pageSize.getWidth() - margin * 2; // Adjust width for margin
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
+
+        // Add the image to the PDF with margins
+        pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth, pdfHeight);
+
+        // Save the PDF
+        pdf.save('PET-RECORDS.PDF');
+
+        // Reapply borders after generating the PDF
+        content.classList.remove('no-border');
+    }
+</script>
+
+
+
