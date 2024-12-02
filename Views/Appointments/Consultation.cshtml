@@ -109,9 +109,13 @@
                                     }
                                     else
                                     {
-                                        <a href="~/OnlineConsultation?ConsultationId=@item.Id" target="_blank" class="btn btn-info waves-effect waves-light btn-sm">
+                                        <a href="~/Chat?AppointmentId=@item.Id" target="_blank" class="btn btn-info waves-effect waves-light btn-sm">
+                                            Chat
+                                        </a>
+                                        <a href="~/OnlineConsultation?ConsultationId=@item.Id" target="_blank" class="btn btn-primary waves-effect waves-light btn-sm">
                                             Call
                                         </a>
+
                                     }
                                 </td>
                             </tr>

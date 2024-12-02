@@ -125,7 +125,7 @@
                                 <label for="RoleId">Role</label>
                                 <select id="RoleId" class="form-control" value="" required>
                                     <option value="">- Select -</option>
-                                    @foreach (var item in List.Roles)
+                                    @foreach (var item in List.Roles.Where(m => m.Id != UserRoles.Staff.Id))
                                     {
                                         <option value="@item.Id">@item.Name</option>
                                     }

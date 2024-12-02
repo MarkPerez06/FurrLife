@@ -120,7 +120,7 @@ namespace FurrLife.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    user.EmailConfirmed = false;
+                    user.EmailConfirmed = true;
                     user.SecurityStamp = "bb9825cc-d2d1-4121-ace8-7335225f2c89";
                     if (user.UserName == "Admin")
                     {
